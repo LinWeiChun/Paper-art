@@ -1,0 +1,242 @@
+/* 整體容器 */
+.home-container {
+  background-color: #f5f0e6;
+  color: #333;
+  font-family: "Noto Sans TC", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 頂部導覽列 */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  border-bottom: 2px solid #b22222;
+}
+
+.site-title {
+  color: #b22222;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.nav-bar ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-bar a {
+  color: #b22222;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s, border-bottom 0.3s;
+}
+
+.nav-bar a:hover {
+  color: #000;
+  border-bottom: 2px solid #b22222;
+}
+
+/* 主視覺區塊 */
+.hero-section {
+  flex: 1;                      /* hero 區塊佔滿中間空間 */
+  display: flex;
+  justify-content: center;
+  align-items: center;           /* 垂直置中 */
+}
+
+.hero-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.artist-photo {
+  width: 280px;
+  border-radius: 50%;
+  border: 3px solid #b22222;
+}
+
+.hero-right {
+  flex: 1;
+  text-align: center;
+  padding-left: 40px;
+}
+
+.hero-title {
+  color: #b22222;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.explore-btn {
+  background-color: #b22222;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.explore-btn:hover {
+  background-color: #8b0000;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 頁尾 */
+.home-footer {
+  text-align: center;
+  padding: 10px; /* 下調高度 */
+  border-top: 2px solid #b22222;
+  margin-top: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.home-footer p {
+  margin: 5px 0;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.home-footer p:hover {
+  color: #b22222;
+}
+
+/* ========= RWD ========= */
+
+/* 平板 (<=768px) */
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: row;
+    padding: 15px 20px;
+    position: relative;
+  }
+
+  .nav-bar ul {
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .hero-section {
+    flex-direction: column;   /* 上下排列 */
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .hero-left {
+    margin-bottom: 20px;
+  }
+
+  .artist-photo {
+    width: 200px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .explore-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/* 手機 (<=480px) */
+@media (max-width: 480px) {
+  .site-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .explore-btn {
+    width: 100%;              /* 滿版按鈕 */
+    border-radius: 0;
+  }
+
+  .home-footer {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+}
+
+/* 漢堡選單按鈕 */
+.menu-toggle {
+  display: none; /* 桌機版隱藏 */
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #b22222;
+}
+
+/* 手機版導覽列預設隱藏 */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* 手機版顯示漢堡選單 */
+  }
+
+  .nav-bar {
+    display: none; /* 預設隱藏 */
+    flex-direction: column;
+    background-color: #f5f0e6;
+    position: absolute;
+    top: 60px;
+    right: 0;              /* 導覽列靠右 */
+    width: 220px;          /* 固定寬度，不佔滿整個畫面 */
+    border-left: 2px solid #b22222;
+    padding: 20px;
+    text-align: left;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+  }
+
+  .nav-bar.open {
+    display: flex; /* 展開時顯示 */
+  }
+
+  .nav-bar ul {
+    flex-direction: column;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .nav-bar a {
+    font-size: 1.1rem;
+    color: #b22222;
+    width: 100%;
+    padding: 8px 0;
+    transition: background-color 0.3s;
+  }
+
+  .nav-bar a:hover {
+    background-color: #f0dede;
+  }
+}

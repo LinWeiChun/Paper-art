@@ -1,0 +1,24 @@
+# -----------正式上線------------------
+# version: "3.8"
+
+# services:
+#   frontend:
+#     build: ./frontend
+#     container_name: frontend
+#     ports:
+#       - "5173:80"
+
+# -----------測試階段------------------
+version: "3.8"
+
+services:
+  frontend:
+    image: node:20
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   # ⭐ 這行是關鍵
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"

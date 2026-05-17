@@ -1,0 +1,33 @@
+.tab-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  border-radius: 5px 5px 0 0;
+}
+
+.tab:hover {
+  background-color: #ddd;
+}
+
+.tab.active {
+  background-color: #fff;
+  border-bottom: 2px solid #007bff;
+  color: #007bff;
+}
+
+.tab-content {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #fff;
+  min-height: 150px;
+}
