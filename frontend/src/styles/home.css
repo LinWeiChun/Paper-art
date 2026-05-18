@@ -19,22 +19,82 @@
 }
 
 /* 導覽列 */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  right: -260px; /* 🔥 預設藏右邊 */
+  width: 260px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  padding: 80px 20px;
+  z-index: 1000;
+}
+
+.nav-bar.open {
+  right: 0; /* 🔥 滑出來 */
+}
+
 .nav-bar ul {
   display: flex;
-  gap: 30px;
-  list-style: none;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .nav-bar a {
-  text-decoration: none;
+  font-size: 1.2rem;
   color: #b22222;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.nav-bar a:hover {
+  background: #f5e6e6;
 }
 
 /* 漢堡 */
 .menu-toggle {
   display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
 }
 
+.menu-toggle span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #b22222;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* 🔥 開啟動畫（變 X） */
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
 /* ===== Hero ===== */
 .hero-section {
   position: relative;
@@ -56,8 +116,8 @@
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0,0,0,0.3),
-    rgba(0,0,0,0.6)
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.6)
   );
 }
 
@@ -133,7 +193,7 @@
 
 .work-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* 按鈕 */
@@ -160,7 +220,12 @@
   }
 
   .menu-toggle {
-    display: block;
+    display: flex;
+  }
+
+  /* 桌機版 navbar 隱藏 */
+  .nav-bar ul {
+    display: none;
   }
 
   .nav-bar {
