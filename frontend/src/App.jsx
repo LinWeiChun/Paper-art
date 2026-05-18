@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import "./styles/home.css";
+import React, { useState, useEffect } from 'react';
+import './styles/home.css';
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,30 +7,30 @@ function Home() {
 
   // 🔥 輪播圖片
   const images = [
-    "/images/slide1.jpg",
-    "/images/slide2.jpg",
-    "/images/slide3.jpg",
+    '/images/slide1.jpg',
+    '/images/slide2.jpg',
+    '/images/slide3.jpg',
   ];
 
   // 🔥 精選作品（之後可改 API）
   const works = [
     {
       id: 1,
-      title: "龍鳳呈祥",
-      image: "/images/work1.jpg",
-      desc: "傳統剪紙藝術",
+      title: '龍鳳呈祥',
+      image: '/images/work1.jpg',
+      desc: '傳統剪紙藝術',
     },
     {
       id: 2,
-      title: "花開富貴",
-      image: "/images/work2.jpg",
-      desc: "吉祥寓意作品",
+      title: '花開富貴',
+      image: '/images/work2.jpg',
+      desc: '吉祥寓意作品',
     },
     {
       id: 3,
-      title: "雙喜臨門",
-      image: "/images/work3.jpg",
-      desc: "婚慶剪紙",
+      title: '雙喜臨門',
+      image: '/images/work3.jpg',
+      desc: '婚慶剪紙',
     },
   ];
 
@@ -45,33 +45,41 @@ function Home() {
 
   return (
     <div className="home-container">
+      {/* 🔥 遮罩（放這裡） */}
+      {menuOpen && (
+        <div className="overlay" onClick={() => setMenuOpen(false)} />
+      )}
       {/* Header */}
       <header className="home-header">
         <h1 className="site-title">李煥章剪紙藝術</h1>
 
         <button
-          className="menu-toggle"
+          className={`menu-toggle ${menuOpen ? 'open' : ''}`}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          ☰
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
 
-        <nav className={`nav-bar ${menuOpen ? "open" : ""}`}>
+        <nav className={`nav-bar ${menuOpen ? 'open' : ''}`}>
           <ul>
-            <li><a href="#home">首頁</a></li>
-            <li><a href="#works">作品集</a></li>
-            <li><a href="#contact">聯絡我們</a></li>
+            <li>
+              <a href="#home">首頁</a>
+            </li>
+            <li>
+              <a href="#works">作品集</a>
+            </li>
+            <li>
+              <a href="#contact">聯絡我們</a>
+            </li>
           </ul>
         </nav>
       </header>
 
       {/* 🔥 Hero 輪播 */}
       <section className="hero-section" id="home">
-        <img
-          src={images[current]}
-          alt="作品"
-          className="slider-image"
-        />
+        <img src={images[current]} alt="作品" className="slider-image" />
 
         <div className="hero-text">
           <h2 className="hero-title">李煥章剪紙藝術</h2>
