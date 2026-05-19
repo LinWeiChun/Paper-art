@@ -11,6 +11,7 @@
   align-items: center;
   padding: 20px 60px;
   border-bottom: 2px solid #b22222;
+  position: relative;
 }
 
 .site-title {
@@ -18,83 +19,44 @@
   font-size: 1.8rem;
 }
 
-/* 導覽列 */
+/* ===== 導覽列（桌機預設顯示） ===== */
 .nav-bar {
-  position: fixed;
-  top: 0;
-  right: -260px; /* 🔥 預設藏右邊 */
-  width: 260px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
-  padding: 80px 20px;
-  z-index: 1000;
-}
-
-.nav-bar.open {
-  right: 0; /* 🔥 滑出來 */
+  display: block;
 }
 
 .nav-bar ul {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .nav-bar a {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #b22222;
   text-decoration: none;
-  padding: 10px;
-  border-radius: 6px;
+  position: relative;
+}
+
+/* 🔥 hover 底線動畫 */
+.nav-bar a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: #b22222;
   transition: 0.3s;
 }
 
-.nav-bar a:hover {
-  background: #f5e6e6;
+.nav-bar a:hover::after {
+  width: 100%;
 }
 
-/* 漢堡 */
+/* ===== 漢堡（桌機隱藏） ===== */
 .menu-toggle {
   display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 1001;
 }
 
-.menu-toggle span {
-  display: block;
-  height: 3px;
-  width: 100%;
-  background: #b22222;
-  border-radius: 2px;
-  transition: 0.3s;
-}
-
-/* 🔥 開啟動畫（變 X） */
-.menu-toggle.open span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-
-.menu-toggle.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.menu-toggle.open span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-}
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-}
 /* ===== Hero ===== */
 .hero-section {
   position: relative;
@@ -102,14 +64,12 @@
   height: 90vh;
 }
 
-/* 圖片 */
 .slider-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* 🔥 遮罩 */
 .hero-section::after {
   content: "";
   position: absolute;
@@ -121,7 +81,6 @@
   );
 }
 
-/* 文字 */
 .hero-text {
   position: absolute;
   z-index: 2;
@@ -153,7 +112,6 @@
 .works-section {
   padding: 80px 60px;
   text-align: center;
-  background: #fff;
 }
 
 .section-title {
@@ -166,14 +124,12 @@
   color: #666;
 }
 
-/* 網格 */
 .works-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 }
 
-/* 卡片 */
 .work-card {
   background: #f9f9f9;
   border-radius: 12px;
@@ -196,7 +152,6 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* 按鈕 */
 .more-btn {
   margin-top: 40px;
   padding: 12px 30px;
@@ -213,31 +168,59 @@
   border-top: 2px solid #b22222;
 }
 
-/* ===== RWD ===== */
+/* ===== 🔥 手機版 ===== */
 @media (max-width: 768px) {
-  .works-grid {
-    grid-template-columns: 1fr;
-  }
-
+  /* 漢堡出現 */
   .menu-toggle {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
   }
 
-  /* 桌機版 navbar 隱藏 */
-  .nav-bar ul {
-    display: none;
+  .menu-toggle span {
+    display: block;
+    height: 3px;
+    background: #b22222;
   }
 
+  /* nav 變側邊 */
   .nav-bar {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 60px;
+    position: fixed;
+    top: 0;
+    right: -260px;
+    width: 260px;
+    height: 100vh;
     background: #fff;
-    padding: 20px;
+    transition: 0.3s;
+    padding: 80px 20px;
+    z-index: 1000;
   }
 
   .nav-bar.open {
-    display: block;
+    right: 0;
+  }
+
+  .nav-bar ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+  }
+
+  /* 作品變單欄 */
+  .works-grid {
+    grid-template-columns: 1fr;
   }
 }
