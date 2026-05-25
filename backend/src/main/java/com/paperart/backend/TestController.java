@@ -8,6 +8,7 @@ public class TestController {
 
     @GetMapping("/api/test")
     public String test() {
+    	System.out.println(System.getProperty("java.version"));
         return "Hello Backend";
     }
 }
