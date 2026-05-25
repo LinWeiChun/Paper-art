@@ -68,6 +68,9 @@ function Home() {
               <a href="#home">首頁</a>
             </li>
             <li>
+              <a href="#author">作者介紹</a>
+            </li>
+            <li>
               <a href="#works">作品集</a>
             </li>
             <li>
@@ -78,15 +81,21 @@ function Home() {
       </header>
 
       {/* 🔥 Hero 輪播 */}
-      <section className="hero-section" id="home">
-        <img src={images[current]} alt="作品" className="slider-image" />
+<section className="hero-section" id="home">
+  {images.map((img, index) => (
+    <img
+      key={index}
+      src={img}
+      className={`slider-image ${index === current ? 'active' : ''}`}
+    />
+  ))}
 
-        <div className="hero-text">
-          <h2 className="hero-title">李煥章剪紙藝術</h2>
-          <p className="hero-subtitle">一紙一世界</p>
-          <button className="explore-btn">探索作品</button>
-        </div>
-      </section>
+  <div className="hero-text">
+    <h2 className="hero-title">李煥章剪紙藝術</h2>
+    <p className="hero-subtitle">一紙一世界</p>
+    <button className="explore-btn">探索作品</button>
+  </div>
+</section>
 
       {/* 🔥 精選作品 */}
       <section className="works-section" id="works">
