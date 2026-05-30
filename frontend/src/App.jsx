@@ -6,10 +6,22 @@ function Home() {
   const [current, setCurrent] = useState(0);
 
   // 🔥 輪播圖片
-  const images = [
-    '/images/slide1.jpg',
-    '/images/slide2.jpg',
-    '/images/slide3.jpg',
+  const slides = [
+    {
+      image: '/images/slide1.jpg',
+      title: '李煥章剪紙藝術',
+      subtitle: '一紙一世界',
+    },
+    {
+      image: '/images/slide2.jpg',
+      title: '最新展覽',
+      subtitle: '2026 春季作品展',
+    },
+    {
+      image: '/images/slide3.jpg',
+      title: '作品上架',
+      subtitle: '花開富貴系列',
+    },
   ];
 
   // 🔥 精選作品（之後可改 API）
@@ -37,7 +49,7 @@ function Home() {
   // 自動輪播
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length);
+      setCurrent((prev) => (prev + 1) % slides.length);
     }, 3000);
 
     return () => clearInterval(timer);
@@ -59,6 +71,7 @@ function Home() {
         >
           <span></span>
           <span></span>
+
           <span></span>
         </button>
 
@@ -66,6 +79,9 @@ function Home() {
           <ul>
             <li>
               <a href="#home">首頁</a>
+            </li>
+            <li>
+              <a href="#author">關於我們</a>
             </li>
             <li>
               <a href="#author">作者介紹</a>
@@ -81,21 +97,22 @@ function Home() {
       </header>
 
       {/* 🔥 Hero 輪播 */}
-<section className="hero-section" id="home">
-  {images.map((img, index) => (
-    <img
-      key={index}
-      src={img}
-      className={`slider-image ${index === current ? 'active' : ''}`}
-    />
-  ))}
+      <section className="hero-section" id="home">
+        {slides.map((slide, index) => (
+          <img
+            key={index}
+            src={slide.image}
+            alt={slide.title}
+            className={`slider-image ${index === current ? 'active' : ''}`}
+          />
+        ))}
 
-  <div className="hero-text">
-    <h2 className="hero-title">李煥章剪紙藝術</h2>
-    <p className="hero-subtitle">一紙一世界</p>
-    <button className="explore-btn">探索作品</button>
-  </div>
-</section>
+        <div className="hero-text">
+          <h2 className="hero-title">{slides[current].title}</h2>
+
+          <p className="hero-subtitle">{slides[current].subtitle}</p>
+        </div>
+      </section>
 
       {/* 🔥 精選作品 */}
       <section className="works-section" id="works">
