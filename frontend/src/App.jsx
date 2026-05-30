@@ -1,147 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import './styles/home.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+// import About from './pages/About';
+// import Author from './pages/Author';
+// import Works from './pages/Works';
+// import Contact from './pages/Contact';
 
-function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [current, setCurrent] = useState(0);
-
-  // 🔥 輪播圖片
-  const slides = [
-    {
-      image: '/images/slide1.jpg',
-      title: '李煥章剪紙藝術',
-      subtitle: '一紙一世界',
-    },
-    {
-      image: '/images/slide2.jpg',
-      title: '最新展覽',
-      subtitle: '2026 春季作品展',
-    },
-    {
-      image: '/images/slide3.jpg',
-      title: '作品上架',
-      subtitle: '花開富貴系列',
-    },
-  ];
-
-  // 🔥 精選作品（之後可改 API）
-  const works = [
-    {
-      id: 1,
-      title: '龍鳳呈祥',
-      image: '/images/work1.jpg',
-      desc: '傳統剪紙藝術',
-    },
-    {
-      id: 2,
-      title: '花開富貴',
-      image: '/images/work2.jpg',
-      desc: '吉祥寓意作品',
-    },
-    {
-      id: 3,
-      title: '雙喜臨門',
-      image: '/images/work3.jpg',
-      desc: '婚慶剪紙',
-    },
-  ];
-
-  // 自動輪播
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 3000);
-
-    return () => clearInterval(timer);
-  }, []);
-
+function App() {
   return (
-    <div className="home-container">
-      {/* 🔥 遮罩（放這裡） */}
-      {menuOpen && (
-        <div className="overlay" onClick={() => setMenuOpen(false)} />
-      )}
-      {/* Header */}
-      <header className="home-header">
-        <h1 className="site-title">李煥章剪紙藝術</h1>
-
-        <button
-          className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span></span>
-          <span></span>
-
-          <span></span>
-        </button>
-
-        <nav className={`nav-bar ${menuOpen ? 'open' : ''}`}>
-          <ul>
-            <li>
-              <a href="#home">首頁</a>
-            </li>
-            <li>
-              <a href="#author">關於我們</a>
-            </li>
-            <li>
-              <a href="#author">作者介紹</a>
-            </li>
-            <li>
-              <a href="#works">作品集</a>
-            </li>
-            <li>
-              <a href="#contact">聯絡我們</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
-      {/* 🔥 Hero 輪播 */}
-      <section className="hero-section" id="home">
-        {slides.map((slide, index) => (
-          <img
-            key={index}
-            src={slide.image}
-            alt={slide.title}
-            className={`slider-image ${index === current ? 'active' : ''}`}
-          />
-        ))}
-
-        <div className="hero-text">
-          <h2 className="hero-title">{slides[current].title}</h2>
-
-          <p className="hero-subtitle">{slides[current].subtitle}</p>
-        </div>
-      </section>
-
-      {/* 🔥 精選作品 */}
-      <section className="works-section" id="works">
-        <h2 className="section-title">精選作品</h2>
-        <p className="section-subtitle">傳統與藝術的結合</p>
-
-        <div className="works-grid">
-          {works.map((work) => (
-            <div className="work-card" key={work.id}>
-              <img src={work.image} alt={work.title} />
-              <div className="work-content">
-                <h3>{work.title}</h3>
-                <p>{work.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button className="more-btn">查看更多作品</button>
-      </section>
-
-      {/* Footer */}
-      <footer className="home-footer">
-        <p>聯絡資訊：example@email.com</p>
-        <p>電話：0912-345-678</p>
-        <p>© 2026 李煥章剪紙藝術</p>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* <Route path="/about" element={<About />} />
+        <Route path="/author" element={<Author />} />
+        <Route path="/works" element={<Works />} />
+        <Route path="/contact" element={<Contact />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default Home;
+export default App;
