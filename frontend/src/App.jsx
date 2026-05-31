@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import Home from './pages/Home';
 import About from './pages/About';
-// import Author from './pages/Author';
-// import Works from './pages/Works';
-// import Contact from './pages/Contact';
+import Authors from './pages/Authors';
+import AuthorDetail from './pages/AuthorDetail';
 
 function App() {
   return (
@@ -11,9 +11,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        {/* <Route path="/author" element={<Author />} />/ */}
-        {/* <Route path="/works" element={<Works />} /> */}
-        {/* <Route path="/contact" element={<Contact />} /> */}
+        <Route path="/authors" element={<Authors />} />
+        <Route path="/authors/:id" element={<AuthorDetail />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,84 @@
+.author-detail-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 40px;
+
+  text-decoration: none;
+  color: #8b0000;
+  font-weight: 600;
+}
+
+.author-profile {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 50px;
+
+  align-items: center;
+}
+
+.author-image img {
+  width: 100%;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+
+.author-info h1 {
+  color: #8b0000;
+  margin-bottom: 20px;
+}
+
+.author-info p {
+  line-height: 2;
+}
+
+.author-philosophy {
+  margin-top: 80px;
+}
+
+.author-philosophy h2 {
+  color: #8b0000;
+  margin-bottom: 20px;
+}
+
+.author-philosophy p {
+  line-height: 2;
+}
+
+.author-experience {
+  margin-top: 80px;
+}
+
+.author-experience h2 {
+  color: #8b0000;
+  margin-bottom: 30px;
+}
+
+.author-experience ul {
+  list-style: none;
+  padding: 0;
+}
+
+.author-experience li {
+  background: white;
+
+  margin-bottom: 16px;
+  padding: 20px;
+
+  border-left: 5px solid #8b0000;
+
+  border-radius: 8px;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+@media (max-width: 768px) {
+  .author-profile {
+    grid-template-columns: 1fr;
+  }
+}

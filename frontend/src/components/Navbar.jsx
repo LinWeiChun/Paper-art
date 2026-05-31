@@ -11,7 +11,7 @@ function Navbar({ menuOpen }) {
         </li>
 
         <li>
-          <a href="/author">作者介紹</a>
+          <a href="/authors">作者介紹</a>
         </li>
 
         <li>

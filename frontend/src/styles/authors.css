@@ -1,0 +1,62 @@
+.authors-container {
+  min-height: 100vh;
+}
+
+.authors-banner {
+  background: #8b0000;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.authors-banner h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.authors-grid {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 20px;
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, 1fr)
+  );
+
+  gap: 30px;
+}
+
+.author-card {
+  text-decoration: none;
+  color: inherit;
+
+  background: white;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+
+  transition: .3s;
+}
+
+.author-card:hover {
+  transform: translateY(-8px);
+}
+
+.author-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.author-card-content {
+  padding: 24px;
+}
+
+.author-card-content h2 {
+  color: #8b0000;
+  margin-bottom: 12px;
+}
