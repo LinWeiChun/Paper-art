@@ -19,6 +19,10 @@ function Navbar({ menuOpen }) {
         </li>
 
         <li>
+          <a href="/news">活動公告</a>
+        </li>
+
+        <li>
           <a href="/contact">聯絡我們</a>
         </li>
       </ul>
