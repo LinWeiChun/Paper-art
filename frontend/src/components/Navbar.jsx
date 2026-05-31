@@ -11,15 +11,14 @@ function Navbar({ menuOpen }) {
         </li>
 
         <li>
+          <a href="/news">最新消息</a>
+        </li>
+        <li>
           <a href="/authors">作者介紹</a>
         </li>
 
         <li>
           <a href="/works">作品集</a>
-        </li>
-
-        <li>
-          <a href="/news">活動公告</a>
         </li>
 
         <li>
