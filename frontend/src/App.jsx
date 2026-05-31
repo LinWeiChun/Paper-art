@@ -5,7 +5,8 @@ import About from './pages/About';
 import Authors from './pages/Authors';
 import AuthorDetail from './pages/AuthorDetail';
 import Contact from './pages/Contact';
-
+import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/authors" element={<Authors />} />
         <Route path="/authors/:id" element={<AuthorDetail />} />
-<Route path="/contact" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
       </Routes>
     </BrowserRouter>
   );
