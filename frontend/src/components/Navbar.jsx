@@ -3,7 +3,7 @@ function Navbar({ menuOpen }) {
     <nav className={`nav-bar ${menuOpen ? 'open' : ''}`}>
       <ul>
         <li>
-          <a href="#home">首頁</a>
+          <a href="/">首頁</a>
         </li>
 
         <li>
