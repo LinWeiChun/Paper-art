@@ -64,7 +64,7 @@ function Home() {
         <div className="overlay" onClick={() => setMenuOpen(false)} />
       )}
       {/* Header */}
-      <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <Header currentPage="home" menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       {/* 🔥 Hero 輪播 */}
       <section className="hero-section" id="home">
