@@ -25,7 +25,7 @@
   width: 100%;
   border-radius: 16px;
 
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .author-info h1 {
@@ -36,7 +36,24 @@
 .author-info p {
   line-height: 2;
 }
+.author-work-btn {
+  display: inline-block;
 
+  margin-top: 30px;
+
+  padding: 12px 24px;
+
+  background: #b22222;
+  color: white;
+
+  border-radius: 8px;
+
+  transition: 0.3s;
+}
+
+.author-work-btn:hover {
+  background: #8b1a1a;
+}
 .author-philosophy {
   margin-top: 80px;
 }
@@ -74,7 +91,7 @@
 
   border-radius: 8px;
 
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 768px) {
