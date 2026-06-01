@@ -10,10 +10,8 @@ function AuthorDetail() {
     1: {
       name: '李煥章',
       image: '/images/author1.jpg',
-      intro:
-        '長年投入傳統剪紙藝術創作，致力於推廣民俗文化。',
-      philosophy:
-        '希望透過剪紙藝術讓更多人感受傳統工藝之美。',
+      intro: '長年投入傳統剪紙藝術創作，致力於推廣民俗文化。',
+      philosophy: '希望透過剪紙藝術讓更多人感受傳統工藝之美。',
       experiences: [
         '2018 地方文化館特展',
         '2020 傳統工藝推廣講師',
@@ -24,14 +22,9 @@ function AuthorDetail() {
     2: {
       name: '王小明',
       image: '/images/author2.jpg',
-      intro:
-        '專注於現代紙雕與裝置藝術創作。',
-      philosophy:
-        '結合傳統與現代設計語彙。',
-      experiences: [
-        '2021 個人展覽',
-        '2022 國際藝術交流展',
-      ],
+      intro: '專注於現代紙雕與裝置藝術創作。',
+      philosophy: '結合傳統與現代設計語彙。',
+      experiences: ['2021 個人展覽', '2022 國際藝術交流展'],
     },
   };
 
@@ -46,26 +39,22 @@ function AuthorDetail() {
       <Header />
 
       <div className="author-detail-container">
-
-        <Link
-          to="/authors"
-          className="back-btn"
-        >
-          ← 返回作者列表
-        </Link>
-
         <section className="author-profile">
           <div className="author-image">
-            <img
-              src={author.image}
-              alt={author.name}
-            />
+            <img src={author.image} alt={author.name} />
           </div>
 
           <div className="author-info">
             <h1>{author.name}</h1>
 
             <p>{author.intro}</p>
+
+            <Link
+              to={`/works?author=${author.name}`}
+              className="author-work-btn"
+            >
+              查看作品
+            </Link>
           </div>
         </section>
 
@@ -84,6 +73,9 @@ function AuthorDetail() {
             ))}
           </ul>
         </section>
+        <Link to="/authors" className="back-btn">
+          ← 返回作者列表
+        </Link>
       </div>
 
       <Footer />

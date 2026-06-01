@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/home.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import works from '../data/works';
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,28 +25,6 @@ function Home() {
       image: '/images/slide3.jpg',
       title: '作品上架',
       subtitle: '花開富貴系列',
-    },
-  ];
-
-  // 🔥 精選作品（之後可改 API）
-  const works = [
-    {
-      id: 1,
-      title: '龍鳳呈祥',
-      image: '/images/work1.jpg',
-      desc: '傳統剪紙藝術',
-    },
-    {
-      id: 2,
-      title: '花開富貴',
-      image: '/images/work2.jpg',
-      desc: '吉祥寓意作品',
-    },
-    {
-      id: 3,
-      title: '雙喜臨門',
-      image: '/images/work3.jpg',
-      desc: '婚慶剪紙',
     },
   ];
 
@@ -95,17 +75,19 @@ function Home() {
 
         <div className="works-grid">
           {works.map((work) => (
-            <div className="work-card" key={work.id}>
+            <Link to={`/works/${work.id}`} className="work-card" key={work.id}>
               <img src={work.image} alt={work.title} />
+
               <div className="work-content">
                 <h3>{work.title}</h3>
                 <p>{work.desc}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
-
-        <button className="more-btn">查看更多作品</button>
+        <Link to="/works" className="more-btn">
+          查看更多作品
+        </Link>
       </section>
 
       {/* Footer */}
