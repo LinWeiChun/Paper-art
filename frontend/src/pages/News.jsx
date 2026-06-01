@@ -10,22 +10,22 @@ function News() {
       title: '2026 春季剪紙展',
       date: '2026-03-15',
       image: '/images/news1.jpg',
-      summary: '展出老師近年代表作品。'
+      summary: '展出老師近年代表作品。',
     },
     {
       id: 2,
       title: '剪紙藝術體驗課',
       date: '2026-06-20',
       image: '/images/news2.jpg',
-      summary: '歡迎大小朋友共同參與。'
+      summary: '歡迎大小朋友共同參與。',
     },
     {
       id: 3,
       title: '文化傳承講座',
       date: '2026-08-10',
       image: '/images/news3.jpg',
-      summary: '分享剪紙藝術發展歷程。'
-    }
+      summary: '分享剪紙藝術發展歷程。',
+    },
   ];
 
   return (
@@ -40,20 +40,11 @@ function News() {
 
         <section className="news-list">
           {newsList.map((item) => (
-            <Link
-              key={item.id}
-              to={`/news/${item.id}`}
-              className="news-card"
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-              />
+            <Link key={item.id} to={`/news/${item.id}`} className="news-card">
+              <img src={item.image} alt={item.title} />
 
               <div className="news-content">
-                <span className="news-date">
-                  {item.date}
-                </span>
+                <span className="news-date">{item.date}</span>
 
                 <h2>{item.title}</h2>
 

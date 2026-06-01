@@ -1,0 +1,105 @@
+/* ===== Header ===== */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  border-bottom: 2px solid #b22222;
+  position: relative;
+}
+.site-title {
+  color: #b22222;
+  font-size: 1.8rem;
+}
+
+/* ===== 導覽列（桌機預設顯示） ===== */
+.nav-bar {
+  display: block;
+}
+
+.nav-bar ul {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-bar a {
+  font-size: 1.1rem;
+  color: #b22222;
+  text-decoration: none;
+  position: relative;
+}
+
+/* 🔥 hover 底線動畫 */
+.nav-bar a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: #b22222;
+  transition: 0.3s;
+}
+
+.nav-bar a:hover::after {
+  width: 100%;
+}
+
+/* ===== 漢堡（桌機隱藏） ===== */
+.menu-toggle {
+  display: none;
+}
+
+/* ===== 🔥 手機版 ===== */
+@media (max-width: 768px) {
+  /* 漢堡出現 */
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background-color: #b22222;
+    border-radius: 2px;
+  }
+
+  /* nav 變側邊 */
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    right: -260px;
+    width: 260px;
+    height: 100vh;
+    background: #fff;
+    transition: 0.3s;
+    padding: 80px 20px;
+    z-index: 1000;
+  }
+
+  .nav-bar.open {
+    right: 0;
+  }
+
+  .nav-bar ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+  }
+}

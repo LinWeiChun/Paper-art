@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/header.css';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,10 +8,7 @@ function Header() {
   return (
     <>
       {menuOpen && (
-        <div
-          className="overlay"
-          onClick={() => setMenuOpen(false)}
-        />
+        <div className="overlay" onClick={() => setMenuOpen(false)} />
       )}
 
       <header className="home-header">
@@ -27,12 +25,24 @@ function Header() {
 
         <nav className={`nav-bar ${menuOpen ? 'open' : ''}`}>
           <ul>
-            <li><Link to="/">首頁</Link></li>
-            <li><Link to="/about">關於我們</Link></li>
-            <li><Link to="/authors">作者介紹</Link></li>
-            <li><Link to="/works">作品集</Link></li>
-            <li><Link to="/news">最新消息</Link></li>
-            <li><Link to="/contact">聯絡我們</Link></li>
+            <li>
+              <Link to="/">首頁</Link>
+            </li>
+            <li>
+              <Link to="/about">關於我們</Link>
+            </li>
+            <li>
+              <Link to="/authors">作者介紹</Link>
+            </li>
+            <li>
+              <Link to="/works">作品集</Link>
+            </li>
+            <li>
+              <Link to="/news">最新消息</Link>
+            </li>
+            <li>
+              <Link to="/contact">聯絡我們</Link>
+            </li>
           </ul>
         </nav>
       </header>
