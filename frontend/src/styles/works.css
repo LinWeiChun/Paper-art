@@ -1,0 +1,120 @@
+.works-container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.works-banner {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.works-banner h1 {
+  font-size: 3rem;
+  color: #b22222;
+}
+
+.works-banner p {
+  color: #666;
+  margin-top: 10px;
+}
+
+.search-area {
+  margin-bottom: 30px;
+}
+
+.search-area input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.filter-section {
+  margin-bottom: 30px;
+}
+
+.filter-section h3 {
+  margin-bottom: 10px;
+  color: #b22222;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-tag {
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid #b22222;
+  background: white;
+  color: #b22222;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filter-tag:hover {
+  background: #b22222;
+  color: white;
+}
+
+.filter-tag.active {
+  background: #b22222;
+  color: white;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.work-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.work-card:hover {
+  transform: translateY(-6px);
+}
+
+.work-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.work-content {
+  padding: 20px;
+}
+
+.work-content h2 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.work-tags span {
+  background: #f3f3f3;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.work-content p {
+  color: #666;
+}
