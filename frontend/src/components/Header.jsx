@@ -32,13 +32,13 @@ function Header() {
               <Link to="/about">關於我們</Link>
             </li>
             <li>
+              <Link to="/news">最新消息</Link>
+            </li>
+            <li>
               <Link to="/authors">作者介紹</Link>
             </li>
             <li>
               <Link to="/works">作品集</Link>
-            </li>
-            <li>
-              <Link to="/news">最新消息</Link>
             </li>
             <li>
               <Link to="/contact">聯絡我們</Link>
