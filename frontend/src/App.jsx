@@ -13,7 +13,7 @@ import WorkDetail from './pages/WorkDetail';
 // 後台
 import Login from './pages/Login';
 import AdminLayout from './pages/admin/AdminLayout';
-import Dashboard from './pages/admin/Dashboard';
+import Dashboard from './pages/admin/DashBoard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
