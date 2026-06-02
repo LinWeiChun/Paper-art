@@ -22,8 +22,8 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-card">
-          <h3>會員數量</h3>
-          <p>3</p>
+          <h3>管理者數量</h3>
+          <p>4</p>
         </div>
       </div>
 
