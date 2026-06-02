@@ -1,27 +1,25 @@
 package com.paperart.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "authors")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Author {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Author extends BaseEntity {
 
     private String name;
 
+    private String title;
+
+    private String avatar;
+
+    private Integer sortOrder = 0;
+
     @Column(columnDefinition = "TEXT")
     private String description;
-
-    // getter / setter
 }

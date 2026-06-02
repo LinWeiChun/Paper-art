@@ -1,24 +1,17 @@
 package com.paperart.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "media")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Media {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Media extends BaseEntity {
 
     private String url;
 
@@ -28,9 +21,5 @@ public class Media {
     @Enumerated(EnumType.STRING)
     private RelatedType relatedType;
 
-    private Long relatedId;
-
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    // getter / setter
+    private String relatedId;
 }
