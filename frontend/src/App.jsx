@@ -10,6 +10,12 @@ import NewsDetail from './pages/NewsDetail';
 import Works from './pages/Works';
 import WorkDetail from './pages/WorkDetail';
 
+// 後台
+import Login from './pages/Login';
+import AdminLayout from './pages/admin/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+
 function App() {
   return (
     <BrowserRouter>
@@ -23,6 +29,20 @@ function App() {
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/works" element={<Works />} />
         <Route path="/works/:id" element={<WorkDetail />} />
+
+        {/* 後台 */}
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
