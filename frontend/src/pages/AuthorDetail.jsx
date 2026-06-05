@@ -1,9 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/authorDetail.css';
 
 function AuthorDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const authors = {
@@ -73,9 +75,9 @@ function AuthorDetail() {
             ))}
           </ul>
         </section>
-        <Link to="/authors" className="back-btn">
+        <button className="back-btn" onClick={() => navigate(-1)}>
           ← 返回作者列表
-        </Link>
+        </button>
       </div>
 
       <Footer />
