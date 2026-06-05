@@ -1,6 +1,15 @@
 /* ===== Footer ===== */
-.home-footer {
+.footer {
+  background: #222;
+  color: #fff;
   text-align: center;
-  padding: 20px;
-  border-top: 2px solid #b22222;
+  padding: 60px 20px 30px;
+}
+
+.footer a {
+  color: #fff;
+}
+
+.footer a:hover {
+  color: #d4af37;
 }

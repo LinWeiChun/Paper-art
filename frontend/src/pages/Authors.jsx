@@ -24,7 +24,7 @@ function Authors() {
       <Header />
 
       <div className="authors-container">
-        <section className="authors-banner">
+        <section className="page-banner authors-banner">
           <h1>作者介紹</h1>
           <p>探索每位藝術家的創作故事</p>
         </section>

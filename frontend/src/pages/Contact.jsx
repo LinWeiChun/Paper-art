@@ -8,7 +8,7 @@ function Contact() {
       <Header />
 
       <div className="contact-container">
-        <section className="contact-banner">
+        <section className="page-banner contact-banner">
           <h1>聯絡我們</h1>
           <p>歡迎與我們交流剪紙藝術相關資訊</p>
         </section>
@@ -42,24 +42,13 @@ function Contact() {
             <h2>留言給我們</h2>
 
             <form>
-              <input
-                type="text"
-                placeholder="您的姓名"
-              />
+              <input type="text" placeholder="您的姓名" />
 
-              <input
-                type="email"
-                placeholder="電子郵件"
-              />
+              <input type="email" placeholder="電子郵件" />
 
-              <textarea
-                rows="6"
-                placeholder="請輸入您的訊息"
-              />
+              <textarea rows="6" placeholder="請輸入您的訊息" />
 
-              <button type="submit">
-                送出訊息
-              </button>
+              <button type="submit">送出訊息</button>
             </form>
           </div>
         </section>

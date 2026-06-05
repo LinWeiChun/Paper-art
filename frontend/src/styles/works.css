@@ -9,25 +9,9 @@
 .works-banner {
   background:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/images/works-banner.jpg');
-
-  background-size: cover;
-  background-position: center;
-
-  text-align: center;
-  color: white;
-
-  padding: 120px 20px;
+    url('/images/about-banner.jpg');
 }
 
-.works-banner h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.works-banner p {
-  font-size: 1.2rem;
-}
 /* ===== 搜尋列 ===== */
 
 .works-toolbar {
@@ -285,14 +269,6 @@
 
 /* ===== 手機版 ===== */
 @media (max-width: 768px) {
-  .works-banner {
-    padding: 80px 20px;
-  }
-
-  .works-banner h1 {
-    font-size: 2rem;
-  }
-
   .works-toolbar {
     flex-direction: row;
   }

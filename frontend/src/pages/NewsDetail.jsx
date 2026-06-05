@@ -1,9 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/newsDetail.css';
 
 function NewsDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const newsData = {
@@ -55,9 +57,9 @@ function NewsDetail() {
         <div className="news-detail-container">
           <h1>找不到此消息</h1>
 
-          <Link to="/news" className="back-btn">
+          <button className="back-btn" onClick={() => navigate(-1)}>
             返回最新消息
-          </Link>
+          </button>
         </div>
         <Footer />
       </>
@@ -69,24 +71,18 @@ function NewsDetail() {
       <Header />
 
       <div className="news-detail-container">
-        <img
-          src={news.image}
-          alt={news.title}
-          className="news-detail-image"
-        />
+        <img src={news.image} alt={news.title} className="news-detail-image" />
 
         <div className="news-detail-content">
-          <span className="news-detail-date">
-            {news.date}
-          </span>
+          <span className="news-detail-date">{news.date}</span>
 
           <h1>{news.title}</h1>
 
           <p>{news.content}</p>
 
-          <Link to="/news" className="back-btn">
+          <button className="back-btn" onClick={() => navigate(-1)}>
             ← 返回最新消息
-          </Link>
+          </button>
         </div>
       </div>
 

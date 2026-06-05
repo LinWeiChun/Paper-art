@@ -1,52 +1,105 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
+import Pagination from '../components/Pagination';
 import works from '../data/works';
-
 import '../styles/works.css';
 
 function Works() {
-  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const toolbarRef = useRef(null);
+
+  const search = searchParams.get('search') || '';
+
+  const selectedCategories = searchParams.getAll('category');
+
+  const selectedAuthors = searchParams.getAll('author');
+
+  const currentPage = Number(searchParams.get('page')) || 1;
+
   const [showFilter, setShowFilter] = useState(false);
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [searchParams] = useSearchParams();
+  const pageSize = 12;
 
-  const defaultAuthor = searchParams.get('author');
+  // 保留返回時的 scrollY
+  useEffect(() => {
+    if (location.state?.scrollY !== undefined) {
+      window.scrollTo({
+        top: location.state.scrollY,
+        behavior: 'auto',
+      });
+    }
+  }, [location.state]);
 
-  const [selectedAuthors, setSelectedAuthors] = useState(
-    defaultAuthor ? [defaultAuthor] : [],
-  );
+  // 更新 URL
+  const updateFilters = ({
+    categories = selectedCategories,
+    authors = selectedAuthors,
+    keyword = search,
+    page = currentPage,
+  }) => {
+    const params = new URLSearchParams();
 
-  // 取得所有分類
+    categories.forEach((c) => params.append('category', c));
+
+    authors.forEach((a) => params.append('author', a));
+
+    if (keyword) {
+      params.set('search', keyword);
+    }
+
+    params.set('page', page);
+
+    setSearchParams(params);
+  };
+
+  // 分類
+  const handleCategoryChange = (category) => {
+    const updated = selectedCategories.includes(category)
+      ? selectedCategories.filter((c) => c !== category)
+      : [...selectedCategories, category];
+
+    updateFilters({
+      categories: updated,
+      page: 1,
+    });
+  };
+
+  // 作者
+  const handleAuthorChange = (author) => {
+    const updated = selectedAuthors.includes(author)
+      ? selectedAuthors.filter((a) => a !== author)
+      : [...selectedAuthors, author];
+
+    updateFilters({
+      authors: updated,
+      page: 1,
+    });
+  };
+
+  // 分頁
+  const handlePageChange = (page) => {
+    updateFilters({ page });
+
+    const y =
+      toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+
+    window.scrollTo({
+      top: y,
+      behavior: 'smooth',
+    });
+  };
+
+  // 分類清單
   const categories = [...new Set(works.flatMap((work) => work.categories))];
 
-  // 取得所有作者
+  // 作者清單
   const authors = [...new Set(works.flatMap((work) => work.authors))];
 
-  // 分類勾選
-  const handleCategoryChange = (category) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((item) => item !== category)
-        : [...prev, category],
-    );
-  };
-
-  // 作者勾選
-  const handleAuthorChange = (author) => {
-    setSelectedAuthors((prev) =>
-      prev.includes(author)
-        ? prev.filter((item) => item !== author)
-        : [...prev, author],
-    );
-  };
-
-  // 篩選作品
+  // 篩選
   const filteredWorks = works.filter((work) => {
     const matchSearch = work.title.toLowerCase().includes(search.toLowerCase());
 
@@ -61,23 +114,35 @@ function Works() {
     return matchSearch && matchCategory && matchAuthor;
   });
 
+  // 分頁資料
+  const totalPages = Math.ceil(filteredWorks.length / pageSize);
+
+  const pagedWorks = filteredWorks.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
   return (
     <>
       <Header />
 
       <div className="works-container">
-        <section className="works-banner">
+        <section className="page-banner works-banner">
           <h1>作品集</h1>
           <p>探索剪紙藝術作品</p>
         </section>
 
         {/* 搜尋列 */}
-        <section className="works-toolbar">
+        <section className="works-toolbar" ref={toolbarRef}>
           <input
             type="text"
             placeholder="搜尋作品..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>
+              updateFilters({
+                keyword: e.target.value,
+                page: 1,
+              })
+            }
             className="search-input"
           />
 
@@ -140,9 +205,9 @@ function Works() {
                 <button
                   className="reset-btn"
                   onClick={() => {
-                    setSelectedCategories([]);
-                    setSelectedAuthors([]);
-                    setSearch('');
+                    setSearchParams({
+                      page: '1',
+                    });
                   }}
                 >
                   清除篩選
@@ -161,8 +226,16 @@ function Works() {
 
         {/* 作品列表 */}
         <section className="works-grid">
-          {filteredWorks.map((work) => (
-            <Link key={work.id} to={`/works/${work.id}`} className="work-card">
+          {pagedWorks.map((work) => (
+            <Link
+              key={work.id}
+              to={`/works/${work.id}`}
+              className="work-card"
+              state={{
+                from: location.pathname + location.search,
+                scrollY: window.scrollY,
+              }}
+            >
               <img src={work.image} alt={work.title} />
 
               <div className="work-content">
@@ -179,6 +252,11 @@ function Works() {
             </Link>
           ))}
         </section>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
 
       <Footer />

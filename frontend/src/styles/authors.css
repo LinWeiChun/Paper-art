@@ -3,15 +3,9 @@
 }
 
 .authors-banner {
-  background: #8b0000;
-  color: white;
-  text-align: center;
-  padding: 100px 20px;
-}
-
-.authors-banner h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('/images/about-banner.jpg');
 }
 
 .authors-grid {
@@ -20,10 +14,7 @@
   padding: 0 20px;
 
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(300px, 1fr)
-  );
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 
   gap: 30px;
 }
@@ -37,9 +28,9 @@
 
   overflow: hidden;
 
-  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .author-card:hover {

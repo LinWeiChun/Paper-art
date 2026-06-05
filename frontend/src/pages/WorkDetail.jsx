@@ -1,12 +1,21 @@
 import { useParams, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/workDetail.css';
 import works from '../data/works';
 
 function WorkDetail() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
-
+  const handleBack = () => {
+    navigate(location.state?.from || '/works', {
+      state: {
+        scrollY: location.state?.scrollY || 0,
+      },
+    });
+  };
   const work = works.find((item) => item.id === Number(id));
 
   if (!work) {
@@ -15,7 +24,9 @@ function WorkDetail() {
         <Header />
         <div className="not-found">
           <h2>找不到作品</h2>
-          <Link to="/works">返回作品集</Link>
+          <button className="back-btn" onClick={handleBack}>
+            返回作品集
+          </button>
         </div>
         <Footer />
       </>
@@ -55,10 +66,9 @@ function WorkDetail() {
 
             <p>{work.description}</p>
           </div>
-
-          <Link to="/works" className="back-btn">
+          <button className="back-btn" onClick={handleBack}>
             返回作品集
-          </Link>
+          </button>
         </div>
       </div>
 

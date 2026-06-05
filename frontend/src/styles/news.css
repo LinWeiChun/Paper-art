@@ -3,19 +3,9 @@
 }
 
 .news-banner {
-  background: #8b0000;
-  color: white;
-  text-align: center;
-  padding: 100px 20px;
-}
-
-.news-banner h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
-}
-
-.news-banner p {
-  font-size: 1.1rem;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('/images/about-banner.jpg');
 }
 
 .news-list {

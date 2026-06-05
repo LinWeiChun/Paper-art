@@ -33,7 +33,7 @@ function News() {
       <Header />
 
       <div className="news-container">
-        <section className="news-banner">
+        <section className="page-banner news-banner">
           <h1>最新消息</h1>
           <p>展覽、課程與最新公告資訊</p>
         </section>

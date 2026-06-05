@@ -1,18 +1,56 @@
 /* ===== Header ===== */
+
 .home-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 20px 60px;
+
+  background: rgba(255, 255, 255, 0.95);
+
   border-bottom: 2px solid #b22222;
-  position: relative;
+
+  z-index: 1000;
+
+  transition: all 0.3s ease;
 }
+
+/* ===== 滾動後收縮 ===== */
+
+.home-header.shrink {
+  padding: 12px 60px;
+
+  background: rgba(255, 255, 255, 0.98);
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== 網站標題 ===== */
+
+.site-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .site-title {
   color: #b22222;
   font-size: 1.8rem;
+  transition: all 0.3s ease;
 }
 
-/* ===== 導覽列（桌機預設顯示） ===== */
+.home-header.shrink .site-title {
+  font-size: 1.5rem;
+}
+
+/* ===== 導覽列 ===== */
+
 .nav-bar {
   display: block;
 }
@@ -27,17 +65,27 @@
   color: #b22222;
   text-decoration: none;
   position: relative;
+  transition: 0.3s;
 }
 
-/* 🔥 hover 底線動畫 */
+.home-header.shrink .nav-bar a {
+  font-size: 1rem;
+}
+
+/* ===== Hover 底線動畫 ===== */
+
 .nav-bar a::after {
   content: '';
+
   position: absolute;
   left: 0;
   bottom: -5px;
+
   width: 0%;
   height: 2px;
+
   background: #b22222;
+
   transition: 0.3s;
 }
 
@@ -45,45 +93,82 @@
   width: 100%;
 }
 
-/* ===== 漢堡（桌機隱藏） ===== */
+/* ===== 漢堡選單（桌機隱藏） ===== */
+
 .menu-toggle {
   display: none;
 }
 
-/* ===== 🔥 手機版 ===== */
+/* ===== 手機版 ===== */
+
 @media (max-width: 768px) {
-  /* 漢堡出現 */
+  .home-header {
+    padding: 15px 20px;
+  }
+
+  .home-header.shrink {
+    padding: 12px 20px;
+  }
+
+  .site-title {
+    font-size: 1.4rem;
+  }
+
+  .home-header.shrink .site-title {
+    font-size: 1.2rem;
+  }
+
+  /* 漢堡按鈕 */
+
   .menu-toggle {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
     width: 28px;
     height: 20px;
+
     background: none;
     border: none;
+
     cursor: pointer;
+
     z-index: 1001;
   }
 
   .menu-toggle span {
     display: block;
+
     width: 28px;
     height: 3px;
+
     background-color: #b22222;
+
     border-radius: 2px;
+
+    transition: 0.3s;
   }
 
-  /* nav 變側邊 */
+  /* 側邊選單 */
+
   .nav-bar {
     position: fixed;
+
     top: 0;
     right: -260px;
+
     width: 260px;
     height: 100vh;
+
     background: #fff;
+
     transition: 0.3s;
+
     padding: 80px 20px;
+
     z-index: 1000;
+
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .nav-bar.open {
@@ -95,11 +180,14 @@
     gap: 20px;
   }
 
-  /* overlay */
+  /* 背景遮罩 */
+
   .overlay {
     position: fixed;
     inset: 0;
+
     background: rgba(0, 0, 0, 0.4);
+
     z-index: 999;
   }
 }
