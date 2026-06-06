@@ -2,8 +2,8 @@ import '../../styles/admin/dashboard.css';
 
 function Dashboard() {
   return (
-    <div className="dashboard">
-      <h1 className="dashboard-title">後台管理系統</h1>
+    <div className="admin-page dashboard">
+      <h1 className="admin-title">後台管理系統</h1>
 
       <div className="dashboard-cards">
         <div className="dashboard-card">

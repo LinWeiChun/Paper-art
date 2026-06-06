@@ -1,0 +1,33 @@
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.preview-image {
+  width: 250px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.experience-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.experience-row input {
+  flex: 1;
+}
