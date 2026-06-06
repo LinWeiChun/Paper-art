@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+
+import Layout from '../components/Layout';
+import Pagination from '../components/Pagination';
+import usePagination from '../hooks/usePagination';
 import '../styles/authors.css';
 
 function Authors() {
@@ -17,12 +19,29 @@ function Authors() {
       image: '/images/author2.jpg',
       summary: '現代紙雕創作者',
     },
+    {
+      id: 3,
+      name: '陳大文',
+      image: '/images/author3.jpg',
+      summary: '民俗剪紙創作者',
+    },
+    {
+      id: 4,
+      name: '林美華',
+      image: '/images/author4.jpg',
+      summary: '紙雕藝術設計師',
+    },
   ];
 
-  return (
-    <>
-      <Header />
+  const {
+    currentPage,
+    totalPages,
+    pagedData: pagedAuthors,
+    handlePageChange,
+  } = usePagination(authors, 2);
 
+  return (
+    <Layout>
       <div className="authors-container">
         <section className="page-banner authors-banner">
           <h1>作者介紹</h1>
@@ -30,7 +49,7 @@ function Authors() {
         </section>
 
         <section className="authors-grid">
-          {authors.map((author) => (
+          {pagedAuthors.map((author) => (
             <Link
               key={author.id}
               to={`/authors/${author.id}`}
@@ -45,10 +64,14 @@ function Authors() {
             </Link>
           ))}
         </section>
-      </div>
 
-      <Footer />
-    </>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+      </div>
+    </Layout>
   );
 }
 

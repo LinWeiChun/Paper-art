@@ -1,39 +1,53 @@
+/* ===== Pagination ===== */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin: 50px 0;
 }
 
+/* 所有按鈕共用 */
 .pagination button {
-  min-width: 42px;
+  width: 42px;
   height: 42px;
 
-  border: 1px solid #ddd;
-  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  background: #fff;
   cursor: pointer;
 
-  border-radius: 6px;
-
-  transition: 0.3s;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
+/* hover */
 .pagination button:hover:not(:disabled) {
   background: #b22222;
-  color: white;
+  color: #fff;
+  border-color: #b22222;
 }
 
+/* disabled */
 .pagination button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
+/* 目前頁碼 */
 .page-btn.active {
   background: #b22222;
-  color: white;
+  color: #fff;
   border-color: #b22222;
+}
+
+/* 左右箭頭按鈕 */
+.page-nav-btn {
+  font-size: 1.2rem;
 }

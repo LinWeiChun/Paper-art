@@ -1,7 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import '../styles/authorDetail.css';
 
 function AuthorDetail() {
@@ -37,9 +36,7 @@ function AuthorDetail() {
   }
 
   return (
-    <>
-      <Header />
-
+    <Layout>
       <div className="author-detail-container">
         <section className="author-profile">
           <div className="author-image">
@@ -79,9 +76,7 @@ function AuthorDetail() {
           ← 返回作者列表
         </button>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 

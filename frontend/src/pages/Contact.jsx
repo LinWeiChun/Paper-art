@@ -1,12 +1,9 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import '../styles/contact.css';
 
 function Contact() {
   return (
-    <>
-      <Header />
-
+    <Layout>
       <div className="contact-container">
         <section className="page-banner contact-banner">
           <h1>聯絡我們</h1>
@@ -53,9 +50,7 @@ function Contact() {
           </div>
         </section>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 

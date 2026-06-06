@@ -1,15 +1,23 @@
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+
 import '../styles/pagination.css';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
+  // 只有一頁時不顯示分頁
+  if (totalPages <= 1) {
+    return null;
+  }
+
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className="pagination">
       <button
+        className="page-nav-btn"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
       >
-        上一頁
+        <FiChevronLeft />
       </button>
 
       {pages.map((page) => (
@@ -23,10 +31,11 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
       ))}
 
       <button
+        className="page-nav-btn"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        下一頁
+        <FiChevronRight />
       </button>
     </div>
   );
