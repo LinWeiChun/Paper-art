@@ -35,30 +35,6 @@
   line-height: 1.8;
 }
 
-.about-mission {
-  background: #f8f8f8;
-  padding: 80px 40px;
-}
-
-.about-mission h2 {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.mission-content {
-  max-width: 1200px;
-  margin: 0 auto;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-
-.mission-content div {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-}
 
 .about-values {
   max-width: 1200px;
@@ -92,7 +68,6 @@
 
 @media (max-width: 768px) {
   .about-story,
-  .mission-content,
   .value-cards {
     grid-template-columns: 1fr;
   }

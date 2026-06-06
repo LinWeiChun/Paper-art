@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
+import { FiFilter } from 'react-icons/fi';
 
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import Pagination from '../components/Pagination';
+import usePagination from '../hooks/usePagination';
 import works from '../data/works';
+
 import '../styles/works.css';
 
 function Works() {
@@ -14,16 +16,16 @@ function Works() {
 
   const search = searchParams.get('search') || '';
 
+  const [searchInput, setSearchInput] = useState(search);
+
   const selectedCategories = searchParams.getAll('category');
-
   const selectedAuthors = searchParams.getAll('author');
-
-  const currentPage = Number(searchParams.get('page')) || 1;
 
   const [showFilter, setShowFilter] = useState(false);
 
-  const pageSize = 12;
-
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
   // 保留返回時的 scrollY
   useEffect(() => {
     if (location.state?.scrollY !== undefined) {
@@ -39,15 +41,19 @@ function Works() {
     categories = selectedCategories,
     authors = selectedAuthors,
     keyword = search,
-    page = currentPage,
+    page = 1,
   }) => {
     const params = new URLSearchParams();
 
-    categories.forEach((c) => params.append('category', c));
+    categories.forEach((c) => {
+      params.append('category', c);
+    });
 
-    authors.forEach((a) => params.append('author', a));
+    authors.forEach((a) => {
+      params.append('author', a);
+    });
 
-    if (keyword) {
+    if (keyword.trim()) {
       params.set('search', keyword);
     }
 
@@ -64,6 +70,7 @@ function Works() {
 
     updateFilters({
       categories: updated,
+      keyword: search,
       page: 1,
     });
   };
@@ -76,13 +83,14 @@ function Works() {
 
     updateFilters({
       authors: updated,
+      keyword: search,
       page: 1,
     });
   };
 
   // 分頁
   const handlePageChange = (page) => {
-    updateFilters({ page });
+    changePage(page);
 
     const y =
       toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
@@ -113,18 +121,14 @@ function Works() {
 
     return matchSearch && matchCategory && matchAuthor;
   });
-
-  // 分頁資料
-  const totalPages = Math.ceil(filteredWorks.length / pageSize);
-
-  const pagedWorks = filteredWorks.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
+  const {
+    currentPage,
+    totalPages,
+    pagedData: pagedWorks,
+    handlePageChange: changePage,
+  } = usePagination(filteredWorks, 12);
   return (
-    <>
-      <Header />
-
+    <Layout>
       <div className="works-container">
         <section className="page-banner works-banner">
           <h1>作品集</h1>
@@ -136,18 +140,22 @@ function Works() {
           <input
             type="text"
             placeholder="搜尋作品..."
-            value={search}
-            onChange={(e) =>
-              updateFilters({
-                keyword: e.target.value,
-                page: 1,
-              })
-            }
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                updateFilters({
+                  keyword: searchInput,
+                  page: 1,
+                });
+              }
+            }}
             className="search-input"
           />
 
           <button className="filter-btn" onClick={() => setShowFilter(true)}>
-            篩選
+            <FiFilter />
+            <span>篩選</span>
           </button>
         </section>
 
@@ -258,9 +266,7 @@ function Works() {
           onPageChange={handlePageChange}
         />
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 

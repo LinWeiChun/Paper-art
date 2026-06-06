@@ -74,7 +74,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
   padding-top: 50px;
 }
+/* ===== Layout ===== */
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+} 
 /* ===== Typography ===== */
 
 h1 {

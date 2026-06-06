@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+
+import Layout from '../components/Layout';
 import '../styles/newsDetail.css';
 
 function NewsDetail() {
@@ -52,8 +52,7 @@ function NewsDetail() {
 
   if (!news) {
     return (
-      <>
-        <Header />
+      <Layout>
         <div className="news-detail-container">
           <h1>找不到此消息</h1>
 
@@ -61,15 +60,12 @@ function NewsDetail() {
             返回最新消息
           </button>
         </div>
-        <Footer />
-      </>
+        </Layout>
     );
   }
 
   return (
-    <>
-      <Header />
-
+    <Layout>
       <div className="news-detail-container">
         <img src={news.image} alt={news.title} className="news-detail-image" />
 
@@ -85,9 +81,7 @@ function NewsDetail() {
           </button>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 

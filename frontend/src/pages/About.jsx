@@ -1,5 +1,4 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import '../styles/about.css';
 
 function About() {
@@ -22,10 +21,8 @@ function About() {
   ];
 
   return (
-    <>
-      <Header />
-
-      <main className="about-container">
+    <Layout>
+      <div className="about-container">
         {/* Banner */}
         <section className="page-banner about-banner">
           <h1>關於我們</h1>
@@ -56,28 +53,6 @@ function About() {
           </div>
         </section>
 
-        {/* 品牌理念 */}
-        <section className="about-mission">
-          <h2>我們的理念</h2>
-
-          <div className="mission-content">
-            <div>
-              <h3>保存文化價值</h3>
-              <p>將傳統剪紙技藝與文化故事完整保存， 持續向下一代傳承。</p>
-            </div>
-
-            <div>
-              <h3>推廣藝術教育</h3>
-              <p>透過展覽、課程與交流活動， 提升大眾對剪紙藝術的認識。</p>
-            </div>
-
-            <div>
-              <h3>連結現代生活</h3>
-              <p>將傳統元素融入當代設計， 讓文化走進更多人的生活。</p>
-            </div>
-          </div>
-        </section>
-
         {/* 核心價值 */}
         <section className="about-values">
           <h2>核心價值</h2>
@@ -91,10 +66,8 @@ function About() {
             ))}
           </div>
         </section>
-      </main>
-
-      <Footer />
-    </>
+      </div>
+    </Layout>
   );
 }
 

@@ -17,24 +17,24 @@ function Sidebar() {
       path: '/admin',
     },
     {
-      name: '作者管理',
-      path: '/admin/authors',
-    },
-    {
-      name: '作品管理',
-      path: '/admin/arts',
-    },
-    {
-      name: '分類管理',
-      path: '/admin/categories',
+      name: '使用者管理',
+      path: '/admin/users',
     },
     {
       name: '最新消息',
       path: '/admin/news',
     },
     {
-      name: '使用者管理',
-      path: '/admin/users',
+      name: '作者管理',
+      path: '/admin/authors',
+    },
+    {
+      name: '分類管理',
+      path: '/admin/categories',
+    },
+    {
+      name: '作品管理',
+      path: '/admin/arts',
     },
   ];
 

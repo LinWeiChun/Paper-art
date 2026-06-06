@@ -34,12 +34,25 @@
 }
 
 .filter-btn {
-  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
+  padding: 12px 20px;
   background: #b22222;
   color: white;
-
   border-radius: 8px;
+
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.filter-btn:hover {
+  background: #8b1a1a;
+}
+
+.filter-btn svg {
+  font-size: 1.1rem;
 }
 
 /* 遮罩 */

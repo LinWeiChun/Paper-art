@@ -1,11 +1,12 @@
 .detail-container {
   max-width: 1200px;
-  margin: 50px auto;
+  margin: 100px auto 50px;
   padding: 0 20px;
 
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 50px;
+  align-items: center;
 }
 
 .detail-image img {

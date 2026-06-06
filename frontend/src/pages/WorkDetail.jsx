@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+
+import Layout from '../components/Layout';
 import '../styles/workDetail.css';
 import works from '../data/works';
 
@@ -20,23 +20,19 @@ function WorkDetail() {
 
   if (!work) {
     return (
-      <>
-        <Header />
+      <Layout>
         <div className="not-found">
           <h2>找不到作品</h2>
           <button className="back-btn" onClick={handleBack}>
-            返回作品集
+            前往作品集
           </button>
         </div>
-        <Footer />
-      </>
+        </Layout>
     );
   }
 
   return (
-    <>
-      <Header />
-
+    <Layout>
       <div className="detail-container">
         <div className="detail-image">
           <img src={work.image} alt={work.title} />
@@ -67,13 +63,11 @@ function WorkDetail() {
             <p>{work.description}</p>
           </div>
           <button className="back-btn" onClick={handleBack}>
-            返回作品集
+            前往作品集
           </button>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 
