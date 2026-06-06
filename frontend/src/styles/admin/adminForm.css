@@ -21,3 +21,13 @@
   margin-top: 15px;
   border-radius: 8px;
 }
+
+.experience-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.experience-row input {
+  flex: 1;
+}
