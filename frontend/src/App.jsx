@@ -48,26 +48,30 @@ function App() {
         {/* 後台 */}
 
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
 
-          <Route path="users" element={<AdminUsers />} />
+            {/* 最新消息 */}
+            <Route path="news" element={<AdminNews />} />
+            <Route path="news/create" element={<AdminNewsCreate />} />
+            <Route path="news/edit/:id" element={<AdminNewsEdit />} />
 
-          <Route path="news" element={<AdminNews />} />
-          <Route path="news/create" element={<AdminNewsCreate />} />
-          <Route path="news/edit/:id" element={<AdminNewsEdit />} />
+            {/* 作者管理 */}
+            <Route path="authors" element={<AdminAuthors />} />
+            <Route path="authors/create" element={<AdminAuthorCreate />} />
+            <Route path="authors/edit/:id" element={<AdminAuthorEdit />} />
 
-          <Route path="authors" element={<AdminAuthors />} />
-          <Route path="authors/create" element={<AdminAuthorCreate />} />
-          <Route path="authors/edit/:id" element={<AdminAuthorEdit />} />
+            {/* 分類管理 */}
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="categories/create" element={<AdminCategoryCreate />} />
+            <Route path="categories/edit/:id" element={<AdminCategoryEdit />} />
 
-          <Route path="categories" element={<AdminCategories />} />
-          <Route path="categories/create" element={<AdminCategoryCreate />} />
-          <Route path="categories/edit/:id" element={<AdminCategoryEdit />} />
-
-          {/* <Route path="arts" element={<AdminArts />} /> */}
-          {/* <Route path="arts/create" element={<AdminArtCreate />} /> */}
-          {/* <Route path="arts/edit/:id" element={<AdminArtEdit />} /> */}
+            {/* 作品管理 */}
+            <Route path="arts" element={<AdminArts />} />
+            <Route path="arts/create" element={<AdminArtCreate />} />
+            <Route path="arts/edit/:id" element={<AdminArtEdit />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
