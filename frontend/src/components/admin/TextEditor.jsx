@@ -7,8 +7,7 @@ function TextEditor({ value, onChange }) {
       editor={ClassicEditor}
       data={value}
       onChange={(event, editor) => {
-        const data = editor.getData();
-        onChange(data);
+        onChange(editor.getData());
       }}
     />
   );
