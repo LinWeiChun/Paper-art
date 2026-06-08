@@ -46,6 +46,8 @@ function App() {
         <Route path="/works/:id" element={<WorkDetail />} />
 
         {/* 後台 */}
+
+        <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
 
