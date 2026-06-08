@@ -68,9 +68,9 @@ function App() {
             <Route path="categories/edit/:id" element={<AdminCategoryEdit />} />
 
             {/* 作品管理 */}
-            <Route path="arts" element={<AdminArts />} />
-            <Route path="arts/create" element={<AdminArtCreate />} />
-            <Route path="arts/edit/:id" element={<AdminArtEdit />} />
+            {/* <Route path="arts" element={<AdminArts />} /> */}
+            {/* <Route path="arts/create" element={<AdminArtCreate />} /> */}
+            {/* <Route path="arts/edit/:id" element={<AdminArtEdit />} /> */}
           </Route>
         </Route>
       </Routes>
