@@ -1,13 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute() {
   const token = sessionStorage.getItem('token');
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  return token ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;
