@@ -113,21 +113,13 @@ function AdminAuthorCreate() {
         <div className="form-group">
           <label>上傳照片</label>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
             <>
               <p>圖片預覽：</p>
 
-              <img
-                src={preview}
-                alt="preview"
-                className="preview-image"
-              />
+              <img src={preview} alt="preview" className="preview-image" />
             </>
           )}
         </div>
@@ -136,11 +128,14 @@ function AdminAuthorCreate() {
         <div className="form-group">
           <label>創作理念</label>
 
-          <textarea
-            rows="4"
-            name="concept"
+          <TextEditor
             value={formData.concept}
-            onChange={handleChange}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                concept: value,
+              })
+            }
           />
         </div>
 
@@ -149,17 +144,12 @@ function AdminAuthorCreate() {
           <label>重要經歷</label>
 
           {formData.experiences.map((item, index) => (
-            <div
-              key={index}
-              className="experience-row"
-            >
+            <div key={index} className="experience-row">
               <input
                 type="text"
                 value={item}
                 placeholder="請輸入重要經歷"
-                onChange={(e) =>
-                  handleExperienceChange(index, e.target.value)
-                }
+                onChange={(e) => handleExperienceChange(index, e.target.value)}
               />
 
               <button
