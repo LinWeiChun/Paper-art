@@ -26,9 +26,9 @@ import AdminAuthorEdit from './pages/admin/Authors/AdminAuthorEdit';
 import AdminCategories from './pages/admin/Categories/AdminCategories';
 import AdminCategoryCreate from './pages/admin/Categories/AdminCategoryCreate';
 import AdminCategoryEdit from './pages/admin/Categories/AdminCategoryEdit';
-// import AdminArts from './pages/admin/Arts/AdminArts';
-// import AdminArtCreate from './pages/admin/Arts/AdminArtCreate';
-// import AdminArtEdit from './pages/admin/Arts/AdminArtEdit';
+import AdminArts from './pages/admin/Arts/AdminArts';
+import AdminArtCreate from './pages/admin/Arts/AdminArtCreate';
+import AdminArtEdit from './pages/admin/Arts/AdminArtEdit';
 
 function App() {
   return (
@@ -68,9 +68,9 @@ function App() {
             <Route path="categories/edit/:id" element={<AdminCategoryEdit />} />
 
             {/* 作品管理 */}
-            {/* <Route path="arts" element={<AdminArts />} /> */}
-            {/* <Route path="arts/create" element={<AdminArtCreate />} /> */}
-            {/* <Route path="arts/edit/:id" element={<AdminArtEdit />} /> */}
+            <Route path="arts" element={<AdminArts />} />
+            <Route path="arts/create" element={<AdminArtCreate />} />
+            <Route path="arts/edit/:id" element={<AdminArtEdit />} />
           </Route>
         </Route>
       </Routes>
