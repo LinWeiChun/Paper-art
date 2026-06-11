@@ -1,3 +1,4 @@
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import '../../styles/components/pagination.css';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {

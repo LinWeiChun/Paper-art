@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import works from '../data/works';
+import Layout from '../layouts/Layout';
 import '../styles/pages/workDetail.css';
 
 function WorkDetail() {

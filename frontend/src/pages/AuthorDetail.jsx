@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
+import Layout from '../layouts/Layout';
 import '../styles/pages/authorDetail.css';
 
 function AuthorDetail() {

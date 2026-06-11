@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-
+import { Link } from 'react-router-dom';
 import works from '../data/works';
+import Layout from '../layouts/Layout';
 import '../styles/pages/home.css';
 
 function Home() {

@@ -1,4 +1,7 @@
+import { Link } from 'react-router-dom';
+import Pagination from '../components/common/Pagination';
 import usePagination from '../hooks/usePagination';
+import Layout from '../layouts/Layout';
 import '../styles/pages/authors.css';
 
 function Authors() {

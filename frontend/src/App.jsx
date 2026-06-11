@@ -1,6 +1,38 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import ScrollToTop from './components/common/ScrollToTop';
 
-// 後台
+import About from './pages/About';
+import AuthorDetail from './pages/AuthorDetail';
+import Authors from './pages/Authors';
+import Contact from './pages/Contact';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
+import WorkDetail from './pages/WorkDetail';
+import Works from './pages/Works';
+
+import ProtectedRoute from './routes/ProtectedRoute';
+
+import AdminLayout from './layouts/admin/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+
+import AdminNews from './pages/admin/news/AdminNews';
+import AdminNewsCreate from './pages/admin/news/AdminNewsCreate';
+import AdminNewsEdit from './pages/admin/news/AdminNewsEdit';
+
+import AdminAuthorCreate from './pages/admin/authors/AdminAuthorCreate';
+import AdminAuthorEdit from './pages/admin/authors/AdminAuthorEdit';
+import AdminAuthors from './pages/admin/authors/AdminAuthors';
+
+import AdminCategories from './pages/admin/categories/AdminCategories';
+import AdminCategoryCreate from './pages/admin/categories/AdminCategoryCreate';
+import AdminCategoryEdit from './pages/admin/categories/AdminCategoryEdit';
+
+import AdminArtCreate from './pages/admin/arts/AdminArtCreate';
+import AdminArtEdit from './pages/admin/arts/AdminArtEdit';
+import AdminArts from './pages/admin/arts/AdminArts';
 
 function App() {
   return (

@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { FiFilter } from 'react-icons/fi';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
+import Pagination from '../components/common/Pagination';
 import works from '../data/works';
 import usePagination from '../hooks/usePagination';
+import Layout from '../layouts/Layout';
 
 import '../styles/pages/works.css';
 
