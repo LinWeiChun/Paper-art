@@ -1,3 +1,4 @@
+import Layout from '../layouts/Layout';
 import '../styles/pages/contact.css';
 
 function Contact() {
