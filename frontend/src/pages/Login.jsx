@@ -15,10 +15,14 @@ function Login() {
 
   // 進入登入頁就登出
   useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
     sessionStorage.removeItem('token');
     generateCaptcha();
   }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 

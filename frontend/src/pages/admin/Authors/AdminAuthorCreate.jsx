@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import '../../../styles/admin/adminForm.css';
 import TextEditor from '../../../components/admin/TextEditor';
+import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorCreate() {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ function AdminAuthorCreate() {
     });
   };
 
-  // 圖片
+  // 圖片上傳
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -36,10 +36,9 @@ function AdminAuthorCreate() {
     }
   };
 
-  // 經歷修改
+  // 修改經歷
   const handleExperienceChange = (index, value) => {
     const updated = [...formData.experiences];
-
     updated[index] = value;
 
     setFormData({
@@ -56,8 +55,10 @@ function AdminAuthorCreate() {
     });
   };
 
-  // 刪除經歷
+  // 刪除經歷（至少保留一筆）
   const removeExperience = (index) => {
+    if (formData.experiences.length === 1) return;
+
     setFormData({
       ...formData,
       experiences: formData.experiences.filter((_, i) => i !== index),
@@ -70,6 +71,7 @@ function AdminAuthorCreate() {
 
     const data = {
       ...formData,
+      experiences: formData.experiences.filter((item) => item.trim() !== ''),
     };
 
     console.log('作者資料：', data);
@@ -186,6 +188,7 @@ function AdminAuthorCreate() {
           />
         </div>
 
+        {/* 按鈕 */}
         <div className="action-buttons">
           <button
             type="button"
