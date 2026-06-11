@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminNewsEdit() {

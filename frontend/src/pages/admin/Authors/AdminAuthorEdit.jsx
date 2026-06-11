@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorEdit() {
