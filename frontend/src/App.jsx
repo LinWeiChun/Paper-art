@@ -16,7 +16,7 @@ import Works from './pages/Works';
 import ProtectedRoute from './routes/ProtectedRoute';
 
 import AdminLayout from './layouts/admin/AdminLayout';
-import Dashboard from './pages/admin/Dashboard';
+import Dashboard from './pages/admin/DashBoard';
 
 import AdminNews from './pages/admin/news/AdminNews';
 import AdminNewsCreate from './pages/admin/news/AdminNewsCreate';
