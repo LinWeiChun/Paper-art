@@ -8,10 +8,17 @@ function AdminAuthorEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // 模擬舊資料
   const currentAuthor = {
     name: '李煥章',
     title: '傳統剪紙藝術家',
-    description: '長期投入傳統剪紙藝術創作。',
+    concept: '<p>以傳統文化為核心，結合現代設計理念。</p>',
+    description: '<p>長期投入傳統剪紙藝術創作與文化推廣。</p>',
+    experiences: [
+      '2018 台灣工藝展特展',
+      '2022 國際剪紙交流展',
+      '2024 台北文化藝術獎',
+    ],
     image: '/images/author1.jpg',
   };
 
@@ -29,10 +36,13 @@ function AdminAuthorEdit() {
     setFormData({
       name: currentAuthor.name,
       title: currentAuthor.title,
+      concept: currentAuthor.concept,
       description: currentAuthor.description,
+      experiences: currentAuthor.experiences,
     });
   }, [id]);
 
+  // 一般欄位
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -40,6 +50,7 @@ function AdminAuthorEdit() {
     });
   };
 
+  // 經歷修改
   const handleExperienceChange = (index, value) => {
     const newExperiences = [...formData.experiences];
     newExperiences[index] = value;
@@ -50,6 +61,7 @@ function AdminAuthorEdit() {
     });
   };
 
+  // 新增經歷
   const addExperience = () => {
     setFormData({
       ...formData,
@@ -57,6 +69,7 @@ function AdminAuthorEdit() {
     });
   };
 
+  // 刪除經歷
   const removeExperience = (index) => {
     setFormData({
       ...formData,
@@ -64,6 +77,7 @@ function AdminAuthorEdit() {
     });
   };
 
+  // 更換圖片
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -72,8 +86,11 @@ function AdminAuthorEdit() {
     }
   };
 
+  // 送出
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log('作者資料：', formData);
 
     alert('修改成功');
 
@@ -85,6 +102,7 @@ function AdminAuthorEdit() {
       <h1>編輯作者</h1>
 
       <form className="admin-form" onSubmit={handleSubmit}>
+        {/* 作者姓名 */}
         <div className="form-group">
           <label>作者姓名</label>
 
@@ -96,6 +114,7 @@ function AdminAuthorEdit() {
           />
         </div>
 
+        {/* 職稱 */}
         <div className="form-group">
           <label>職稱</label>
 
@@ -107,12 +126,14 @@ function AdminAuthorEdit() {
           />
         </div>
 
+        {/* 原圖 */}
         <div className="form-group">
           <label>目前照片</label>
 
           <img src={currentAuthor.image} alt="原圖" className="preview-image" />
         </div>
 
+        {/* 更換照片 */}
         <div className="form-group">
           <label>更換照片</label>
 
@@ -174,6 +195,7 @@ function AdminAuthorEdit() {
           </button>
         </div>
 
+        {/* 作者介紹 */}
         <div className="form-group">
           <label>作者介紹</label>
 
@@ -188,6 +210,7 @@ function AdminAuthorEdit() {
           />
         </div>
 
+        {/* 按鈕 */}
         <div className="action-buttons">
           <button
             type="button"
