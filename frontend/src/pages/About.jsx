@@ -1,5 +1,4 @@
-import Layout from '../components/Layout';
-import '../styles/about.css';
+import '../styles/pages/about.css';
 
 function About() {
   const values = [

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import '../styles/login.css';
+import '../styles/pages/login.css';
 
 function Login() {
   const navigate = useNavigate();
@@ -13,21 +13,11 @@ function Login() {
   const [errorCount, setErrorCount] = useState(0);
   const [lockUntil, setLockUntil] = useState(null);
 
-  // 進入登入頁就登出
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-    sessionStorage.removeItem('token');
-    generateCaptcha();
-  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // 是否鎖定
-    if (lockUntil && Date.now() < lockUntil) {
+    if (lockUntil && new Date().getTime() < lockUntil) {
       alert('錯誤次數過多，請 5 分鐘後再試');
       return;
     }
@@ -53,7 +43,7 @@ function Login() {
       setErrorCount(count);
 
       if (count >= 5) {
-        setLockUntil(Date.now() + 5 * 60 * 1000);
+        setLockUntil(new Date().getTime() + 5 * 60 * 1000);
 
         alert('錯誤達 5 次，已鎖定 5 分鐘');
       } else {
@@ -77,6 +67,21 @@ function Login() {
     setCaptcha(code);
   };
 
+  // 進入登入頁就登出
+  useEffect(() => {
+    // 進入登入頁就登出
+    sessionStorage.removeItem('token');
+
+    // 產生驗證碼
+    generateCaptcha();
+
+    // 隱藏登入頁 scrollbar
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
   return (
     <div className="login-page">
       <form className="login-card" onSubmit={handleSubmit}>

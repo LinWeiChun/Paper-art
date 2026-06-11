@@ -1,7 +1,6 @@
-import { useParams, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import '../styles/authorDetail.css';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import '../styles/pages/authorDetail.css';
 
 function AuthorDetail() {
   const navigate = useNavigate();

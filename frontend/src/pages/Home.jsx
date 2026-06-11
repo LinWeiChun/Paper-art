@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import Layout from '../components/Layout';
-import '../styles/home.css';
 import works from '../data/works';
+import '../styles/pages/home.css';
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,7 +33,7 @@ function Home() {
     }, 3000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   return (
     <Layout>

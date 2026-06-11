@@ -1,8 +1,6 @@
-import { useParams, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import Layout from '../components/Layout';
-import '../styles/newsDetail.css';
+import '../styles/pages/newsDetail.css';
 
 function NewsDetail() {
   const navigate = useNavigate();
@@ -60,7 +58,7 @@ function NewsDetail() {
             返回最新消息
           </button>
         </div>
-        </Layout>
+      </Layout>
     );
   }
 

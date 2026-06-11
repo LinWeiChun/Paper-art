@@ -1,6 +1,4 @@
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-
-import '../styles/pagination.css';
+import '../../styles/components/pagination.css';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
   // 只有一頁時不顯示分頁
