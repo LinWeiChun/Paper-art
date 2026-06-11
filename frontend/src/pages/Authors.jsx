@@ -1,9 +1,5 @@
-import { Link } from 'react-router-dom';
-
-import Layout from '../components/Layout';
-import Pagination from '../components/Pagination';
 import usePagination from '../hooks/usePagination';
-import '../styles/authors.css';
+import '../styles/pages/authors.css';
 
 function Authors() {
   const authors = [
@@ -65,11 +61,11 @@ function Authors() {
           ))}
         </section>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </Layout>
   );

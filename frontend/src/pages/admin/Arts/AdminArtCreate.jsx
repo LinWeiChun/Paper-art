@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminArtCreate() {

@@ -1,9 +1,7 @@
-import { useParams, Link } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import Layout from '../components/Layout';
-import '../styles/workDetail.css';
 import works from '../data/works';
+import '../styles/pages/workDetail.css';
 
 function WorkDetail() {
   const navigate = useNavigate();
@@ -27,7 +25,7 @@ function WorkDetail() {
             前往作品集
           </button>
         </div>
-        </Layout>
+      </Layout>
     );
   }
 

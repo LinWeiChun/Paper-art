@@ -1,10 +1,6 @@
-import { Link } from 'react-router-dom';
-
-import Layout from '../components/Layout';
-import Pagination from '../components/Pagination';
 import usePagination from '../hooks/usePagination';
 
-import '../styles/news.css';
+import '../styles/pages/news.css';
 
 function News() {
   const newsList = [
@@ -64,11 +60,7 @@ function News() {
         {/* 消息列表 */}
         <section className="news-list">
           {pagedNews.map((item) => (
-            <Link
-              key={item.id}
-              to={`/news/${item.id}`}
-              className="news-card"
-            >
+            <Link key={item.id} to={`/news/${item.id}`} className="news-card">
               <img src={item.image} alt={item.title} />
 
               <div className="news-content">
@@ -81,11 +73,11 @@ function News() {
             </Link>
           ))}
         </section>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </Layout>
   );

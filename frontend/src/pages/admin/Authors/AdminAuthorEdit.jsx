@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorEdit() {
@@ -38,8 +37,9 @@ function AdminAuthorEdit() {
       title: currentAuthor.title,
       concept: currentAuthor.concept,
       description: currentAuthor.description,
-      experiences: currentAuthor.experiences,
+      experiences: currentAuthor.experiences || [''],
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // 一般欄位

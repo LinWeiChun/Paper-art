@@ -21,7 +21,13 @@ function AdminNews() {
       date: '2026-08-10',
     },
   ];
+  const handleDelete = (id) => {
+    console.log(id);
 
+    if (window.confirm('確定刪除？')) {
+      alert('刪除成功');
+    }
+  };
   return (
     <div className="admin-page">
       <div className="admin-page-header">

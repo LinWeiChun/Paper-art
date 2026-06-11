@@ -1,13 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useSearchParams, useLocation } from 'react-router-dom';
-import { FiFilter } from 'react-icons/fi';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-import Layout from '../components/Layout';
-import Pagination from '../components/Pagination';
-import usePagination from '../hooks/usePagination';
 import works from '../data/works';
+import usePagination from '../hooks/usePagination';
 
-import '../styles/works.css';
+import '../styles/pages/works.css';
 
 function Works() {
   const [searchParams, setSearchParams] = useSearchParams();
