@@ -37,7 +37,7 @@ function Authors() {
     totalPages,
     pagedData: pagedAuthors,
     handlePageChange,
-  } = usePagination(authors, 2);
+  } = usePagination(authors, 6);
 
   return (
     <Layout>

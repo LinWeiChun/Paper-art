@@ -67,54 +67,106 @@ function AdminArtCreate() {
         <div className="form-group">
           <label>作者</label>
 
-          <select
-            multiple
-            value={formData.authors}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                authors: Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                ),
-              })
-            }
-          >
-            {authorOptions.map((author) => (
-              <option key={author} value={author}>
-                {author}
-              </option>
-            ))}
-          </select>
+          <div className="dual-list">
+            {/* 左邊：可選作者 */}
+            <div className="list-box">
+              <h4>可選作者</h4>
 
-          <small>按住 Ctrl（Windows）或 Command（Mac）可多選</small>
+              {authorOptions
+                .filter((author) => !formData.authors.includes(author))
+                .map((author) => (
+                  <button
+                    key={author}
+                    type="button"
+                    className="list-item"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        authors: [...formData.authors, author],
+                      })
+                    }
+                  >
+                    + {author}
+                  </button>
+                ))}
+            </div>
+
+            {/* 右邊：已選作者 */}
+            <div className="list-box">
+              <h4>已選作者</h4>
+
+              {formData.authors.map((author) => (
+                <button
+                  key={author}
+                  type="button"
+                  className="selected-item"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      authors: formData.authors.filter(
+                        (item) => item !== author,
+                      ),
+                    })
+                  }
+                >
+                  × {author}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* 分類 */}
         <div className="form-group">
           <label>分類</label>
 
-          <select
-            multiple
-            value={formData.categories}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                categories: Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                ),
-              })
-            }
-          >
-            {categoryOptions.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          <div className="dual-list">
+            {/* 左邊：可選分類 */}
+            <div className="list-box">
+              <h4>可選分類</h4>
 
-          <small>按住 Ctrl（Windows）或 Command（Mac）可多選</small>
+              {categoryOptions
+                .filter((category) => !formData.categories.includes(category))
+                .map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className="list-item"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        categories: [...formData.categories, category],
+                      })
+                    }
+                  >
+                    + {category}
+                  </button>
+                ))}
+            </div>
+
+            {/* 右邊：已選分類 */}
+            <div className="list-box">
+              <h4>已選分類</h4>
+
+              {formData.categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className="selected-item"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      categories: formData.categories.filter(
+                        (item) => item !== category,
+                      ),
+                    })
+                  }
+                >
+                  × {category}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
         {/* 圖片 */}
         <div className="form-group">

@@ -18,6 +18,8 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import AdminLayout from './layouts/admin/AdminLayout';
 import Dashboard from './pages/admin/DashBoard';
 
+import AdminAbout from './pages/admin/about/AdminAbout';
+
 import AdminNews from './pages/admin/news/AdminNews';
 import AdminNewsCreate from './pages/admin/news/AdminNewsCreate';
 import AdminNewsEdit from './pages/admin/news/AdminNewsEdit';
@@ -34,6 +36,8 @@ import AdminArtCreate from './pages/admin/arts/AdminArtCreate';
 import AdminArtEdit from './pages/admin/arts/AdminArtEdit';
 import AdminArts from './pages/admin/arts/AdminArts';
 
+import AdminContact from './pages/admin/contact/AdminContact';
+import AdminContactDetail from './pages/admin/contact/AdminContactDetail';
 function App() {
   return (
     <BrowserRouter>
@@ -56,6 +60,9 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
 
+            {/* 關於我們 */}
+            <Route path="about" element={<AdminAbout />} />
+
             {/* 最新消息 */}
             <Route path="news" element={<AdminNews />} />
             <Route path="news/create" element={<AdminNewsCreate />} />
@@ -75,6 +82,10 @@ function App() {
             <Route path="arts" element={<AdminArts />} />
             <Route path="arts/create" element={<AdminArtCreate />} />
             <Route path="arts/edit/:id" element={<AdminArtEdit />} />
+
+            {/* 聯絡我們 */}
+            <Route path="contact" element={<AdminContact />} />
+            <Route path="contact/:id" element={<AdminContactDetail />} />
           </Route>
         </Route>
       </Routes>
