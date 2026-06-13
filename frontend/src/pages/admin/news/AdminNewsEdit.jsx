@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import SummaryEditor from '../../../components/admin/SummaryEditor';
 import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
@@ -99,32 +100,20 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>目前圖片</label>
 
-          <img
-            src={currentImage}
-            alt="原圖"
-            className="preview-image"
-          />
+          <img src={currentImage} alt="原圖" className="preview-image" />
         </div>
 
         {/* 新圖片 */}
         <div className="form-group">
           <label>更換圖片</label>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
             <>
               <p>新圖片預覽：</p>
 
-              <img
-                src={preview}
-                alt="新圖"
-                className="preview-image"
-              />
+              <img src={preview} alt="新圖" className="preview-image" />
             </>
           )}
         </div>
@@ -133,11 +122,14 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>摘要</label>
 
-          <textarea
-            name="summary"
-            rows="3"
+          <SummaryEditor
             value={formData.summary}
-            onChange={handleChange}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                summary: value,
+              })
+            }
           />
         </div>
 
@@ -145,11 +137,14 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>詳細資訊</label>
 
-          <textarea
-            name="content"
-            rows="8"
+          <TextEditor
             value={formData.content}
-            onChange={handleChange}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                content: value,
+              })
+            }
           />
         </div>
 
@@ -162,10 +157,7 @@ function AdminNewsEdit() {
             返回列表
           </button>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-          >
+          <button type="submit" className="btn btn-primary">
             儲存
           </button>
         </div>

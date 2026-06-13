@@ -159,6 +159,66 @@ function Works() {
           </button>
         </section>
 
+        {/* 已套用篩選 */}
+        {(selectedCategories.length > 0 ||
+          selectedAuthors.length > 0 ||
+          search) && (
+          <section className="active-filters">
+            <div className="filter-tags">
+              {/* 分類 */}
+              {selectedCategories.map((category) => (
+                <button
+                  key={category}
+                  className="active-tag"
+                  onClick={() => handleCategoryChange(category)}
+                >
+                  {category}
+                  <span className="tag-remove">×</span>
+                </button>
+              ))}
+
+              {/* 作者 */}
+              {selectedAuthors.map((author) => (
+                <button
+                  key={author}
+                  className="active-tag"
+                  onClick={() => handleAuthorChange(author)}
+                >
+                  {author}
+                  <span className="tag-remove">×</span>
+                </button>
+              ))}
+
+              {/* 搜尋關鍵字 */}
+              {search && (
+                <button
+                  className="active-tag"
+                  onClick={() =>
+                    updateFilters({
+                      keyword: '',
+                      page: 1,
+                    })
+                  }
+                >
+                  搜尋：{search}
+                  <span className="tag-remove">×</span>
+                </button>
+              )}
+            </div>
+
+            <button
+              className="clear-filter-btn"
+              onClick={() =>
+                setSearchParams({
+                  page: '1',
+                })
+              }
+            >
+              清除篩選
+            </button>
+          </section>
+        )}
+
         {/* 篩選 Drawer */}
         {showFilter && (
           <>

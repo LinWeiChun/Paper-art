@@ -1,27 +1,44 @@
+/* ===== 共用欄位 ===== */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
+  color: #333;
 }
 
+/* input、textarea、select 共用 */
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #4b6b4b;
+  box-shadow: 0 0 0 3px rgba(75, 107, 75, 0.1);
+}
+
+/* ===== 圖片 ===== */
 .preview-image {
   width: 250px;
   margin-top: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 
+/* ===== 經歷欄位 ===== */
 .experience-row {
   display: flex;
   gap: 12px;
@@ -30,4 +47,97 @@
 
 .experience-row input {
   flex: 1;
+}
+
+/* ===== 左右選單 ===== */
+.dual-list {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+/* 左右區塊 */
+.list-box {
+  flex: 1;
+  min-height: 250px;
+  padding: 18px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.list-box h4 {
+  margin-bottom: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* 按鈕共用 */
+.list-item,
+.selected-item {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 可選項目 */
+.list-item {
+  background: #f1f1f1;
+  color: #333;
+}
+
+.list-item:hover {
+  background: #e2e2e2;
+}
+
+/* 已選項目 */
+.selected-item {
+  background: #4b6b4b;
+  color: #fff;
+}
+
+.selected-item:hover {
+  background: #395339;
+}
+
+/* ===== 核心價值 ===== */
+.value-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.value-row input:first-child {
+  flex: 1;
+}
+
+.value-row input:nth-child(2) {
+  flex: 2;
+}
+
+/* ===== RWD ===== */
+@media (max-width: 768px) {
+  .dual-list {
+    flex-direction: column;
+  }
+
+  .list-box {
+    min-height: auto;
+  }
+
+  .preview-image {
+    width: 100%;
+  }
+  .value-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

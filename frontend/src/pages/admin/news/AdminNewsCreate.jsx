@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import SummaryEditor from '../../../components/admin/SummaryEditor';
 import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
@@ -78,20 +79,12 @@ function AdminNewsCreate() {
         <div className="form-group">
           <label>上傳圖片</label>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
             <>
               <p>圖片預覽：</p>
-              <img
-                src={preview}
-                alt="預覽"
-                className="preview-image"
-              />
+              <img src={preview} alt="預覽" className="preview-image" />
             </>
           )}
         </div>
@@ -99,22 +92,28 @@ function AdminNewsCreate() {
         <div className="form-group">
           <label>摘要</label>
 
-          <textarea
-            name="summary"
-            rows="3"
+          <SummaryEditor
             value={formData.summary}
-            onChange={handleChange}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                summary: value,
+              })
+            }
           />
         </div>
 
         <div className="form-group">
           <label>詳細資訊</label>
 
-          <textarea
-            name="content"
-            rows="8"
+          <TextEditor
             value={formData.content}
-            onChange={handleChange}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                content: value,
+              })
+            }
           />
         </div>
 

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
@@ -22,6 +22,8 @@ function AdminArtEdit() {
   };
 
   useEffect(() => {
+    console.log('載入資料');
+
     const artData = {
       title: '春之剪影',
       authors: ['王小明', '陳美玲'],
@@ -31,6 +33,10 @@ function AdminArtEdit() {
 
     setFormData(artData);
   }, [id]);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   const handleChange = (e) => {
     setFormData({
@@ -75,57 +81,109 @@ function AdminArtEdit() {
         </div>
 
         {/* 作者 */}
+        {/* 作者 */}
         <div className="form-group">
           <label>作者</label>
 
-          <select
-            multiple
-            value={formData.authors}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                authors: Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                ),
-              })
-            }
-          >
-            {authorOptions.map((author) => (
-              <option key={author} value={author}>
-                {author}
-              </option>
-            ))}
-          </select>
+          <div className="dual-list">
+            {/* 左側：可選作者 */}
+            <div className="list-box">
+              <h4>可選作者</h4>
+              {authorOptions
+                .filter((author) => !formData.authors.includes(author))
+                .map((author) => (
+                  <button
+                    key={author}
+                    type="button"
+                    className="list-item"
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        authors: [...prev.authors, author],
+                      }))
+                    }
+                  >
+                    + {author}
+                  </button>
+                ))}
+            </div>
 
-          <small>按住 Ctrl（Windows）或 Command（Mac）可多選</small>
+            {/* 右側：已選作者 */}
+            <div className="list-box">
+              <h4>已選作者</h4>
+              {formData.authors.map((author) => (
+                <button
+                  key={author}
+                  type="button"
+                  className="selected-item"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      authors: formData.authors.filter(
+                        (item) => item !== author,
+                      ),
+                    })
+                  }
+                >
+                  × {author}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
+        {/* 分類 */}
         {/* 分類 */}
         <div className="form-group">
           <label>分類</label>
 
-          <select
-            multiple
-            value={formData.categories}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                categories: Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                ),
-              })
-            }
-          >
-            {categoryOptions.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          <div className="dual-list">
+            {/* 左側：可選分類 */}
+            <div className="list-box">
+              <h4>可選分類</h4>
 
-          <small>按住 Ctrl（Windows）或 Command（Mac）可多選</small>
+              {categoryOptions
+                .filter((category) => !formData.categories.includes(category))
+                .map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className="list-item"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        categories: [...formData.categories, category],
+                      })
+                    }
+                  >
+                    + {category}
+                  </button>
+                ))}
+            </div>
+
+            {/* 右側：已選分類 */}
+            <div className="list-box">
+              <h4>已選分類</h4>
+
+              {formData.categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className="selected-item"
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      categories: formData.categories.filter(
+                        (item) => item !== category,
+                      ),
+                    })
+                  }
+                >
+                  × {category}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* 原圖 */}
@@ -157,10 +215,10 @@ function AdminArtEdit() {
           <TextEditor
             value={formData.description}
             onChange={(value) =>
-              setFormData({
-                ...formData,
+              setFormData((prev) => ({
+                ...prev,
                 description: value,
-              })
+              }))
             }
           />
         </div>

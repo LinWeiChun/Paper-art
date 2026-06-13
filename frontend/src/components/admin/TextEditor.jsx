@@ -1,13 +1,17 @@
-import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 
 function TextEditor({ value, onChange }) {
   return (
     <CKEditor
       editor={ClassicEditor}
-      data={value}
+      data={value || ''}
       onChange={(event, editor) => {
-        onChange(editor.getData());
+        const data = editor.getData();
+
+        if (data !== value) {
+          onChange(data);
+        }
       }}
     />
   );

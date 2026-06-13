@@ -1,5 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import '../../styles/admin/sidebar.css';
 
@@ -22,6 +21,10 @@ function Sidebar() {
       path: '/admin/users',
     },
     {
+      name: '關於我們',
+      path: '/admin/about',
+    },
+    {
       name: '最新消息',
       path: '/admin/news',
     },
@@ -36,6 +39,10 @@ function Sidebar() {
     {
       name: '作品管理',
       path: '/admin/arts',
+    },
+    {
+      name: '聯絡我們',
+      path: '/admin/contact',
     },
   ];
 
