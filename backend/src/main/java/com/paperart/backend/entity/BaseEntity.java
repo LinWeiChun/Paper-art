@@ -13,12 +13,14 @@ import java.util.UUID;
 public abstract class BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,11 +33,6 @@ public abstract class BaseEntity {
 
     @PrePersist
     protected void onCreate() {
-
-        if (id == null) {
-            id = UUID.randomUUID().toString();
-        }
-
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
