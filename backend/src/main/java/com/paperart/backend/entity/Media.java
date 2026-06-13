@@ -5,21 +5,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
 @Table(name = "media")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Media extends BaseEntity {
 
-    private String url;
+    @Column(nullable = false)
+    private String mediaUrl;
+
+    @Column(nullable = false)
+    private String relatedId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MediaType type;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RelatedType relatedType;
 
-    private String relatedId;
+    @Column(nullable = false)
+    private Integer sortOrder = 0;
 }

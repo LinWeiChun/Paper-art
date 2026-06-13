@@ -6,7 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,23 +19,29 @@ import lombok.Setter;
 @Table(name = "news")
 @Getter
 @Setter
-@NoArgsConstructor
 public class News extends BaseEntity {
 
+    @Column(nullable = false)
     private String title;
 
-    private String coverImage;
-
-    private LocalDate publishDate;
-
-    private Boolean featured = false;
-
-    @Enumerated(EnumType.STRING)
-    private PublishStatus status = PublishStatus.DRAFT;
+    @Column(columnDefinition = "LONGTEXT")
+    private String content;
 
     @Column(columnDefinition = "TEXT")
     private String summary;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String content;
+    @Column(nullable = false)
+    private String coverImage;
+
+    @Column(nullable = false)
+    private Boolean featured = false;
+
+    private LocalDate publishDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PublishStatus status = PublishStatus.DRAFT;
+
+    @Column(nullable = false)
+    private Integer sortOrder = 0;
 }
