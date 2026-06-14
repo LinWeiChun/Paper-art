@@ -1,4 +1,6 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { getNewsById } from '../api/newsApi';
 
 import Layout from '../layouts/Layout';
 import '../styles/pages/newsDetail.css';
@@ -7,55 +9,50 @@ function NewsDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const newsData = {
-    1: {
-      title: '2026 春季剪紙展',
-      date: '2026-03-15',
-      image: '/images/news1.jpg',
-      content: `
-李煥章老師將於 2026 春季舉辦個人剪紙藝術展，
-展出近年代表作品與珍貴收藏。
+  const location = useLocation();
 
-歡迎對傳統藝術有興趣的民眾蒞臨參觀，
-共同感受剪紙藝術的魅力。
-      `,
-    },
+  const page = location.state?.page || 1;
 
-    2: {
-      title: '剪紙藝術體驗課',
-      date: '2026-06-20',
-      image: '/images/news2.jpg',
-      content: `
-本次課程將由老師親自指導，
-帶領學員從基礎開始認識剪紙藝術。
+  const [news, setNews] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-課程適合所有年齡層參加，
-歡迎親子共同報名。
-      `,
-    },
+  useEffect(() => {
+    fetchNews();
+  }, [id]);
 
-    3: {
-      title: '文化傳承講座',
-      date: '2026-08-10',
-      image: '/images/news3.jpg',
-      content: `
-講座將介紹剪紙藝術的歷史發展、
-文化意涵與現代應用。
+  const fetchNews = async () => {
+    try {
+      const response = await getNewsById(id);
 
-歡迎喜愛傳統文化的朋友一同參與交流。
-      `,
-    },
+      setNews(response.data);
+    } catch (error) {
+      console.error('取得最新消息失敗：', error);
+
+      setNews(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const news = newsData[id];
+  // 載入中
+  if (loading) {
+    return (
+      <Layout>
+        <div className="news-detail-container">
+          <h1>載入中...</h1>
+        </div>
+      </Layout>
+    );
+  }
 
+  // 找不到資料
   if (!news) {
     return (
       <Layout>
         <div className="news-detail-container">
           <h1>找不到此消息</h1>
 
-          <button className="back-btn" onClick={() => navigate(-1)}>
+          <button className="back-btn" onClick={() => navigate('/news')}>
             返回最新消息
           </button>
         </div>
@@ -66,16 +63,25 @@ function NewsDetail() {
   return (
     <Layout>
       <div className="news-detail-container">
-        <img src={news.image} alt={news.title} className="news-detail-image" />
+        <img
+          src={news.coverImage || '/images/default-news.jpg'}
+          alt={news.title}
+          className="news-detail-image"
+        />
 
         <div className="news-detail-content">
-          <span className="news-detail-date">{news.date}</span>
+          <span className="news-detail-date">
+            {new Date(news.publishDate).toLocaleDateString('zh-TW')}
+          </span>
 
           <h1>{news.title}</h1>
 
-          <p>{news.content}</p>
-
-          <button className="back-btn" onClick={() => navigate(-1)}>
+          {/* 如果 content 是純文字 */}
+          <div dangerouslySetInnerHTML={{ __html: news.content }} />
+          <button
+            className="back-btn"
+            onClick={() => navigate(`/news?page=${page}`)}
+          >
             ← 返回最新消息
           </button>
         </div>

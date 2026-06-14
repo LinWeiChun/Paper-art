@@ -1,33 +1,75 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { deleteNews, getAllNews } from '../../../api/newsApi';
+import Pagination from '../../../components/common/Pagination';
 
 import '../../../styles/admin/adminTable.css';
 
 function AdminNews() {
   const navigate = useNavigate();
-  const newsList = [
-    {
-      id: 1,
-      title: '2026 春季剪紙展',
-      date: '2026-03-15',
-    },
-    {
-      id: 2,
-      title: '剪紙藝術體驗課',
-      date: '2026-06-20',
-    },
-    {
-      id: 3,
-      title: '文化傳承講座',
-      date: '2026-08-10',
-    },
-  ];
-  const handleDelete = (id) => {
-    console.log(id);
 
-    if (window.confirm('確定刪除？')) {
-      alert('刪除成功');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const ITEMS_PER_PAGE = 10;
+
+  const [newsList, setNewsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1,
+  );
+
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    fetchNews();
+  }, [currentPage]);
+
+  const fetchNews = async () => {
+    try {
+      const response = await getAllNews(currentPage - 1, ITEMS_PER_PAGE);
+
+      setNewsList(response.data.content);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error(error);
+      alert('取得資料失敗');
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+
+    setSearchParams({
+      page,
+    });
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('確定刪除？')) {
+      return;
+    }
+
+    try {
+      await deleteNews(id);
+
+      alert('刪除成功');
+
+      fetchNews();
+    } catch (error) {
+      console.error(error);
+
+      alert('刪除失敗');
+    }
+  };
+
+  if (loading) {
+    return <div>載入中...</div>;
+  }
+
   return (
     <div className="admin-page">
       <div className="admin-page-header">
@@ -44,28 +86,37 @@ function AdminNews() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>標題</th>
             <th>日期</th>
-            <th></th>
+            <th>操作</th>
           </tr>
         </thead>
 
         <tbody>
-          {newsList.map((news) => (
+          {newsList.map((news, index) => (
             <tr key={news.id}>
-              <td>{news.id}</td>
+              <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+
               <td>{news.title}</td>
-              <td>{news.date}</td>
+
+              <td>{news.publishDate}</td>
 
               <td>
                 <div className="action-buttons">
                   <button
                     className="btn btn-edit"
-                    onClick={() => navigate(`/admin/news/edit/${news.id}`)}
+                    onClick={() =>
+                      navigate(`/admin/news/edit/${news.id}`, {
+                        state: {
+                          page: currentPage,
+                        },
+                      })
+                    }
                   >
                     編輯
                   </button>
+
                   <button
                     className="btn btn-delete"
                     onClick={() => handleDelete(news.id)}
@@ -78,6 +129,12 @@ function AdminNews() {
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
