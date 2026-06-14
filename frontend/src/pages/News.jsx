@@ -28,10 +28,9 @@ function News() {
         currentPage - 1,
         9, // 每頁 9 筆
       );
-
-      setNewsList(response.data.content);
-
-      setTotalPages(response.data.totalPages);
+      console.log(response.data);
+      setNewsList(response.data.content || []);
+      setTotalPages(response.data.totalPages || 0);
     } catch (error) {
       console.error('取得最新消息失敗：', error);
     }
@@ -48,7 +47,7 @@ function News() {
 
         {/* News List */}
         <section className="news-list">
-          {newsList.length === 0 ? (
+          {newsList?.length === 0 ? (
             <p>目前沒有最新消息</p>
           ) : (
             newsList.map((item) => (

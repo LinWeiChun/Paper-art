@@ -30,8 +30,9 @@ function AdminNews() {
     try {
       const response = await getAllNews(currentPage - 1, ITEMS_PER_PAGE);
 
-      setNewsList(response.data.content);
-      setTotalPages(response.data.totalPages);
+      console.log(response.data);
+      setNewsList(response.data.content || []);
+      setTotalPages(response.data.totalPages || 0);
     } catch (error) {
       console.error(error);
       alert('取得資料失敗');
