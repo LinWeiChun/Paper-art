@@ -1,13 +1,18 @@
 # frontend
 .vscode/
-node_modules
-dist
+node_modules/
+dist/
 
 # backend
-target
+target/
+
+# Spring Boot properties
+src/main/resources/application-dev.properties
+src/main/resources/application-local.properties
 
 # env
 .env
+.env.*
 
 # system
 .DS_Store

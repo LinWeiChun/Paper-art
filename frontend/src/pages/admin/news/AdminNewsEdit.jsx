@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { getNewsById, updateNews } from '../../../api/newsApi';
 
 import SummaryEditor from '../../../components/admin/SummaryEditor';
 import TextEditor from '../../../components/admin/TextEditor';
+
 import '../../../styles/admin/adminForm.css';
 
 function AdminNewsEdit() {
   const { id } = useParams();
+
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const page = location.state?.page || 1;
+
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -17,28 +27,36 @@ function AdminNewsEdit() {
   });
 
   const [currentImage, setCurrentImage] = useState('');
+
   const [image, setImage] = useState(null);
+
   const [preview, setPreview] = useState(null);
 
-  // 模擬取得舊資料
   useEffect(() => {
-    const newsData = {
-      title: '2026 春季剪紙展',
-      date: '2026-03-15',
-      summary: '展出老師近年代表作品。',
-      content: '詳細內容...',
-      image: '/images/news1.jpg',
-    };
-
-    setFormData({
-      title: newsData.title,
-      date: newsData.date,
-      summary: newsData.summary,
-      content: newsData.content,
-    });
-
-    setCurrentImage(newsData.image);
+    fetchNews();
   }, [id]);
+
+  const fetchNews = async () => {
+    try {
+      const response = await getNewsById(id);
+
+      const newsData = response.data;
+
+      setFormData({
+        title: newsData.title || '',
+        date: newsData.publishDate ? newsData.publishDate.substring(0, 10) : '',
+        summary: newsData.summary || '',
+        content: newsData.content || '',
+      });
+
+      setCurrentImage(newsData.coverImage || '');
+    } catch (error) {
+      console.error(error);
+      alert('取得資料失敗');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -52,20 +70,53 @@ function AdminNewsEdit() {
 
     if (file) {
       setImage(file);
+
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
-    console.log(image);
+    try {
+      const newsData = {
+        title: formData.title,
+        summary: formData.summary,
+        content: formData.content,
+        publishDate: formData.date,
+        status: 'PUBLISHED',
+        featured: false,
+      };
 
-    alert('修改成功');
+      const requestData = new FormData();
 
-    navigate('/admin/news');
+      requestData.append(
+        'news',
+        new Blob([JSON.stringify(newsData)], {
+          type: 'application/json',
+        }),
+      );
+
+      // 有選新圖片才上傳
+      if (image) {
+        requestData.append('image', image);
+      }
+
+      await updateNews(id, requestData);
+
+      alert('修改成功');
+
+      navigate(`/admin/news?page=${page}`);
+    } catch (error) {
+      console.error(error);
+
+      alert('修改失敗');
+    }
   };
+
+  if (loading) {
+    return <div>載入中...</div>;
+  }
 
   return (
     <div className="admin-page">
@@ -100,10 +151,12 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>目前圖片</label>
 
-          <img src={currentImage} alt="原圖" className="preview-image" />
+          {currentImage && (
+            <img src={currentImage} alt="原圖" className="preview-image" />
+          )}
         </div>
 
-        {/* 新圖片 */}
+        {/* 更換圖片 */}
         <div className="form-group">
           <label>更換圖片</label>
 
@@ -152,7 +205,7 @@ function AdminNewsEdit() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/news')}
+            onClick={() => navigate(`/admin/news?page=${page}`)}
           >
             返回列表
           </button>

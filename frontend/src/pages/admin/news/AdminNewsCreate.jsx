@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { createNews } from '../../../api/newsApi';
 import SummaryEditor from '../../../components/admin/SummaryEditor';
 import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminNewsCreate() {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -34,21 +37,45 @@ function AdminNewsCreate() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
+    setLoading(true);
 
-    data.append('title', formData.title);
-    data.append('date', formData.date);
-    data.append('summary', formData.summary);
-    data.append('content', formData.content);
+    try {
+      const news = {
+        title: formData.title,
+        summary: formData.summary,
+        content: formData.content,
+        publishDate: formData.date,
+        status: 'PUBLISHED',
+        featured: false,
+      };
 
-    if (image) {
-      data.append('image', image);
+      const data = new FormData();
+
+      data.append(
+        'news',
+        new Blob([JSON.stringify(news)], {
+          type: 'application/json',
+        }),
+      );
+
+      if (image) {
+        data.append('image', image);
+      }
+
+      await createNews(data);
+
+      alert('新增成功');
+
+      navigate('/admin/news');
+    } catch (error) {
+      console.error(error);
+      alert('新增失敗');
+    } finally {
+      setLoading(false);
     }
-
-    console.log('送出資料');
   };
 
   return (
@@ -58,6 +85,7 @@ function AdminNewsCreate() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>標題</label>
+
           <input
             type="text"
             name="title"
@@ -68,6 +96,7 @@ function AdminNewsCreate() {
 
         <div className="form-group">
           <label>日期</label>
+
           <input
             type="date"
             name="date"
@@ -84,6 +113,7 @@ function AdminNewsCreate() {
           {preview && (
             <>
               <p>圖片預覽：</p>
+
               <img src={preview} alt="預覽" className="preview-image" />
             </>
           )}
@@ -126,8 +156,8 @@ function AdminNewsCreate() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>
