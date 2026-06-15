@@ -1,6 +1,5 @@
 package com.paperart.backend.service;
 
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
