@@ -1,36 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { getAbout, updateAbout } from '../../../api/aboutApi';
 import TextEditor from '../../../components/admin/TextEditor';
+
 import '../../../styles/admin/adminForm.css';
 
 function AdminAbout() {
   const [formData, setFormData] = useState({
-    bannerTitle: '關於我們',
-    bannerSubtitle: '傳承剪紙文化，延續匠人精神',
-
-    storyTitle: '李煥章剪紙藝術',
-
-    storyContent:
-      '李煥章老師長年投入傳統剪紙藝術創作，將民俗文化、吉祥寓意與現代美學融合於作品之中。\n\n剪紙不只是技藝，更是一種文化記憶。我們希望透過作品展示、教育推廣與文化交流，讓更多人認識這門珍貴的傳統藝術。',
-
-    values: [
-      {
-        id: 1,
-        title: '文化傳承',
-        description: '保存傳統剪紙技藝與文化意涵。',
-      },
-      {
-        id: 2,
-        title: '藝術推廣',
-        description: '讓更多人接觸並喜愛剪紙藝術。',
-      },
-      {
-        id: 3,
-        title: '創新發展',
-        description: '結合現代設計，展現剪紙藝術新生命。',
-      },
-    ],
+    bannerTitle: '',
+    bannerSubtitle: '',
+    storyTitle: '',
+    storyContent: '',
+    vision: '',
+    values: [],
   });
+
+  useEffect(() => {
+    fetchAbout();
+  }, []);
+
+  const fetchAbout = async () => {
+    try {
+      const response = await getAbout();
+
+      setFormData(response.data);
+    } catch (error) {
+      console.error(error);
+
+      alert('取得資料失敗');
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -59,6 +58,7 @@ function AdminAbout() {
           id: Date.now(),
           title: '',
           description: '',
+          sortOrder: formData.values.length + 1,
         },
       ],
     });
@@ -71,12 +71,32 @@ function AdminAbout() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    try {
+      const requestData = {
+        bannerTitle: formData.bannerTitle,
+        bannerSubtitle: formData.bannerSubtitle,
+        storyTitle: formData.storyTitle,
+        storyContent: formData.storyContent,
+        vision: formData.vision,
 
-    alert('儲存成功');
+        values: formData.values.map((item, index) => ({
+          title: item.title,
+          description: item.description,
+          sortOrder: index + 1,
+        })),
+      };
+
+      await updateAbout(requestData);
+
+      alert('儲存成功');
+    } catch (error) {
+      console.error(error);
+
+      alert('儲存失敗');
+    }
   };
 
   return (
@@ -85,7 +105,7 @@ function AdminAbout() {
 
       <form onSubmit={handleSubmit}>
         {/* Banner */}
-        <h2>Banner 區塊</h2>
+        {/* <h2>Banner 區塊</h2>
 
         <div className="form-group">
           <label>Banner 標題</label>
@@ -105,7 +125,7 @@ function AdminAbout() {
             value={formData.bannerSubtitle}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         {/* 品牌故事 */}
         <h2>品牌故事</h2>
@@ -134,12 +154,29 @@ function AdminAbout() {
           />
         </div>
 
+        {/* 願景 */}
+        <h2>願景</h2>
+
+        <div className="form-group">
+          <label>願景內容</label>
+
+          <TextEditor
+            value={formData.vision}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                vision: value,
+              })
+            }
+          />
+        </div>
+
         {/* 核心價值 */}
         <h2>核心價值</h2>
 
         <div className="form-group">
           {formData.values.map((item, index) => (
-            <div key={item.id} className="value-row">
+            <div key={item.id || index} className="value-row">
               <input
                 type="text"
                 placeholder="核心價值標題"
@@ -176,6 +213,7 @@ function AdminAbout() {
             ＋ 新增核心價值
           </button>
         </div>
+
         <br />
         <br />
 
