@@ -1,17 +1,15 @@
-import axios from 'axios';
-
-const API_URL = 'https://paper-art-production.up.railway.app/api/news';
+import api from './api';
 
 export const getAllNews = (page = 0, size = 6) => {
-  return axios.get(`${API_URL}?page=${page}&size=${size}`);
+  return api.get(`/news?page=${page}&size=${size}`);
 };
 
 export const getNewsById = (id) => {
-  return axios.get(`${API_URL}/${id}`);
+  return api.get(`/news/${id}`);
 };
 
 export const createNews = (formData) => {
-  return axios.post(API_URL, formData, {
+  return api.post('/news', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -19,7 +17,7 @@ export const createNews = (formData) => {
 };
 
 export const updateNews = (id, formData) => {
-  return axios.put(`${API_URL}/${id}`, formData, {
+  return api.put(`/news/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -27,5 +25,5 @@ export const updateNews = (id, formData) => {
 };
 
 export const deleteNews = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+  return api.delete(`/news/${id}`);
 };
