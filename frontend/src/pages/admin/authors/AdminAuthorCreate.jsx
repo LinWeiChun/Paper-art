@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { createAuthor } from '../../../api/authorsApi';
+
 import TextEditor from '../../../components/admin/TextEditor';
+
 import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorCreate() {
@@ -10,15 +13,13 @@ function AdminAuthorCreate() {
   const [formData, setFormData] = useState({
     name: '',
     title: '',
-    concept: '',
     description: '',
-    experiences: [''],
+    sortOrder: 0,
   });
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  // 一般欄位
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,7 +27,6 @@ function AdminAuthorCreate() {
     });
   };
 
-  // 圖片上傳
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -36,50 +36,20 @@ function AdminAuthorCreate() {
     }
   };
 
-  // 修改經歷
-  const handleExperienceChange = (index, value) => {
-    const updated = [...formData.experiences];
-    updated[index] = value;
-
-    setFormData({
-      ...formData,
-      experiences: updated,
-    });
-  };
-
-  // 新增經歷
-  const addExperience = () => {
-    setFormData({
-      ...formData,
-      experiences: [...formData.experiences, ''],
-    });
-  };
-
-  // 刪除經歷（至少保留一筆）
-  const removeExperience = (index) => {
-    if (formData.experiences.length === 1) return;
-
-    setFormData({
-      ...formData,
-      experiences: formData.experiences.filter((_, i) => i !== index),
-    });
-  };
-
-  // 送出
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      ...formData,
-      experiences: formData.experiences.filter((item) => item.trim() !== ''),
-    };
+    try {
+      await createAuthor(formData, image);
 
-    console.log('作者資料：', data);
-    console.log('圖片：', image);
+      alert('新增成功');
 
-    alert('新增成功');
+      navigate('/admin/authors');
+    } catch (error) {
+      console.error(error);
 
-    navigate('/admin/authors');
+      alert('新增失敗');
+    }
   };
 
   return (
@@ -87,7 +57,7 @@ function AdminAuthorCreate() {
       <h1>新增作者</h1>
 
       <form className="admin-form" onSubmit={handleSubmit}>
-        {/* 作者姓名 */}
+        {/* 姓名 */}
         <div className="form-group">
           <label>作者姓名</label>
 
@@ -111,9 +81,21 @@ function AdminAuthorCreate() {
           />
         </div>
 
-        {/* 作者照片 */}
+        {/* 排序 */}
         <div className="form-group">
-          <label>上傳照片</label>
+          <label>排序</label>
+
+          <input
+            type="number"
+            name="sortOrder"
+            value={formData.sortOrder}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* 圖片 */}
+        <div className="form-group">
+          <label>作者照片</label>
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
 
@@ -126,54 +108,7 @@ function AdminAuthorCreate() {
           )}
         </div>
 
-        {/* 創作理念 */}
-        <div className="form-group">
-          <label>創作理念</label>
-
-          <TextEditor
-            value={formData.concept}
-            onChange={(value) =>
-              setFormData({
-                ...formData,
-                concept: value,
-              })
-            }
-          />
-        </div>
-
-        {/* 重要經歷 */}
-        <div className="form-group">
-          <label>重要經歷</label>
-
-          {formData.experiences.map((item, index) => (
-            <div key={index} className="experience-row">
-              <input
-                type="text"
-                value={item}
-                placeholder="請輸入重要經歷"
-                onChange={(e) => handleExperienceChange(index, e.target.value)}
-              />
-
-              <button
-                type="button"
-                className="btn btn-delete"
-                onClick={() => removeExperience(index)}
-              >
-                刪除
-              </button>
-            </div>
-          ))}
-
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={addExperience}
-          >
-            ＋ 新增經歷
-          </button>
-        </div>
-
-        {/* 作者介紹 */}
+        {/* 介紹 */}
         <div className="form-group">
           <label>作者介紹</label>
 
@@ -188,7 +123,6 @@ function AdminAuthorCreate() {
           />
         </div>
 
-        {/* 按鈕 */}
         <div className="action-buttons">
           <button
             type="button"

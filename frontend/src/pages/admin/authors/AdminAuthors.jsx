@@ -1,31 +1,62 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { deleteAuthor, getAllAuthors } from '../../../api/authorsApi';
+
+import Pagination from '../../../components/common/Pagination';
 import '../../../styles/admin/adminTable.css';
 
 function AdminAuthors() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const authors = [
-    {
-      id: 1,
-      name: '李煥章',
-      title: '傳統剪紙藝術家',
-    },
-    {
-      id: 2,
-      name: '王小明',
-      title: '現代紙雕創作者',
-    },
-    {
-      id: 3,
-      name: '陳美玲',
-      title: '民俗藝術創作者',
-    },
-  ];
+  const ITEMS_PER_PAGE = 10;
 
-  const handleDelete = (id) => {
-    if (window.confirm('確定要刪除此作者嗎？')) {
-      console.log('刪除作者：', id);
+  const [authors, setAuthors] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1,
+  );
+
+  useEffect(() => {
+    fetchAuthors();
+  }, [currentPage]);
+
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage.toString(),
+    });
+  }, [currentPage, setSearchParams]);
+
+  const fetchAuthors = async () => {
+    try {
+      const response = await getAllAuthors(currentPage - 1, ITEMS_PER_PAGE);
+
+      setAuthors(response.data.content);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('取得作者失敗：', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('確定要刪除此作者嗎？')) return;
+
+    try {
+      await deleteAuthor(id);
+
+      alert('刪除成功');
+
+      // 若刪除後當頁沒有資料，可回上一頁
+      if (authors.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      } else {
+        fetchAuthors();
+      }
+    } catch (error) {
+      console.error(error);
+      alert('刪除失敗');
     }
   };
 
@@ -45,18 +76,20 @@ function AdminAuthors() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>#</th>
             <th>姓名</th>
             <th>職稱</th>
-            <th></th>
+            <th>操作</th>
           </tr>
         </thead>
 
         <tbody>
-          {authors.map((author) => (
+          {authors.map((author, index) => (
             <tr key={author.id}>
-              <td>{author.id}</td>
+              <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+
               <td>{author.name}</td>
+
               <td>{author.title}</td>
 
               <td>
@@ -64,7 +97,11 @@ function AdminAuthors() {
                   <button
                     className="btn btn-edit"
                     onClick={() =>
-                      navigate(`/admin/authors/edit/${author.id}`)
+                      navigate(`/admin/authors/edit/${author.id}`, {
+                        state: {
+                          page: currentPage,
+                        },
+                      })
                     }
                   >
                     編輯
@@ -80,8 +117,20 @@ function AdminAuthors() {
               </td>
             </tr>
           ))}
+
+          {authors.length === 0 && (
+            <tr>
+              <td colSpan="5">目前沒有資料</td>
+            </tr>
+          )}
         </tbody>
       </table>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }

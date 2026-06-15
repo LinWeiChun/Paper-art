@@ -1,43 +1,31 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { getAllAuthors } from '../api/authorsApi';
 import Pagination from '../components/common/Pagination';
-import usePagination from '../hooks/usePagination';
 import Layout from '../layouts/Layout';
+
 import '../styles/pages/authors.css';
 
 function Authors() {
-  const authors = [
-    {
-      id: 1,
-      name: '李煥章',
-      image: '/images/author1.jpg',
-      summary: '傳統剪紙藝術家',
-    },
-    {
-      id: 2,
-      name: '王小明',
-      image: '/images/author2.jpg',
-      summary: '現代紙雕創作者',
-    },
-    {
-      id: 3,
-      name: '陳大文',
-      image: '/images/author3.jpg',
-      summary: '民俗剪紙創作者',
-    },
-    {
-      id: 4,
-      name: '林美華',
-      image: '/images/author4.jpg',
-      summary: '紙雕藝術設計師',
-    },
-  ];
+  const [authors, setAuthors] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const {
-    currentPage,
-    totalPages,
-    pagedData: pagedAuthors,
-    handlePageChange,
-  } = usePagination(authors, 6);
+  useEffect(() => {
+    fetchAuthors();
+  }, [currentPage]);
+
+  const fetchAuthors = async () => {
+    try {
+      const response = await getAllAuthors(currentPage - 1, 6);
+
+      setAuthors(response.data.content);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('取得作者失敗：', error);
+    }
+  };
 
   return (
     <Layout>
@@ -48,17 +36,18 @@ function Authors() {
         </section>
 
         <section className="authors-grid">
-          {pagedAuthors.map((author) => (
+          {authors.map((author) => (
             <Link
               key={author.id}
               to={`/authors/${author.id}`}
               className="author-card"
             >
-              <img src={author.image} alt={author.name} />
+              <img src={author.avatarUrl} alt={author.name} />
 
               <div className="author-card-content">
                 <h2>{author.name}</h2>
-                <p>{author.summary}</p>
+
+                <p>{author.title}</p>
               </div>
             </Link>
           ))}
@@ -67,7 +56,7 @@ function Authors() {
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={setCurrentPage}
         />
       </div>
     </Layout>
