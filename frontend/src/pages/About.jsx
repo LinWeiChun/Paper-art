@@ -62,7 +62,12 @@ function About() {
         {about.vision && (
           <section className="about-vision">
             <h2>願景</h2>
-            <p>{about.vision}</p>
+            <p>
+              dangerouslySetInnerHTML=
+              {{
+                __html: about.vision,
+              }}
+            </p>
           </section>
         )}
 
