@@ -1,21 +1,31 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { createCategory } from '../../../api/categoryApi';
 import '../../../styles/admin/adminForm.css';
 
 function AdminCategoryCreate() {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
+  const [sortOrder, setSortOrder] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(name);
+    try {
+      await createCategory({
+        name,
+        sortOrder,
+      });
 
-    alert('新增成功');
+      alert('新增成功');
 
-    navigate('/admin/categories');
+      navigate('/admin/categories');
+    } catch (error) {
+      console.error(error);
+      alert('新增失敗');
+    }
   };
 
   return (
@@ -30,6 +40,17 @@ function AdminCategoryCreate() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>排序</label>
+
+          <input
+            type="number"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(Number(e.target.value))}
           />
         </div>
 
