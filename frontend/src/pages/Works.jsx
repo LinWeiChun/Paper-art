@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-
 import Pagination from '../components/common/Pagination';
+import { useRental } from '../contexts/RentalContext';
 import works from '../data/works';
 import usePagination from '../hooks/usePagination';
 import Layout from '../layouts/Layout';
@@ -22,7 +22,7 @@ function Works() {
   const selectedAuthors = searchParams.getAll('author');
 
   const [showFilter, setShowFilter] = useState(false);
-
+  const { rentalList, addToRental, removeFromRental, isInRental } = useRental();
   useEffect(() => {
     setSearchInput(search);
   }, [search]);
@@ -127,6 +127,7 @@ function Works() {
     pagedData: pagedWorks,
     handlePageChange: changePage,
   } = usePagination(filteredWorks, 12);
+
   return (
     <Layout>
       <div className="works-container">
@@ -295,29 +296,42 @@ function Works() {
         {/* 作品列表 */}
         <section className="works-grid">
           {pagedWorks.map((work) => (
-            <Link
-              key={work.id}
-              to={`/works/${work.id}`}
-              className="work-card"
-              state={{
-                from: location.pathname + location.search,
-                scrollY: window.scrollY,
-              }}
-            >
-              <img src={work.image} alt={work.title} />
+            <div className="work-card-wrapper" key={work.id}>
+              <button
+                className={`add-rental-btn ${
+                  isInRental(work.id) ? 'added' : ''
+                }`}
+                disabled={isInRental(work.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  addToRental(work);
+                }}
+              >
+                {isInRental(work.id) ? '已加入' : '＋ 租借'}
+              </button>
+              <Link
+                to={`/works/${work.id}`}
+                className="work-card"
+                state={{
+                  from: location.pathname + location.search,
+                  scrollY: window.scrollY,
+                }}
+              >
+                <img src={work.image} alt={work.title} />
 
-              <div className="work-content">
-                <h3>{work.title}</h3>
+                <div className="work-content">
+                  <h3>{work.title}</h3>
 
-                <p>{work.authors.join('、')}</p>
+                  <p>{work.authors.join('、')}</p>
 
-                <div className="work-tags">
-                  {work.categories.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
+                  <div className="work-tags">
+                    {work.categories.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </section>
         <Pagination

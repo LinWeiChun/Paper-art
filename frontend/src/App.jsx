@@ -10,6 +10,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
+import Rental from './pages/Rental';
+import RentalRequest from './pages/RentalRequest';
+import RentalWorks from './pages/RentalWorks';
 import WorkDetail from './pages/WorkDetail';
 import Works from './pages/Works';
 
@@ -52,9 +55,11 @@ function App() {
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/works" element={<Works />} />
         <Route path="/works/:id" element={<WorkDetail />} />
+        <Route path="/rental" element={<Rental />} />
+        <Route path="/rental/works" element={<RentalWorks />} />
+        <Route path="/rental/request" element={<RentalRequest />} />
 
         {/* 後台 */}
-
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />}>

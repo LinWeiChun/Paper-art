@@ -1,0 +1,11 @@
+.floating-buttons {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  z-index: 999;
+}
