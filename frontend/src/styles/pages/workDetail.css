@@ -9,11 +9,13 @@
   align-items: center;
 }
 
+/* ===== 左側圖片 ===== */
 .detail-image img {
   width: 100%;
   border-radius: 12px;
 }
 
+/* ===== 右側內容 ===== */
 .detail-content h1 {
   color: #b22222;
   margin-bottom: 20px;
@@ -23,6 +25,7 @@
   margin-bottom: 15px;
 }
 
+/* ===== 標籤 ===== */
 .detail-tags {
   display: flex;
   flex-wrap: wrap;
@@ -36,6 +39,7 @@
   border-radius: 20px;
 }
 
+/* ===== 作品介紹 ===== */
 .detail-description {
   margin-top: 30px;
 }
@@ -45,30 +49,76 @@
   margin-bottom: 10px;
 }
 
-.back-btn {
-  display: inline-block;
-  margin-top: 30px;
-
-  background: #b22222;
-  color: white;
-
-  padding: 12px 24px;
-  border-radius: 8px;
-
-  text-decoration: none;
+/* ===== 按鈕區 ===== */
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+  align-items: center;
 }
 
+/* 共用按鈕 */
+.detail-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  color: white;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+/* 一般按鈕 */
+.rental-btn,
+.back-btn {
+  background: #b22222;
+}
+
+.rental-btn:hover,
 .back-btn:hover {
   background: #8b1a1a;
 }
 
+/* 已加入租借 */
+.rental-btn.added {
+  background: #2e8b57;
+  cursor: default;
+}
+
+.rental-btn.added:hover {
+  background: #2e8b57;
+}
+
+/* disabled 狀態避免瀏覽器自動變灰 */
+.rental-btn.added:disabled {
+  opacity: 1;
+  background: #2e8b57;
+  color: white;
+}
+
+/* ===== 找不到作品 ===== */
 .not-found {
   text-align: center;
   padding: 100px 20px;
 }
 
+/* ===== RWD ===== */
 @media (max-width: 768px) {
   .detail-container {
     grid-template-columns: 1fr;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-actions button {
+    width: 100%;
   }
 }

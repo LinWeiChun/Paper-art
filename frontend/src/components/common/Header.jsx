@@ -37,24 +37,38 @@ function Header() {
           <span />
           <span />
         </button>
-
         <nav className={`nav-bar ${menuOpen ? 'open' : ''}`}>
           <ul>
             <li>
               <Link to="/">首頁</Link>
             </li>
+
             <li>
               <Link to="/about">關於我們</Link>
             </li>
+
             <li>
               <Link to="/news">最新消息</Link>
             </li>
+
             <li>
               <Link to="/authors">作者介紹</Link>
             </li>
-            <li>
-              <Link to="/works">作品集</Link>
+            {/* 下拉選單 */}
+            <li className="dropdown">
+              <span>作品專區</span>
+
+              <ul className="dropdown-menu">
+                <li>
+                  <Link to="/works">作品集</Link>
+                </li>
+
+                <li>
+                  <Link to="/rental">作品租借</Link>
+                </li>
+              </ul>
             </li>
+
             <li>
               <Link to="/contact">聯絡我們</Link>
             </li>

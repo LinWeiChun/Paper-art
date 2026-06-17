@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-
+import { useRental } from '../contexts/RentalContext';
 import works from '../data/works';
 import Layout from '../layouts/Layout';
 import '../styles/pages/workDetail.css';
@@ -7,6 +7,7 @@ import '../styles/pages/workDetail.css';
 function WorkDetail() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { addToRental, isInRental } = useRental();
   const { id } = useParams();
   const handleBack = () => {
     navigate(location.state?.from || '/works', {
@@ -61,9 +62,21 @@ function WorkDetail() {
 
             <p>{work.description}</p>
           </div>
-          <button className="back-btn" onClick={handleBack}>
-            前往作品集
-          </button>
+          <div className="detail-actions">
+            {isInRental(work.id) ? (
+              <button className="rental-btn added" disabled>
+                ✓ 已加入租借清單
+              </button>
+            ) : (
+              <button className="rental-btn" onClick={() => addToRental(work)}>
+                ＋ 加入租借清單
+              </button>
+            )}
+
+            <button className="back-btn" onClick={handleBack}>
+              返回作品集
+            </button>
+          </div>
         </div>
       </div>
     </Layout>
