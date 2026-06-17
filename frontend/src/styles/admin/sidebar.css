@@ -9,17 +9,17 @@
   flex-direction: column;
 }
 
+/* Logo */
 .sidebar-logo {
   padding: 30px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Menu */
 .sidebar-menu {
   flex: 1;
-
   display: flex;
   flex-direction: column;
-
   padding: 20px 0;
 }
 
@@ -27,13 +27,15 @@
   list-style: none;
 }
 
+/* 一般連結 */
 .sidebar-menu a {
   display: block;
-  padding: 15px 25px;
+  padding: 14px 24px;
 
   color: white;
+  text-decoration: none;
 
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .sidebar-menu a:hover {
@@ -43,10 +45,48 @@
 .sidebar-menu a.active {
   background: white;
   color: #b22222;
-  font-weight: bold;
+  font-weight: 700;
 }
 
-/* 登出固定最底部 */
+/* 群組 */
+.sidebar-group {
+  margin-top: 12px;
+}
+
+/* 群組標題 */
+.sidebar-group-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 24px;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: 0.3s;
+}
+
+.sidebar-group-title:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+/* 子選單 */
+.sidebar-submenu {
+  margin-top: 4px;
+}
+
+.sidebar-submenu a {
+  padding-left: 48px;
+  font-size: 15px;
+}
+
+/* 登出固定底部 */
 .logout-item {
   margin-top: auto;
 }
@@ -56,14 +96,15 @@
 
   padding: 15px 25px;
 
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+  color: white;
+  font-size: 1rem;
   text-align: left;
 
-  background: transparent;
-  color: white;
-
-  font-size: 1rem;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 
   transition: 0.3s;
 }

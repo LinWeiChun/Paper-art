@@ -1,48 +1,53 @@
+import { useState } from 'react';
+import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
 import '../../styles/admin/sidebar.css';
 
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [openMenus, setOpenMenus] = useState({
+    網站內容: true,
+    租借管理: false,
+    系統管理: false,
+  });
+
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     navigate('/login');
   };
 
+  const toggleMenu = (title) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
   const menus = [
     {
-      name: 'Dashboard',
-      path: '/admin',
+      title: '網站內容',
+      items: [
+        { name: '首頁輪播', path: '/admin/banners' },
+        { name: '關於我們', path: '/admin/about' },
+        { name: '最新消息', path: '/admin/news' },
+        { name: '作者管理', path: '/admin/authors' },
+        { name: '分類管理', path: '/admin/categories' },
+        { name: '作品管理', path: '/admin/arts' },
+        { name: '聯絡我們', path: '/admin/contact' },
+      ],
     },
     {
-      name: '使用者管理',
-      path: '/admin/users',
+      title: '表單填寫',
+      items: [
+        { name: '聯絡訊息', path: '/admin/contact-message' },
+        { name: '租借申請', path: '/admin/rentals' },
+      ],
     },
     {
-      name: '關於我們',
-      path: '/admin/about',
-    },
-    {
-      name: '最新消息',
-      path: '/admin/news',
-    },
-    {
-      name: '作者管理',
-      path: '/admin/authors',
-    },
-    {
-      name: '分類管理',
-      path: '/admin/categories',
-    },
-    {
-      name: '作品管理',
-      path: '/admin/arts',
-    },
-    {
-      name: '聯絡我們',
-      path: '/admin/contact',
+      title: '系統管理',
+      items: [{ name: '使用者管理', path: '/admin/users' }],
     },
   ];
 
@@ -53,14 +58,42 @@ function Sidebar() {
       </div>
 
       <ul className="sidebar-menu">
-        {menus.map((menu) => (
-          <li key={menu.path}>
-            <Link
-              to={menu.path}
-              className={location.pathname === menu.path ? 'active' : ''}
+        <li>
+          <Link
+            to="/admin"
+            className={location.pathname === '/admin' ? 'active' : ''}
+          >
+            Dashboard
+          </Link>
+        </li>
+
+        {menus.map((group) => (
+          <li key={group.title} className="sidebar-group">
+            <div
+              className="sidebar-group-title"
+              onClick={() => toggleMenu(group.title)}
             >
-              {menu.name}
-            </Link>
+              <span>{group.title}</span>
+
+              {openMenus[group.title] ? <FiChevronDown /> : <FiChevronRight />}
+            </div>
+
+            {openMenus[group.title] && (
+              <ul className="sidebar-submenu">
+                {group.items.map((menu) => (
+                  <li key={menu.path}>
+                    <Link
+                      to={menu.path}
+                      className={
+                        location.pathname.startsWith(menu.path) ? 'active' : ''
+                      }
+                    >
+                      {menu.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
 
