@@ -55,3 +55,8 @@ export const updateArt = (id, art, thumbnail) => {
 export const deleteArt = (id) => {
   return api.delete(`/arts/${id}`);
 };
+
+// 精選作品
+export const getFeaturedArts = () => {
+  return api.get('/arts/featured');
+};

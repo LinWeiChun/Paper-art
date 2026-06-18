@@ -194,6 +194,15 @@ public class ArtServiceImpl implements ArtService {
         artRepository.deleteById(id);
     }
 
+    @Override
+    public List<ArtResponse> getFeaturedArts() {
+        return artRepository
+                .findByFeaturedTrueOrderBySortOrderAsc()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    
     /**
      * Entity → Response
      */

@@ -68,4 +68,11 @@ public class ArtController {
     public void delete(@PathVariable String id) {
         artService.delete(id);
     }
+    
+    @GetMapping("/featured")
+    public ResponseEntity<List<ArtResponse>> getFeaturedArts() {
+        return ResponseEntity.ok(
+                artService.getFeaturedArts()
+        );
+    }
 }

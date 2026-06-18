@@ -26,4 +26,6 @@ public interface ArtService {
             MultipartFile thumbnail);
 
     void delete(String id);
+    
+    public List<ArtResponse> getFeaturedArts();
 }
