@@ -42,23 +42,17 @@ function Dashboard() {
       <div className="dashboard-cards">
         <div className="dashboard-card">
           <h3>作品數量</h3>
-          <p>
-            <CountUp end={dashboard.artCount} duration={1.5} />
-          </p>
+          <p>{dashboard.artCount}</p>
         </div>
 
         <div className="dashboard-card">
           <h3>作者數量</h3>
-          <p>
-            <CountUp end={dashboard.authorCount} duration={1.5} />
-          </p>
+          <p>{dashboard.authorCount}</p>
         </div>
 
         <div className="dashboard-card">
           <h3>消息數量</h3>
-          <p>
-            <CountUp end={dashboard.newsCount} duration={1.5} />
-          </p>
+          <p>{dashboard.newsCount}</p>
         </div>
       </div>
 
