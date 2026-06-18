@@ -1,5 +1,7 @@
 package com.paperart.backend.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,19 +9,18 @@ import com.paperart.backend.dto.request.AuthorRequest;
 import com.paperart.backend.dto.response.AuthorResponse;
 
 public interface AuthorService {
-	
-	Page<AuthorResponse> getAllAuthors(int page, int size);
 
-    AuthorResponse getAuthorById(String id);
+    // 全部作者
+    List<AuthorResponse> getAll();
 
-    AuthorResponse createAuthor(
-            AuthorRequest request,
-            MultipartFile avatar);
+    // 分頁作者
+    Page<AuthorResponse> getAll(int page, int size);
 
-    AuthorResponse updateAuthor(
-            String id,
-            AuthorRequest request,
-            MultipartFile avatar);
+    AuthorResponse getById(String id);
 
-    void deleteAuthor(String id);
+    AuthorResponse create(AuthorRequest request, MultipartFile avatar);
+
+    AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar);
+
+    void delete(String id);
 }

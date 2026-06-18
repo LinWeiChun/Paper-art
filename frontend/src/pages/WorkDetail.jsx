@@ -1,14 +1,23 @@
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { getArtById } from '../api/artApi';
 import { useRental } from '../contexts/RentalContext';
-import works from '../data/works';
 import Layout from '../layouts/Layout';
+
 import '../styles/pages/workDetail.css';
 
 function WorkDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { addToRental, isInRental } = useRental();
   const { id } = useParams();
+
+  const { addToRental, isInRental } = useRental();
+
+  const [work, setWork] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 返回作品列表
   const handleBack = () => {
     navigate(location.state?.from || '/works', {
       state: {
@@ -16,13 +25,45 @@ function WorkDetail() {
       },
     });
   };
-  const work = works.find((item) => item.id === Number(id));
 
+  // 取得作品資料
+  useEffect(() => {
+    fetchWork();
+  }, [id]);
+
+  const fetchWork = async () => {
+    try {
+      setLoading(true);
+
+      const response = await getArtById(id);
+
+      setWork(response.data);
+    } catch (error) {
+      console.error('取得作品失敗：', error);
+      setWork(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 載入中
+  if (loading) {
+    return (
+      <Layout>
+        <div className="detail-container">
+          <p>載入中...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // 找不到資料
   if (!work) {
     return (
       <Layout>
         <div className="not-found">
           <h2>找不到作品</h2>
+
           <button className="back-btn" onClick={handleBack}>
             前往作品集
           </button>
@@ -34,34 +75,44 @@ function WorkDetail() {
   return (
     <Layout>
       <div className="detail-container">
+        {/* 左側圖片 */}
         <div className="detail-image">
-          <img src={work.image} alt={work.title} />
+          <img src={work.thumbnail} alt={work.title} />
         </div>
 
+        {/* 右側內容 */}
         <div className="detail-content">
           <h1>{work.title}</h1>
 
           <p>
             <strong>作者：</strong>
-            {work.authors.join('、')}
+            {work.authors?.map((author) => author.name).join('、')}
           </p>
 
           <p>
             <strong>年份：</strong>
-            {work.year}
+            {work.year || '未提供'}
           </p>
 
+          {/* 分類 */}
           <div className="detail-tags">
-            {work.categories.map((tag) => (
-              <span key={tag}>{tag}</span>
+            {work.categories?.map((category) => (
+              <span key={category.id}>{category.name}</span>
             ))}
           </div>
 
+          {/* 作品介紹 */}
           <div className="detail-description">
             <h3>作品介紹</h3>
 
-            <p>{work.description}</p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: work.description || '',
+              }}
+            />
           </div>
+
+          {/* 按鈕 */}
           <div className="detail-actions">
             {isInRental(work.id) ? (
               <button className="rental-btn added" disabled>

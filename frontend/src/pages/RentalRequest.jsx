@@ -33,14 +33,15 @@ function RentalRequest() {
 
     console.log({
       ...formData,
-      works: rentalList,
+
+      // 只送作品 id 即可
+      artIds: rentalList.map((work) => work.id),
     });
 
     alert('租借申請已送出');
 
     clearRental();
-
-    navigate('/');
+    navigate('/rental');
   };
 
   return (
@@ -138,12 +139,14 @@ function RentalRequest() {
 
             {rentalList.map((work) => (
               <div className="selected-work-item" key={work.id}>
-                <img src={work.image} alt={work.title} />
+                <img src={work.thumbnail} alt={work.title} />
 
                 <div>
                   <h3>{work.title}</h3>
-                  <p>{work.authors.join('、')}</p>
-                  <p>{work.year}</p>
+
+                  <p>{work.authors?.map((author) => author.name).join('、')}</p>
+
+                  <p>{work.year || '未提供'}</p>
                 </div>
               </div>
             ))}

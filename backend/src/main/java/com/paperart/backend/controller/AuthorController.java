@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,19 +29,26 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
+    // 前台
     @GetMapping
-    public Page<AuthorResponse> getAllAuthors(
+    public List<AuthorResponse> getAll() {
+        return authorService.getAll();
+    }
+
+    // 分頁
+    @GetMapping("/page")
+    public ResponseEntity<Page<AuthorResponse>> getPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return authorService.getAllAuthors(page, size);
+        return ResponseEntity.ok(
+                authorService.getAll(page, size));
     }
-
     @GetMapping("/{id}")
     public AuthorResponse getAuthorById(
             @PathVariable String id) {
 
-        return authorService.getAuthorById(id);
+        return authorService.getById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -52,7 +60,7 @@ public class AuthorController {
             @RequestPart(value = "avatar", required = false)
             MultipartFile avatar) {
 
-        return authorService.createAuthor(request, avatar);
+        return authorService.create(request, avatar);
     }
 
     @PutMapping(value = "/{id}",
@@ -67,13 +75,13 @@ public class AuthorController {
             @RequestPart(value = "avatar", required = false)
             MultipartFile avatar) {
 
-        return authorService.updateAuthor(id, request, avatar);
+        return authorService.update(id, request, avatar);
     }
 
     @DeleteMapping("/{id}")
     public void deleteAuthor(
             @PathVariable String id) {
 
-        authorService.deleteAuthor(id);
+        authorService.delete(id);
     }
 }

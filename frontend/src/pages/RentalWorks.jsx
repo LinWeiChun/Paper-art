@@ -14,9 +14,8 @@ function RentalWorks() {
         {/* Banner */}
         <section className="page-banner rental-banner">
           <h1>租借清單</h1>
-          <p>
-            已選擇 {rentalList.length === 0 ? '0' : rentalList.length} 件作品
-          </p>
+
+          <p>已選擇 {rentalList.length} 件作品</p>
         </section>
 
         {rentalList.length === 0 ? (
@@ -29,17 +28,33 @@ function RentalWorks() {
           </div>
         ) : (
           <>
+            {/* 作品列表 */}
             <section className="rental-list">
               {rentalList.map((work) => (
                 <div className="rental-item" key={work.id}>
-                  <img src={work.image} alt={work.title} />
+                  <img src={work.thumbnail} alt={work.title} />
 
                   <div className="rental-info">
                     <h3>{work.title}</h3>
 
-                    <p>作者：{work.authors.join('、')}</p>
+                    <p>
+                      作者：
+                      {work.authors?.map((author) => author.name).join('、')}
+                    </p>
 
-                    <p>年份：{work.year}</p>
+                    <p>
+                      年份：
+                      {work.year || '未提供'}
+                    </p>
+
+                    {/* 分類 */}
+                    {work.categories?.length > 0 && (
+                      <div className="rental-tags">
+                        {work.categories.map((category) => (
+                          <span key={category.id}>{category.name}</span>
+                        ))}
+                      </div>
+                    )}
 
                     <button
                       className="remove-btn"
@@ -52,10 +67,9 @@ function RentalWorks() {
               ))}
             </section>
 
+            {/* Footer */}
             <div className="rental-footer">
-              <p>
-                共 {rentalList.length === 0 ? '0' : rentalList.length} 件作品
-              </p>
+              <p>共 {rentalList.length} 件作品</p>
 
               <div className="rental-actions">
                 <Link to="/works" className="action-btn secondary">

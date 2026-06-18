@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { getArts } from '../api/artApi';
 import Pagination from '../components/common/Pagination';
 import { useRental } from '../contexts/RentalContext';
-import works from '../data/works';
-import usePagination from '../hooks/usePagination';
+import useAuthors from '../hooks/useAuthors';
+import useCategories from '../hooks/useCategories';
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/works.css';
@@ -14,19 +15,42 @@ function Works() {
   const location = useLocation();
   const toolbarRef = useRef(null);
 
+  /* ===== Hooks ===== */
+  const { categories, loading } = useCategories();
+  const { authors, loading: authorLoading } = useAuthors();
+  const { addToRental, isInRental } = useRental();
+
+  /* ===== URL 參數 ===== */
   const search = searchParams.get('search') || '';
-
-  const [searchInput, setSearchInput] = useState(search);
-
   const selectedCategories = searchParams.getAll('category');
   const selectedAuthors = searchParams.getAll('author');
 
+  /* ===== State ===== */
+  const [searchInput, setSearchInput] = useState(search);
   const [showFilter, setShowFilter] = useState(false);
-  const { rentalList, addToRental, removeFromRental, isInRental } = useRental();
+  const [works, setWorks] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const fetchWorks = async () => {
+    try {
+      const response = await getArts(currentPage - 1, 12);
+
+      setWorks(response.data.content || []);
+      setTotalPages(response.data.totalPages || 0);
+    } catch (error) {
+      console.error('取得作品失敗：', error);
+    }
+  };
+  /* ===== useEffect ===== */
+
+  // 搜尋欄同步 URL
   useEffect(() => {
     setSearchInput(search);
   }, [search]);
-  // 保留返回時的 scrollY
+
+  // 返回列表時恢復捲動位置
   useEffect(() => {
     if (location.state?.scrollY !== undefined) {
       window.scrollTo({
@@ -36,7 +60,11 @@ function Works() {
     }
   }, [location.state]);
 
-  // 更新 URL
+  useEffect(() => {
+    fetchWorks();
+  }, [currentPage]);
+
+  /* ===== 更新 URL ===== */
   const updateFilters = ({
     categories = selectedCategories,
     authors = selectedAuthors,
@@ -45,12 +73,12 @@ function Works() {
   }) => {
     const params = new URLSearchParams();
 
-    categories.forEach((c) => {
-      params.append('category', c);
+    categories.forEach((category) => {
+      params.append('category', category);
     });
 
-    authors.forEach((a) => {
-      params.append('author', a);
+    authors.forEach((author) => {
+      params.append('author', author);
     });
 
     if (keyword.trim()) {
@@ -62,7 +90,7 @@ function Works() {
     setSearchParams(params);
   };
 
-  // 分類
+  /* ===== 分類切換 ===== */
   const handleCategoryChange = (category) => {
     const updated = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
@@ -75,7 +103,7 @@ function Works() {
     });
   };
 
-  // 作者
+  /* ===== 作者切換 ===== */
   const handleAuthorChange = (author) => {
     const updated = selectedAuthors.includes(author)
       ? selectedAuthors.filter((a) => a !== author)
@@ -88,9 +116,27 @@ function Works() {
     });
   };
 
-  // 分頁
+  /* ===== 篩選作品 ===== */
+  const filteredWorks = works.filter((work) => {
+    const matchSearch = work.title.toLowerCase().includes(search.toLowerCase());
+
+    const matchCategory =
+      selectedCategories.length === 0 ||
+      selectedCategories.some((category) =>
+        work.categories?.some((c) => c.name === category),
+      );
+
+    const matchAuthor =
+      selectedAuthors.length === 0 ||
+      selectedAuthors.some((author) =>
+        work.authors?.some((a) => a.name === author),
+      );
+
+    return matchSearch && matchCategory && matchAuthor;
+  });
+  /* ===== 分頁 ===== */
   const handlePageChange = (page) => {
-    changePage(page);
+    updateFilters({ page });
 
     const y =
       toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
@@ -100,33 +146,6 @@ function Works() {
       behavior: 'smooth',
     });
   };
-
-  // 分類清單
-  const categories = [...new Set(works.flatMap((work) => work.categories))];
-
-  // 作者清單
-  const authors = [...new Set(works.flatMap((work) => work.authors))];
-
-  // 篩選
-  const filteredWorks = works.filter((work) => {
-    const matchSearch = work.title.toLowerCase().includes(search.toLowerCase());
-
-    const matchCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.some((category) => work.categories.includes(category));
-
-    const matchAuthor =
-      selectedAuthors.length === 0 ||
-      selectedAuthors.some((author) => work.authors.includes(author));
-
-    return matchSearch && matchCategory && matchAuthor;
-  });
-  const {
-    currentPage,
-    totalPages,
-    pagedData: pagedWorks,
-    handlePageChange: changePage,
-  } = usePagination(filteredWorks, 12);
 
   return (
     <Layout>
@@ -194,12 +213,13 @@ function Works() {
               {search && (
                 <button
                   className="active-tag"
-                  onClick={() =>
-                    updateFilters({
-                      keyword: '',
-                      page: 1,
-                    })
-                  }
+                  onClick={() => {
+                    setSearchInput('');
+
+                    setSearchParams({
+                      page: '1',
+                    });
+                  }}
                 >
                   搜尋：{search}
                   <span className="tag-remove">×</span>
@@ -209,11 +229,13 @@ function Works() {
 
             <button
               className="clear-filter-btn"
-              onClick={() =>
+              onClick={() => {
+                setSearchInput('');
+
                 setSearchParams({
                   page: '1',
-                })
-              }
+                });
+              }}
             >
               清除篩選
             </button>
@@ -240,34 +262,36 @@ function Works() {
               <div className="filter-group">
                 <h3>分類</h3>
 
-                {categories.map((category) => (
-                  <label key={category} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => handleCategoryChange(category)}
-                    />
+                {!loading &&
+                  categories.map((category) => (
+                    <label key={category.id} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category.name)}
+                        onChange={() => handleCategoryChange(category.name)}
+                      />
 
-                    <span>{category}</span>
-                  </label>
-                ))}
+                      <span>{category.name}</span>
+                    </label>
+                  ))}
               </div>
 
               {/* 作者 */}
               <div className="filter-group">
                 <h3>作者</h3>
 
-                {authors.map((author) => (
-                  <label key={author} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={selectedAuthors.includes(author)}
-                      onChange={() => handleAuthorChange(author)}
-                    />
+                {!authorLoading &&
+                  authors.map((author) => (
+                    <label key={author.id} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedAuthors.includes(author.name)}
+                        onChange={() => handleAuthorChange(author.name)}
+                      />
 
-                    <span>{author}</span>
-                  </label>
-                ))}
+                      <span>{author.name}</span>
+                    </label>
+                  ))}
               </div>
 
               <div className="filter-actions">
@@ -295,7 +319,7 @@ function Works() {
 
         {/* 作品列表 */}
         <section className="works-grid">
-          {pagedWorks.map((work) => (
+          {filteredWorks.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
               <button
                 className={`add-rental-btn ${
@@ -317,16 +341,14 @@ function Works() {
                   scrollY: window.scrollY,
                 }}
               >
-                <img src={work.image} alt={work.title} />
+                <img src={work.thumbnail} alt={work.title} />
 
                 <div className="work-content">
                   <h3>{work.title}</h3>
-
-                  <p>{work.authors.join('、')}</p>
-
+                  <p>{work.authors?.map((author) => author.name).join('、')}</p>
                   <div className="work-tags">
-                    {work.categories.map((tag) => (
-                      <span key={tag}>{tag}</span>
+                    {work.categories?.map((category) => (
+                      <span key={category.id}>{category.name}</span>
                     ))}
                   </div>
                 </div>

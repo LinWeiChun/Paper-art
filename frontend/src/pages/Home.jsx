@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import works from '../data/works';
+
+import { getFeaturedArts } from '../api/artApi';
 import Layout from '../layouts/Layout';
+
 import '../styles/pages/home.css';
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [current, setCurrent] = useState(0);
+  const [featuredWorks, setFeaturedWorks] = useState([]);
 
-  // 🔥 輪播圖片
+  // Hero 輪播
   const slides = [
     {
       image: '/images/slide1.jpg',
@@ -34,7 +37,22 @@ function Home() {
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, []);
+
+  // 取得精選作品
+  useEffect(() => {
+    fetchFeaturedWorks();
+  }, []);
+
+  const fetchFeaturedWorks = async () => {
+    try {
+      const response = await getFeaturedArts();
+
+      setFeaturedWorks(response.data || []);
+    } catch (error) {
+      console.error('取得精選作品失敗：', error);
+    }
+  };
 
   return (
     <Layout>
@@ -43,7 +61,7 @@ function Home() {
           <div className="overlay" onClick={() => setMenuOpen(false)} />
         )}
 
-        {/* 🔥 Hero 輪播 */}
+        {/* Hero */}
         <section className="hero-section" id="home">
           {slides.map((slide, index) => (
             <img
@@ -61,27 +79,30 @@ function Home() {
           </div>
         </section>
 
-        {/* 🔥 精選作品 */}
+        {/* 精選作品 */}
         <section className="works-section" id="works">
           <h2 className="section-title">精選作品</h2>
+
           <p className="section-subtitle">傳統與藝術的結合</p>
 
           <div className="works-grid">
-            {works.map((work) => (
+            {featuredWorks.map((work) => (
               <Link
+                key={work.id}
                 to={`/works/${work.id}`}
                 className="work-card"
-                key={work.id}
               >
-                <img src={work.image} alt={work.title} />
+                <img src={work.thumbnail} alt={work.title} />
 
                 <div className="work-content">
                   <h3>{work.title}</h3>
-                  <p>{work.desc}</p>
+
+                  <p>{work.authors?.map((author) => author.name).join('、')}</p>
                 </div>
               </Link>
             ))}
           </div>
+
           <Link to="/works" className="more-btn">
             查看更多作品
           </Link>

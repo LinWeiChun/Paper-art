@@ -6,16 +6,11 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -24,16 +19,31 @@ import lombok.Setter;
 @Setter
 public class Art extends BaseEntity {
 
+    // 作品名稱
     private String title;
 
+    // 作品介紹
     @Column(columnDefinition = "LONGTEXT")
     private String description;
 
+    // 縮圖
     private String thumbnail;
 
+    // 創作年份
+    private Integer year;
+
+    // 排序
+    private Integer sortOrder = 0;
+
+    // 是否首頁精選
     @Column(nullable = false)
     private Boolean featured = false;
 
+    // 是否可租借
+    @Column(nullable = false)
+    private Boolean rentable = true;
+
+    // 作者
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "art_authors",
@@ -42,6 +52,7 @@ public class Art extends BaseEntity {
     )
     private List<Author> authors = new ArrayList<>();
 
+    // 分類
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "art_categories",
@@ -50,6 +61,7 @@ public class Art extends BaseEntity {
     )
     private List<Category> categories = new ArrayList<>();
 
+    // 標籤
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "art_tags",

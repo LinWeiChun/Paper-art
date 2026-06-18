@@ -1,5 +1,7 @@
 package com.paperart.backend.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +25,21 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final FileUploadService fileUploadService;
 
+    // 前台：全部作者
     @Override
-    public Page<AuthorResponse> getAllAuthors(int page, int size) {
+    public List<AuthorResponse> getAll() {
+
+        return authorRepository.findAll(
+                Sort.by("sortOrder").ascending()
+        )
+        .stream()
+        .map(this::toResponse)
+        .toList();
+    }
+
+    // 分頁查詢
+    @Override
+    public Page<AuthorResponse> getAll(int page, int size) {
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -37,7 +52,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorResponse getAuthorById(String id) {
+    public AuthorResponse getById(String id) {
 
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found"));
@@ -46,7 +61,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorResponse createAuthor(
+    public AuthorResponse create(
             AuthorRequest request,
             MultipartFile avatar) {
 
@@ -65,13 +80,11 @@ public class AuthorServiceImpl implements AuthorService {
             author.setAvatarUrl(imageUrl);
         }
 
-        authorRepository.save(author);
-
-        return toResponse(author);
+        return toResponse(authorRepository.save(author));
     }
 
     @Override
-    public AuthorResponse updateAuthor(
+    public AuthorResponse update(
             String id,
             AuthorRequest request,
             MultipartFile avatar) {
@@ -92,13 +105,11 @@ public class AuthorServiceImpl implements AuthorService {
             author.setAvatarUrl(imageUrl);
         }
 
-        authorRepository.save(author);
-
-        return toResponse(author);
+        return toResponse(authorRepository.save(author));
     }
 
     @Override
-    public void deleteAuthor(String id) {
+    public void delete(String id) {
 
         authorRepository.deleteById(id);
     }

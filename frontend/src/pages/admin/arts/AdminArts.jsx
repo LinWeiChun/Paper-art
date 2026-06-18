@@ -1,37 +1,61 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { deleteArt, getArts } from '../../../api/artApi';
+
+import Pagination from '../../../components/common/Pagination';
 import '../../../styles/admin/adminTable.css';
+
+const ITEMS_PER_PAGE = 10;
 
 function AdminArts() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const artList = [
-    {
-      id: 1,
-      title: '春之剪影',
-      category: '傳統剪紙',
-      author: '王小明',
-      date: '2026-03-15',
-    },
-    {
-      id: 2,
-      title: '福氣滿堂',
-      category: '吉祥剪紙',
-      author: '陳美玲',
-      date: '2026-05-20',
-    },
-    {
-      id: 3,
-      title: '花開富貴',
-      category: '花卉系列',
-      author: '王小明',
-      date: '2026-08-10',
-    },
-  ];
+  const [arts, setArts] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const handleDelete = (id) => {
-    if (window.confirm('確定要刪除此作品嗎？')) {
-      console.log('刪除作品 ID：', id);
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1,
+  );
+
+  useEffect(() => {
+    fetchArts();
+  }, [currentPage]);
+
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage.toString(),
+    });
+  }, [currentPage, setSearchParams]);
+
+  const fetchArts = async () => {
+    try {
+      const response = await getArts(currentPage - 1, ITEMS_PER_PAGE);
+
+      setArts(response.data.content || []);
+      setTotalPages(response.data.totalPages || 0);
+    } catch (error) {
+      console.error('取得作品失敗：', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('確定要刪除此作品嗎？')) return;
+
+    try {
+      await deleteArt(id);
+
+      alert('刪除成功');
+
+      if (arts.length === 1 && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      } else {
+        fetchArts();
+      }
+    } catch (error) {
+      console.error(error);
+      alert('刪除失敗');
     }
   };
 
@@ -51,45 +75,91 @@ function AdminArts() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>#</th>
+            <th>縮圖</th>
             <th>作品名稱</th>
-            <th>分類</th>
             <th>作者</th>
-            <th>建立日期</th>
-            <th></th>
+            <th>分類</th>
+            <th>精選</th>
+            <th>操作</th>
           </tr>
         </thead>
 
         <tbody>
-          {artList.map((art) => (
-            <tr key={art.id}>
-              <td>{art.id}</td>
-              <td>{art.title}</td>
-              <td>{art.category}</td>
-              <td>{art.author}</td>
-              <td>{art.date}</td>
-
-              <td>
-                <div className="action-buttons">
-                  <button
-                    className="btn btn-edit"
-                    onClick={() => navigate(`/admin/arts/edit/${art.id}`)}
-                  >
-                    編輯
-                  </button>
-
-                  <button
-                    className="btn btn-delete"
-                    onClick={() => handleDelete(art.id)}
-                  >
-                    刪除
-                  </button>
-                </div>
-              </td>
+          {arts.length === 0 ? (
+            <tr>
+              <td colSpan="7">目前沒有作品資料</td>
             </tr>
-          ))}
+          ) : (
+            arts.map((art, index) => (
+              <tr key={art.id}>
+                <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+
+                <td>
+                  {art.thumbnail && (
+                    <img
+                      src={art.thumbnail}
+                      alt={art.title}
+                      style={{
+                        width: '80px',
+                        height: '60px',
+                        objectFit: 'cover',
+                        borderRadius: '6px',
+                      }}
+                    />
+                  )}
+                </td>
+
+                <td>{art.title}</td>
+
+                <td>
+                  {art.authors?.length
+                    ? art.authors.map((author) => author.name).join('、')
+                    : '-'}
+                </td>
+
+                <td>
+                  {art.categories?.length
+                    ? art.categories.map((category) => category.name).join('、')
+                    : '-'}
+                </td>
+
+                <td>{art.featured ? '是' : '否'}</td>
+
+                <td>
+                  <div className="action-buttons">
+                    <button
+                      className="btn btn-edit"
+                      onClick={() =>
+                        navigate(`/admin/arts/edit/${art.id}`, {
+                          state: {
+                            page: currentPage,
+                          },
+                        })
+                      }
+                    >
+                      編輯
+                    </button>
+
+                    <button
+                      className="btn btn-delete"
+                      onClick={() => handleDelete(art.id)}
+                    >
+                      刪除
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 }
