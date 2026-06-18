@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import CountUp from 'react-countup';
-
 import { getDashboard } from '../../api/dashboardApi';
 
+import AnimatedNumber from '../../components/common/AnimatedNumber';
 import '../../styles/admin/dashboard.css';
 
 function Dashboard() {
@@ -43,21 +42,21 @@ function Dashboard() {
         <div className="dashboard-card">
           <h3>作品數量</h3>
           <p>
-            <CountUp end={dashboard.artCount} duration={1.5} />
+            <AnimatedNumber value={dashboard.artCount} />
           </p>
         </div>
 
         <div className="dashboard-card">
           <h3>作者數量</h3>
           <p>
-            <CountUp end={dashboard.authorCount} duration={1.5} />
+            <AnimatedNumber value={dashboard.authorCount} />
           </p>
         </div>
 
         <div className="dashboard-card">
           <h3>消息數量</h3>
           <p>
-            <CountUp end={dashboard.newsCount} duration={1.5} />
+            <AnimatedNumber value={dashboard.newsCount} />
           </p>
         </div>
       </div>
