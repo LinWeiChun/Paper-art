@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { getArts } from '../api/artApi';
 import Pagination from '../components/common/Pagination';
 import { useRental } from '../contexts/RentalContext';
-import works from '../data/works';
 import useAuthors from '../hooks/useAuthors';
 import useCategories from '../hooks/useCategories';
-import usePagination from '../hooks/usePagination';
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/works.css';
@@ -29,7 +28,21 @@ function Works() {
   /* ===== State ===== */
   const [searchInput, setSearchInput] = useState(search);
   const [showFilter, setShowFilter] = useState(false);
+  const [works, setWorks] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
+  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const fetchWorks = async () => {
+    try {
+      const response = await getArts(currentPage - 1, 12);
+
+      setWorks(response.data.content || []);
+      setTotalPages(response.data.totalPages || 0);
+    } catch (error) {
+      console.error('取得作品失敗：', error);
+    }
+  };
   /* ===== useEffect ===== */
 
   // 搜尋欄同步 URL
@@ -46,6 +59,10 @@ function Works() {
       });
     }
   }, [location.state]);
+
+  useEffect(() => {
+    fetchWorks();
+  }, [currentPage]);
 
   /* ===== 更新 URL ===== */
   const updateFilters = ({
@@ -105,26 +122,21 @@ function Works() {
 
     const matchCategory =
       selectedCategories.length === 0 ||
-      selectedCategories.some((category) => work.categories.includes(category));
+      selectedCategories.some((category) =>
+        work.categories?.some((c) => c.name === category),
+      );
 
     const matchAuthor =
       selectedAuthors.length === 0 ||
-      selectedAuthors.some((author) => work.authors.includes(author));
+      selectedAuthors.some((author) =>
+        work.authors?.some((a) => a.name === author),
+      );
 
     return matchSearch && matchCategory && matchAuthor;
   });
-
   /* ===== 分頁 ===== */
-  const {
-    currentPage,
-    totalPages,
-    pagedData: pagedWorks,
-    handlePageChange: changePage,
-  } = usePagination(filteredWorks, 12);
-
-  /* ===== 分頁切換 ===== */
   const handlePageChange = (page) => {
-    changePage(page);
+    updateFilters({ page });
 
     const y =
       toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
@@ -134,6 +146,7 @@ function Works() {
       behavior: 'smooth',
     });
   };
+
   return (
     <Layout>
       <div className="works-container">
@@ -200,12 +213,13 @@ function Works() {
               {search && (
                 <button
                   className="active-tag"
-                  onClick={() =>
-                    updateFilters({
-                      keyword: '',
-                      page: 1,
-                    })
-                  }
+                  onClick={() => {
+                    setSearchInput('');
+
+                    setSearchParams({
+                      page: '1',
+                    });
+                  }}
                 >
                   搜尋：{search}
                   <span className="tag-remove">×</span>
@@ -215,11 +229,13 @@ function Works() {
 
             <button
               className="clear-filter-btn"
-              onClick={() =>
+              onClick={() => {
+                setSearchInput('');
+
                 setSearchParams({
                   page: '1',
-                })
-              }
+                });
+              }}
             >
               清除篩選
             </button>
@@ -303,7 +319,7 @@ function Works() {
 
         {/* 作品列表 */}
         <section className="works-grid">
-          {pagedWorks.map((work) => (
+          {filteredWorks.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
               <button
                 className={`add-rental-btn ${
@@ -325,16 +341,14 @@ function Works() {
                   scrollY: window.scrollY,
                 }}
               >
-                <img src={work.image} alt={work.title} />
+                <img src={work.thumbnail} alt={work.title} />
 
                 <div className="work-content">
                   <h3>{work.title}</h3>
-
-                  <p>{work.authors.join('、')}</p>
-
+                  <p>{work.authors?.map((author) => author.name).join('、')}</p>
                   <div className="work-tags">
-                    {work.categories.map((tag) => (
-                      <span key={tag}>{tag}</span>
+                    {work.categories?.map((category) => (
+                      <span key={category.id}>{category.name}</span>
                     ))}
                   </div>
                 </div>

@@ -1,29 +1,62 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { createArt } from '../../../api/artApi';
+import { getAllAuthors } from '../../../api/authorsApi';
+import { getAllCategories } from '../../../api/categoryApi';
+
 import TextEditor from '../../../components/admin/TextEditor';
+
 import '../../../styles/admin/adminForm.css';
 
 function AdminArtCreate() {
   const navigate = useNavigate();
 
+  const [authors, setAuthors] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   const [formData, setFormData] = useState({
     title: '',
-    authors: [],
-    categories: [],
     description: '',
+    featured: false,
+    rentable: true,
+    authorIds: [],
+    categoryIds: [],
+    tagIds: [],
   });
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [authorRes, categoryRes] = await Promise.all([
+        getAllAuthors(),
+        getAllCategories(),
+      ]);
+
+      setAuthors(authorRes.data);
+      setCategories(categoryRes.data);
+    } catch (error) {
+      console.error('取得資料失敗：', error);
+    }
   };
 
+  // 一般欄位
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  // 圖片
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -33,25 +66,60 @@ function AdminArtCreate() {
     }
   };
 
-  const handleSubmit = (e) => {
+  // 新增作者
+  const addAuthor = (id) => {
+    setFormData((prev) => ({
+      ...prev,
+      authorIds: [...prev.authorIds, id],
+    }));
+  };
+
+  // 移除作者
+  const removeAuthor = (id) => {
+    setFormData((prev) => ({
+      ...prev,
+      authorIds: prev.authorIds.filter((item) => item !== id),
+    }));
+  };
+
+  // 新增分類
+  const addCategory = (id) => {
+    setFormData((prev) => ({
+      ...prev,
+      categoryIds: [...prev.categoryIds, id],
+    }));
+  };
+
+  // 移除分類
+  const removeCategory = (id) => {
+    setFormData((prev) => ({
+      ...prev,
+      categoryIds: prev.categoryIds.filter((item) => item !== id),
+    }));
+  };
+
+  // 儲存
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
-    console.log(image);
+    try {
+      await createArt(formData, image);
 
-    alert('新增成功');
+      alert('新增成功');
 
-    navigate('/admin/arts');
+      navigate('/admin/arts');
+    } catch (error) {
+      console.error(error);
+      alert('新增失敗');
+    }
   };
-  const authorOptions = ['王小明', '陳美玲', '林志宏'];
 
-  const categoryOptions = ['傳統剪紙', '花卉系列', '生肖系列', '吉祥剪紙'];
   return (
     <div className="admin-page">
       <h1>新增作品</h1>
 
       <form className="admin-form" onSubmit={handleSubmit}>
-        {/* 作品名稱 */}
+        {/* 標題 */}
         <div className="form-group">
           <label>作品名稱</label>
 
@@ -68,50 +136,40 @@ function AdminArtCreate() {
           <label>作者</label>
 
           <div className="dual-list">
-            {/* 左邊：可選作者 */}
             <div className="list-box">
               <h4>可選作者</h4>
 
-              {authorOptions
-                .filter((author) => !formData.authors.includes(author))
+              {authors
+                .filter((author) => !formData.authorIds.includes(author.id))
                 .map((author) => (
                   <button
-                    key={author}
+                    key={author.id}
                     type="button"
                     className="list-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        authors: [...formData.authors, author],
-                      })
-                    }
+                    onClick={() => addAuthor(author.id)}
                   >
-                    + {author}
+                    + {author.name}
                   </button>
                 ))}
             </div>
 
-            {/* 右邊：已選作者 */}
             <div className="list-box">
               <h4>已選作者</h4>
 
-              {formData.authors.map((author) => (
-                <button
-                  key={author}
-                  type="button"
-                  className="selected-item"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      authors: formData.authors.filter(
-                        (item) => item !== author,
-                      ),
-                    })
-                  }
-                >
-                  × {author}
-                </button>
-              ))}
+              {formData.authorIds.map((id) => {
+                const author = authors.find((a) => a.id === id);
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className="selected-item"
+                    onClick={() => removeAuthor(id)}
+                  >
+                    × {author?.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -121,79 +179,82 @@ function AdminArtCreate() {
           <label>分類</label>
 
           <div className="dual-list">
-            {/* 左邊：可選分類 */}
             <div className="list-box">
               <h4>可選分類</h4>
 
-              {categoryOptions
-                .filter((category) => !formData.categories.includes(category))
+              {categories
+                .filter(
+                  (category) => !formData.categoryIds.includes(category.id),
+                )
                 .map((category) => (
                   <button
-                    key={category}
+                    key={category.id}
                     type="button"
                     className="list-item"
-                    onClick={() =>
-                      setFormData({
-                        ...formData,
-                        categories: [...formData.categories, category],
-                      })
-                    }
+                    onClick={() => addCategory(category.id)}
                   >
-                    + {category}
+                    + {category.name}
                   </button>
                 ))}
             </div>
 
-            {/* 右邊：已選分類 */}
             <div className="list-box">
               <h4>已選分類</h4>
 
-              {formData.categories.map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  className="selected-item"
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      categories: formData.categories.filter(
-                        (item) => item !== category,
-                      ),
-                    })
-                  }
-                >
-                  × {category}
-                </button>
-              ))}
+              {formData.categoryIds.map((id) => {
+                const category = categories.find((c) => c.id === id);
+
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className="selected-item"
+                    onClick={() => removeCategory(id)}
+                  >
+                    × {category?.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
+
+        {/* 精選 */}
+        <div className="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              name="featured"
+              checked={formData.featured}
+              onChange={handleChange}
+            />
+
+            <span>精選作品</span>
+          </label>
+        </div>
+
         {/* 圖片 */}
         <div className="form-group">
-          <label>上傳封面圖片</label>
+          <label>封面圖片</label>
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
-            <>
-              <p>圖片預覽：</p>
-
-              <img src={preview} alt="preview" className="preview-image" />
-            </>
+            <img src={preview} alt="preview" className="preview-image" />
           )}
         </div>
 
-        {/* 作品介紹 */}
+        {/* 介紹 */}
         <div className="form-group">
           <label>作品介紹</label>
 
           <TextEditor
             value={formData.description}
             onChange={(value) =>
-              setFormData({
-                ...formData,
+              setFormData((prev) => ({
+                ...prev,
                 description: value,
-              })
+              }))
             }
           />
         </div>

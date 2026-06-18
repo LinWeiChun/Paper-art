@@ -9,13 +9,15 @@ export function RentalProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 儲存到 sessionStorage
+  // 同步到 sessionStorage
   useEffect(() => {
     sessionStorage.setItem('rentalList', JSON.stringify(rentalList));
   }, [rentalList]);
 
   // 加入作品
   const addToRental = (work) => {
+    if (!work || !work.id) return;
+
     const exists = rentalList.some((item) => item.id === work.id);
 
     if (!exists) {
@@ -28,7 +30,7 @@ export function RentalProvider({ children }) {
     setRentalList((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 清空
+  // 清空租借清單
   const clearRental = () => {
     setRentalList([]);
   };

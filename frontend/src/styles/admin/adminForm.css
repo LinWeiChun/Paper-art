@@ -141,3 +141,19 @@
     align-items: stretch;
   }
 }
+/* ===== Checkbox ===== */
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.checkbox-group input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #4b6b4b;
+  cursor: pointer;
+}
