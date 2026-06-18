@@ -8,4 +8,6 @@ import com.paperart.backend.entity.Art;
 
 public interface ArtRepository extends JpaRepository<Art, String> {
 	List<Art> findByFeaturedTrueOrderBySortOrderAsc();
+	List<Art> findTop5ByOrderByCreatedAtDesc();
+
 }
