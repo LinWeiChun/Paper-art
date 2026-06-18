@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import CountUp from 'react-countup';
 
 import { getDashboard } from '../../api/dashboardApi';
 
 import '../../styles/admin/dashboard.css';
 
 function Dashboard() {
+  const [loading, setLoading] = useState(true);
+
   const [dashboard, setDashboard] = useState({
     artCount: 0,
     authorCount: 0,
@@ -24,6 +27,8 @@ function Dashboard() {
       setDashboard(response.data);
     } catch (error) {
       console.error('取得 Dashboard 資料失敗：', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,17 +40,26 @@ function Dashboard() {
       <div className="dashboard-cards">
         <div className="dashboard-card">
           <h3>作品數量</h3>
-          <p>{dashboard.artCount}</p>
+
+          <p>
+            <CountUp end={dashboard.artCount} duration={1.5} />
+          </p>
         </div>
 
         <div className="dashboard-card">
           <h3>作者數量</h3>
-          <p>{dashboard.authorCount}</p>
+
+          <p>
+            <CountUp end={dashboard.authorCount} duration={1.5} />
+          </p>
         </div>
 
         <div className="dashboard-card">
           <h3>消息數量</h3>
-          <p>{dashboard.newsCount}</p>
+
+          <p>
+            <CountUp end={dashboard.newsCount} duration={1.5} />
+          </p>
         </div>
       </div>
 
@@ -53,7 +67,15 @@ function Dashboard() {
       <div className="dashboard-section">
         <h2>最近新增作品</h2>
 
-        {dashboard.recentArts.length === 0 ? (
+        {loading ? (
+          <ul>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+          </ul>
+        ) : dashboard.recentArts.length === 0 ? (
           <p>目前沒有資料</p>
         ) : (
           <ul>
@@ -68,7 +90,15 @@ function Dashboard() {
       <div className="dashboard-section">
         <h2>最近消息</h2>
 
-        {dashboard.recentNews.length === 0 ? (
+        {loading ? (
+          <ul>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+            <li className="skeleton-item"></li>
+          </ul>
+        ) : dashboard.recentNews.length === 0 ? (
           <p>目前沒有資料</p>
         ) : (
           <ul>

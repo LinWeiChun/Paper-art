@@ -108,3 +108,9 @@
 .status-select:hover {
   border-color: #4b6b4b;
 }
+
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+}
