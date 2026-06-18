@@ -21,7 +21,7 @@ function AdminAuthorEdit() {
   });
 
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState('');
 
   // 取得作者資料
   useEffect(() => {
@@ -40,6 +40,8 @@ function AdminAuthorEdit() {
         description: response.data.description || '',
         sortOrder: response.data.sortOrder || 0,
       });
+
+      setPreview(response.data.avatarUrl);
     } catch (error) {
       console.error(error);
     }

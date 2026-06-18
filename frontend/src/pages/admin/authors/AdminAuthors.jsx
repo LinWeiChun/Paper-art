@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { deleteAuthor, getAllAuthors } from '../../../api/authorsApi';
+import { deleteAuthor, getAdminAuthors } from '../../../api/authorsApi';
 
 import Pagination from '../../../components/common/Pagination';
 import '../../../styles/admin/adminTable.css';
@@ -19,19 +19,10 @@ function AdminAuthors() {
     Number(searchParams.get('page')) || 1,
   );
 
-  useEffect(() => {
-    fetchAuthors();
-  }, [currentPage]);
-
-  useEffect(() => {
-    setSearchParams({
-      page: currentPage.toString(),
-    });
-  }, [currentPage, setSearchParams]);
-
+  // 取得作者
   const fetchAuthors = async () => {
     try {
-      const response = await getAllAuthors(currentPage - 1, ITEMS_PER_PAGE);
+      const response = await getAdminAuthors(currentPage - 1, ITEMS_PER_PAGE);
 
       setAuthors(response.data.content);
       setTotalPages(response.data.totalPages);
@@ -40,6 +31,19 @@ function AdminAuthors() {
     }
   };
 
+  // 頁數改變時重新查詢
+  useEffect(() => {
+    fetchAuthors();
+  }, [currentPage]);
+
+  // 同步 URL
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage.toString(),
+    });
+  }, [currentPage, setSearchParams]);
+
+  // 刪除作者
   const handleDelete = async (id) => {
     if (!window.confirm('確定要刪除此作者嗎？')) return;
 
@@ -48,11 +52,11 @@ function AdminAuthors() {
 
       alert('刪除成功');
 
-      // 若刪除後當頁沒有資料，可回上一頁
+      // 若當頁只剩一筆且不是第一頁，回上一頁
       if (authors.length === 1 && currentPage > 1) {
         setCurrentPage((prev) => prev - 1);
       } else {
-        fetchAuthors();
+        await fetchAuthors();
       }
     } catch (error) {
       console.error(error);
@@ -120,7 +124,7 @@ function AdminAuthors() {
 
           {authors.length === 0 && (
             <tr>
-              <td colSpan="5">目前沒有資料</td>
+              <td colSpan="4">目前沒有資料</td>
             </tr>
           )}
         </tbody>

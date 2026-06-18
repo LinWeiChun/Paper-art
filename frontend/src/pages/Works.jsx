@@ -4,6 +4,7 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Pagination from '../components/common/Pagination';
 import { useRental } from '../contexts/RentalContext';
 import works from '../data/works';
+import useAuthors from '../hooks/useAuthors';
 import useCategories from '../hooks/useCategories';
 import usePagination from '../hooks/usePagination';
 import Layout from '../layouts/Layout';
@@ -17,6 +18,7 @@ function Works() {
 
   /* ===== Hooks ===== */
   const { categories, loading } = useCategories();
+  const { authors, loading: authorLoading } = useAuthors();
   const { addToRental, isInRental } = useRental();
 
   /* ===== URL 參數 ===== */
@@ -96,9 +98,6 @@ function Works() {
       page: 1,
     });
   };
-
-  /* ===== 作者清單 ===== */
-  const authors = [...new Set(works.flatMap((work) => work.authors))];
 
   /* ===== 篩選作品 ===== */
   const filteredWorks = works.filter((work) => {
@@ -265,17 +264,18 @@ function Works() {
               <div className="filter-group">
                 <h3>作者</h3>
 
-                {authors.map((author) => (
-                  <label key={author} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={selectedAuthors.includes(author)}
-                      onChange={() => handleAuthorChange(author)}
-                    />
+                {!authorLoading &&
+                  authors.map((author) => (
+                    <label key={author.id} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedAuthors.includes(author.name)}
+                        onChange={() => handleAuthorChange(author.name)}
+                      />
 
-                    <span>{author}</span>
-                  </label>
-                ))}
+                      <span>{author.name}</span>
+                    </label>
+                  ))}
               </div>
 
               <div className="filter-actions">

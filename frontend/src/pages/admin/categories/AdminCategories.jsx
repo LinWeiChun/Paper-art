@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { deleteCategory } from '../../../api/categoryApi';
+import { deleteCategory, getAdminCategories } from '../../../api/categoryApi';
 
 import Pagination from '../../../components/common/Pagination';
 import '../../../styles/admin/adminTable.css';
