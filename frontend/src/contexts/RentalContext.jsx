@@ -4,13 +4,14 @@ const RentalContext = createContext();
 
 export function RentalProvider({ children }) {
   const [rentalList, setRentalList] = useState(() => {
-    const saved = localStorage.getItem('rentalList');
+    const saved = sessionStorage.getItem('rentalList');
+
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 儲存到 localStorage
+  // 儲存到 sessionStorage
   useEffect(() => {
-    localStorage.setItem('rentalList', JSON.stringify(rentalList));
+    sessionStorage.setItem('rentalList', JSON.stringify(rentalList));
   }, [rentalList]);
 
   // 加入作品

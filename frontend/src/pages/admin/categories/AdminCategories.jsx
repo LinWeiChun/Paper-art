@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { deleteCategory, getAllCategories } from '../../../api/categoryApi';
+import { deleteCategory } from '../../../api/categoryApi';
 
 import Pagination from '../../../components/common/Pagination';
 import '../../../styles/admin/adminTable.css';
@@ -21,7 +21,10 @@ function AdminCategories() {
 
   const fetchCategories = async () => {
     try {
-      const response = await getAllCategories(currentPage - 1, ITEMS_PER_PAGE);
+      const response = await getAdminCategories(
+        currentPage - 1,
+        ITEMS_PER_PAGE,
+      );
 
       setCategories(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);

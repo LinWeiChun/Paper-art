@@ -39,8 +39,8 @@ function RentalRequest() {
     alert('租借申請已送出');
 
     clearRental();
-
-    navigate('/');
+    sessionStorage.removeItem('rentalList');
+    navigate('/rental');
   };
 
   return (

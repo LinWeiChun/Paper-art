@@ -1,5 +1,7 @@
 package com.paperart.backend.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +36,16 @@ public class CategoryServiceImpl implements CategoryService {
                 .findAll(pageable)
                 .map(this::toResponse);
     }
-
+    
+    @Override
+    public List<CategoryResponse> getAll() {
+        return categoryRepository
+                .findAllByOrderBySortOrderAscCreatedAtDesc()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    
     @Override
     public CategoryResponse getById(String id) {
 

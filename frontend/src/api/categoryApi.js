@@ -1,8 +1,13 @@
 import api from './api';
 
-// 分頁查詢分類
-export const getAllCategories = (page = 0, size = 10) => {
-  return api.get('/categories', {
+// 前台：全部分類
+export const getAllCategories = () => {
+  return api.get('/categories');
+};
+
+// 後台：分頁分類
+export const getAdminCategories = (page = 0, size = 10) => {
+  return api.get('/categories/admin', {
     params: {
       page,
       size,

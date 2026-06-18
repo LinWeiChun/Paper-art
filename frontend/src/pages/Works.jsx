@@ -4,6 +4,7 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Pagination from '../components/common/Pagination';
 import { useRental } from '../contexts/RentalContext';
 import works from '../data/works';
+import useCategories from '../hooks/useCategories';
 import usePagination from '../hooks/usePagination';
 import Layout from '../layouts/Layout';
 
@@ -14,19 +15,27 @@ function Works() {
   const location = useLocation();
   const toolbarRef = useRef(null);
 
+  /* ===== Hooks ===== */
+  const { categories, loading } = useCategories();
+  const { addToRental, isInRental } = useRental();
+
+  /* ===== URL 參數 ===== */
   const search = searchParams.get('search') || '';
-
-  const [searchInput, setSearchInput] = useState(search);
-
   const selectedCategories = searchParams.getAll('category');
   const selectedAuthors = searchParams.getAll('author');
 
+  /* ===== State ===== */
+  const [searchInput, setSearchInput] = useState(search);
   const [showFilter, setShowFilter] = useState(false);
-  const { rentalList, addToRental, removeFromRental, isInRental } = useRental();
+
+  /* ===== useEffect ===== */
+
+  // 搜尋欄同步 URL
   useEffect(() => {
     setSearchInput(search);
   }, [search]);
-  // 保留返回時的 scrollY
+
+  // 返回列表時恢復捲動位置
   useEffect(() => {
     if (location.state?.scrollY !== undefined) {
       window.scrollTo({
@@ -36,7 +45,7 @@ function Works() {
     }
   }, [location.state]);
 
-  // 更新 URL
+  /* ===== 更新 URL ===== */
   const updateFilters = ({
     categories = selectedCategories,
     authors = selectedAuthors,
@@ -45,12 +54,12 @@ function Works() {
   }) => {
     const params = new URLSearchParams();
 
-    categories.forEach((c) => {
-      params.append('category', c);
+    categories.forEach((category) => {
+      params.append('category', category);
     });
 
-    authors.forEach((a) => {
-      params.append('author', a);
+    authors.forEach((author) => {
+      params.append('author', author);
     });
 
     if (keyword.trim()) {
@@ -62,7 +71,7 @@ function Works() {
     setSearchParams(params);
   };
 
-  // 分類
+  /* ===== 分類切換 ===== */
   const handleCategoryChange = (category) => {
     const updated = selectedCategories.includes(category)
       ? selectedCategories.filter((c) => c !== category)
@@ -75,7 +84,7 @@ function Works() {
     });
   };
 
-  // 作者
+  /* ===== 作者切換 ===== */
   const handleAuthorChange = (author) => {
     const updated = selectedAuthors.includes(author)
       ? selectedAuthors.filter((a) => a !== author)
@@ -88,26 +97,10 @@ function Works() {
     });
   };
 
-  // 分頁
-  const handlePageChange = (page) => {
-    changePage(page);
-
-    const y =
-      toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
-
-    window.scrollTo({
-      top: y,
-      behavior: 'smooth',
-    });
-  };
-
-  // 分類清單
-  const categories = [...new Set(works.flatMap((work) => work.categories))];
-
-  // 作者清單
+  /* ===== 作者清單 ===== */
   const authors = [...new Set(works.flatMap((work) => work.authors))];
 
-  // 篩選
+  /* ===== 篩選作品 ===== */
   const filteredWorks = works.filter((work) => {
     const matchSearch = work.title.toLowerCase().includes(search.toLowerCase());
 
@@ -121,6 +114,8 @@ function Works() {
 
     return matchSearch && matchCategory && matchAuthor;
   });
+
+  /* ===== 分頁 ===== */
   const {
     currentPage,
     totalPages,
@@ -128,6 +123,18 @@ function Works() {
     handlePageChange: changePage,
   } = usePagination(filteredWorks, 12);
 
+  /* ===== 分頁切換 ===== */
+  const handlePageChange = (page) => {
+    changePage(page);
+
+    const y =
+      toolbarRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+
+    window.scrollTo({
+      top: y,
+      behavior: 'smooth',
+    });
+  };
   return (
     <Layout>
       <div className="works-container">
@@ -240,17 +247,18 @@ function Works() {
               <div className="filter-group">
                 <h3>分類</h3>
 
-                {categories.map((category) => (
-                  <label key={category} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => handleCategoryChange(category)}
-                    />
+                {!loading &&
+                  categories.map((category) => (
+                    <label key={category.id} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category.name)}
+                        onChange={() => handleCategoryChange(category.name)}
+                      />
 
-                    <span>{category}</span>
-                  </label>
-                ))}
+                      <span>{category.name}</span>
+                    </label>
+                  ))}
               </div>
 
               {/* 作者 */}
