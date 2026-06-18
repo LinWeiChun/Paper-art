@@ -1,28 +1,32 @@
 import { useEffect, useState } from 'react';
 
-function AnimatedNumber({ value }) {
-  const [displayValue, setDisplayValue] = useState(0);
+function AnimatedNumber({ value = 0 }) {
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const duration = 1000;
-    const increment = value / (duration / 16);
+    let current = 0;
+
+    const step = Math.max(1, Math.ceil(value / 30));
 
     const timer = setInterval(() => {
-      start += increment;
+      current += step;
 
-      if (start >= value) {
-        setDisplayValue(value);
+      if (current >= value) {
+        current = value;
         clearInterval(timer);
-      } else {
-        setDisplayValue(Math.floor(start));
       }
-    }, 16);
+
+      setDisplay(current);
+    }, 40);
 
     return () => clearInterval(timer);
   }, [value]);
 
-  return <>{displayValue}</>;
+  return (
+    <span className="rolling-number" key={display}>
+      {display}
+    </span>
+  );
 }
 
 export default AnimatedNumber;
