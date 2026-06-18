@@ -24,6 +24,8 @@ function Dashboard() {
     try {
       const response = await getDashboard();
 
+      console.log(response.data); // ← 建議保留
+
       setDashboard(response.data);
     } catch (error) {
       console.error('取得 Dashboard 資料失敗：', error);
@@ -40,7 +42,6 @@ function Dashboard() {
       <div className="dashboard-cards">
         <div className="dashboard-card">
           <h3>作品數量</h3>
-
           <p>
             <CountUp end={dashboard.artCount} duration={1.5} />
           </p>
@@ -48,7 +49,6 @@ function Dashboard() {
 
         <div className="dashboard-card">
           <h3>作者數量</h3>
-
           <p>
             <CountUp end={dashboard.authorCount} duration={1.5} />
           </p>
@@ -56,7 +56,6 @@ function Dashboard() {
 
         <div className="dashboard-card">
           <h3>消息數量</h3>
-
           <p>
             <CountUp end={dashboard.newsCount} duration={1.5} />
           </p>
@@ -69,18 +68,16 @@ function Dashboard() {
 
         {loading ? (
           <ul>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
+            {[1, 2, 3, 4, 5].map((item) => (
+              <li key={item} className="skeleton-item"></li>
+            ))}
           </ul>
         ) : dashboard.recentArts.length === 0 ? (
           <p>目前沒有資料</p>
         ) : (
           <ul>
             {dashboard.recentArts.map((art) => (
-              <li key={art.id}>{art.name}</li>
+              <li key={art.id}>{art.title || art.name || '未命名作品'}</li>
             ))}
           </ul>
         )}
@@ -92,18 +89,16 @@ function Dashboard() {
 
         {loading ? (
           <ul>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
-            <li className="skeleton-item"></li>
+            {[1, 2, 3, 4, 5].map((item) => (
+              <li key={item} className="skeleton-item"></li>
+            ))}
           </ul>
         ) : dashboard.recentNews.length === 0 ? (
           <p>目前沒有資料</p>
         ) : (
           <ul>
             {dashboard.recentNews.map((news) => (
-              <li key={news.id}>{news.name}</li>
+              <li key={news.id}>{news.title || news.name || '未命名消息'}</li>
             ))}
           </ul>
         )}
