@@ -63,15 +63,15 @@ function Header() {
                   <Link to="/works">作品集</Link>
                 </li>
 
-                <li>
+                {/* <li>
                   <Link to="/rental">作品租借</Link>
-                </li>
+                </li> */}
               </ul>
             </li>
 
-            <li>
+            {/* <li>
               <Link to="/contact">聯絡我們</Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </header>
