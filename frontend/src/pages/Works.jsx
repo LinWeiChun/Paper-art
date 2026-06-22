@@ -321,7 +321,7 @@ function Works() {
         <section className="works-grid">
           {filteredWorks.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
-              <button
+              {/* <button
                 className={`add-rental-btn ${
                   isInRental(work.id) ? 'added' : ''
                 }`}
@@ -332,7 +332,7 @@ function Works() {
                 }}
               >
                 {isInRental(work.id) ? '已加入' : '＋ 租借'}
-              </button>
+              </button> */}
               <Link
                 to={`/works/${work.id}`}
                 className="work-card"

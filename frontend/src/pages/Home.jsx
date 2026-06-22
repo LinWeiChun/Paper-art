@@ -2,44 +2,49 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getFeaturedArts } from '../api/artApi';
+import { getBanners } from '../api/bannerApi';
+
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/home.css';
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Banner
+  const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
+
+  // 精選作品
   const [featuredWorks, setFeaturedWorks] = useState([]);
 
-  // Hero 輪播
-  const slides = [
-    {
-      image: '/images/slide1.jpg',
-      title: '李煥章剪紙藝術',
-      subtitle: '一紙一世界',
-    },
-    {
-      image: '/images/slide2.jpg',
-      title: '最新展覽',
-      subtitle: '2026 春季作品展',
-    },
-    {
-      image: '/images/slide3.jpg',
-      title: '作品上架',
-      subtitle: '花開富貴系列',
-    },
-  ];
+  // Banner API
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  const fetchBanners = async () => {
+    try {
+      const response = await getBanners();
+
+      setSlides(response.data || []);
+    } catch (error) {
+      console.error('取得 Banner 失敗：', error);
+    }
+  };
 
   // 自動輪播
   useEffect(() => {
+    if (slides.length === 0) return;
+
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 3000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides]);
 
-  // 取得精選作品
+  // 精選作品
   useEffect(() => {
     fetchFeaturedWorks();
   }, []);
@@ -61,23 +66,25 @@ function Home() {
           <div className="overlay" onClick={() => setMenuOpen(false)} />
         )}
 
-        {/* Hero */}
-        <section className="hero-section" id="home">
-          {slides.map((slide, index) => (
-            <img
-              key={index}
-              src={slide.image}
-              alt={slide.title}
-              className={`slider-image ${index === current ? 'active' : ''}`}
-            />
-          ))}
+        {/* Hero Banner */}
+        {slides.length > 0 && (
+          <section className="hero-section" id="home">
+            {slides.map((slide, index) => (
+              <img
+                key={slide.id}
+                src={slide.image}
+                alt={slide.title}
+                className={`slider-image ${index === current ? 'active' : ''}`}
+              />
+            ))}
 
-          <div className="hero-text">
-            <h2 className="hero-title">{slides[current].title}</h2>
+            <div className="hero-text">
+              <h2 className="hero-title">{slides[current]?.title}</h2>
 
-            <p className="hero-subtitle">{slides[current].subtitle}</p>
-          </div>
-        </section>
+              <p className="hero-subtitle">{slides[current]?.subtitle}</p>
+            </div>
+          </section>
+        )}
 
         {/* 精選作品 */}
         <section className="works-section" id="works">

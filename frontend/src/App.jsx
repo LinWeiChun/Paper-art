@@ -21,6 +21,10 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import AdminLayout from './layouts/admin/AdminLayout';
 import Dashboard from './pages/admin/DashBoard';
 
+import AdminBanners from './pages/admin/banner/AdminBanners';
+import AdminBannerCreate from './pages/admin/banner/AdminBannersCreate';
+import AdminBannerEdit from './pages/admin/banner/AdminBannersEdit';
+
 import AdminAbout from './pages/admin/about/AdminAbout';
 
 import AdminNews from './pages/admin/news/AdminNews';
@@ -64,6 +68,11 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
+
+            {/* banner */}
+            <Route path="banners" element={<AdminBanners />} />
+            <Route path="banners/create" element={<AdminBannerCreate />} />
+            <Route path="banners/edit/:id" element={<AdminBannerEdit />} />
 
             {/* 關於我們 */}
             <Route path="about" element={<AdminAbout />} />
