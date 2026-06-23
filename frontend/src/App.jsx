@@ -21,9 +21,9 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import AdminLayout from './layouts/admin/AdminLayout';
 import Dashboard from './pages/admin/DashBoard';
 
-import AdminBanners from './pages/admin/banner/AdminBanners';
-import AdminBannerCreate from './pages/admin/banner/AdminBannersCreate';
-import AdminBannerEdit from './pages/admin/banner/AdminBannersEdit';
+import AdminBanners from './pages/admin/banner/AdminBanner';
+import AdminBannerCreate from './pages/admin/banner/AdminBannerCreate';
+import AdminBannerEdit from './pages/admin/banner/AdminBannerEdit';
 
 import AdminAbout from './pages/admin/about/AdminAbout';
 
