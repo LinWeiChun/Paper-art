@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/authApi';
 
@@ -9,11 +10,13 @@ function Login() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState('');
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [errorCount, setErrorCount] = useState(0);
   const [lockUntil, setLockUntil] = useState(null);
 
+  // 產生驗證碼
   const generateCaptcha = () => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -52,7 +55,7 @@ function Login() {
       // JWT 資料存入 sessionStorage
       sessionStorage.setItem('token', response.data.token);
       sessionStorage.setItem('username', response.data.username);
-      sessionStorage.setItem('role', response.data.role);
+      sessionStorage.setItem('roles', JSON.stringify(response.data.roles));
 
       setErrorCount(0);
 
@@ -64,12 +67,14 @@ function Login() {
 
       setErrorCount(count);
 
+      const message = error.response?.data?.message || '帳號或密碼錯誤';
+
       if (count >= 5) {
         setLockUntil(new Date().getTime() + 5 * 60 * 1000);
 
         alert('錯誤達 5 次，已鎖定 5 分鐘');
       } else {
-        alert(`帳號或密碼錯誤（剩餘 ${5 - count} 次）`);
+        alert(`${message}（剩餘 ${5 - count} 次）`);
       }
 
       generateCaptcha();
@@ -78,19 +83,21 @@ function Login() {
   };
 
   useEffect(() => {
-    // 進入登入頁即登出
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('role');
+    // 已登入則直接進後台
+    if (sessionStorage.getItem('token')) {
+      navigate('/admin');
+      return;
+    }
 
     generateCaptcha();
 
+    // 隱藏登入頁 scrollbar
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="login-page">
@@ -110,13 +117,24 @@ function Login() {
 
         <div className="form-group">
           <label>密碼</label>
-          <input
-            type="password"
-            placeholder="請輸入密碼"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="請輸入密碼"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </div>
 
         <div className="form-group">

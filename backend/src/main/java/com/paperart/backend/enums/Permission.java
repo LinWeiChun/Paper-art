@@ -1,0 +1,14 @@
+package com.paperart.backend.enums;
+
+public enum Permission {
+    BANNER_MANAGE,
+    ABOUT_MANAGE,
+    NEWS_MANAGE,
+    AUTHOR_MANAGE,
+    ART_MANAGE,
+    CATEGORY_MANAGE,
+    CONTACT_MANAGE,
+    CONTACT_MESSAGE_MANAGE,
+    RENTAL_MANAGE,
+    USER_MANAGE
+}

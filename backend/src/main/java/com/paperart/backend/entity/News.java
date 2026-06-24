@@ -2,6 +2,8 @@ package com.paperart.backend.entity;
 
 import java.time.LocalDate;
 
+import com.paperart.backend.enums.PublishStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

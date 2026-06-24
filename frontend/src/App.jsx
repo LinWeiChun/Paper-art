@@ -45,6 +45,10 @@ import AdminArts from './pages/admin/arts/AdminArts';
 
 import AdminContact from './pages/admin/contact/AdminContact';
 import AdminContactDetail from './pages/admin/contact/AdminContactDetail';
+
+import AdminUser from './pages/admin/user/AdminUser';
+import AdminUserCreate from './pages/admin/user/AdminUserCreate';
+import AdminUserEdit from './pages/admin/user/AdminUserEdit';
 function App() {
   return (
     <BrowserRouter>
@@ -100,6 +104,11 @@ function App() {
             {/* 聯絡我們 */}
             <Route path="contact" element={<AdminContact />} />
             <Route path="contact/:id" element={<AdminContactDetail />} />
+
+            {/* 管理者 */}
+            <Route path="users" element={<AdminUser />} />
+            <Route path="/admin/users/create" element={<AdminUserCreate />} />
+            <Route path="/admin/users/edit/:id" element={<AdminUserEdit />} />
           </Route>
         </Route>
       </Routes>

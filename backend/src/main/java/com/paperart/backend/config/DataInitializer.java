@@ -1,5 +1,8 @@
 package com.paperart.backend.config;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.paperart.backend.entity.Role;
 import com.paperart.backend.entity.User;
+import com.paperart.backend.enums.Permission;
 import com.paperart.backend.repository.RoleRepository;
 import com.paperart.backend.repository.UserRepository;
 
@@ -26,33 +30,42 @@ public class DataInitializer {
 
     @Value("${admin.password}")
     private String adminPassword;
-    
+
     @Bean
     public CommandLineRunner init() {
 
         return args -> {
 
-            // 建立 ADMIN Role
-            Role adminRole = roleRepository
-                    .findByName("ADMIN")
-                    .orElseGet(() -> {
+            // 建立所有權限
+            Set<Role> adminRoles = new HashSet<>();
 
-                        Role role = new Role();
-                        role.setName("ADMIN");
+            for (Permission permission : Permission.values()) {
 
-                        return roleRepository.save(role);
-                    });
+                Role role = roleRepository
+                        .findByName(permission.name())
+                        .orElseGet(() -> {
+
+                            Role newRole = new Role();
+                            newRole.setName(permission.name());
+
+                            return roleRepository.save(newRole);
+                        });
+
+                adminRoles.add(role);
+            }
 
             // 建立 admin 帳號
-            if (!userRepository.existsByUsername("admin")) {
+            if (!userRepository.existsByUsername(adminUsername)) {
 
                 User admin = new User();
 
                 admin.setUsername(adminUsername);
+
                 admin.setPassword(
                         passwordEncoder.encode(adminPassword)
                 );
-                admin.setRole(adminRole);
+
+                admin.setRoles(adminRoles);
 
                 userRepository.save(admin);
             }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.paperart.backend.dto.request.LoginRequest;
 import com.paperart.backend.dto.response.LoginResponse;
+import com.paperart.backend.entity.Role;
 import com.paperart.backend.entity.User;
 import com.paperart.backend.repository.UserRepository;
 import com.paperart.backend.service.AuthService;
@@ -23,21 +24,29 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("帳號不存在"));
+    	User user = userRepository.findByUsername(request.getUsername())
+    	        .orElseThrow(() -> new RuntimeException("帳號不存在"));
 
-        if (!passwordEncoder.matches(
-                request.getPassword(),
-                user.getPassword()
-        )) {
+    	if (!user.getEnabled()) {
+    	    throw new RuntimeException("帳號已停用");
+    	}
 
-            throw new RuntimeException("密碼錯誤");
-        }
+    	if (!passwordEncoder.matches(
+    	        request.getPassword(),
+    	        user.getPassword()
+    	)) {
+    	    throw new RuntimeException("密碼錯誤");
+    	}
 
         return LoginResponse.builder()
                 .token(jwtService.generateToken(user.getUsername()))
                 .username(user.getUsername())
-                .role(user.getRole().getName())
+                .roles(
+                        user.getRoles()
+                                .stream()
+                                .map(Role::getName)
+                                .toList()
+                )
                 .build();
     }
 }
