@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -32,32 +33,32 @@ public class SecurityConfig {
             throws Exception {
 
     	http
-		        .cors(Customizer.withDefaults())
-		        .csrf(AbstractHttpConfigurer::disable)
-		        .formLogin(AbstractHttpConfigurer::disable)
-		        .httpBasic(AbstractHttpConfigurer::disable)
-		        .sessionManagement(session ->
-		                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		        )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/arts/**",
-                                "/news/**",
-                                "/authors/**",
-                                "/categories/**",
-                                "/about/**",
-                                "/banners/**"
-                        )
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-                )
-                .addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+        .cors(Customizer.withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                .requestMatchers(
+                        "/auth/**",
+                        "/arts/**",
+                        "/news/**",
+                        "/authors/**",
+                        "/categories/**",
+                        "/about/**",
+                        "/banners/**"
+                ).permitAll()
+
+                .anyRequest().authenticated()
+        )
+        .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
         return http.build();
     }
 }

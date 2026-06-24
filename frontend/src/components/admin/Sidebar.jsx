@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { hasPermission } from '../../utils/permission.js';
+
 import '../../styles/admin/sidebar.css';
 
 function Sidebar() {
@@ -9,14 +11,14 @@ function Sidebar() {
 
   const [openMenus, setOpenMenus] = useState({
     網站內容: true,
-    租借管理: false,
+    表單填寫: false,
     系統管理: false,
   });
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('username');
-    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('roles');
 
     navigate('/login');
   };
@@ -32,25 +34,66 @@ function Sidebar() {
     {
       title: '網站內容',
       items: [
-        { name: '首頁輪播', path: '/admin/banners' },
-        { name: '關於我們', path: '/admin/about' },
-        { name: '最新消息', path: '/admin/news' },
-        { name: '作者管理', path: '/admin/authors' },
-        { name: '分類管理', path: '/admin/categories' },
-        { name: '作品管理', path: '/admin/arts' },
-        { name: '聯絡我們', path: '/admin/contact' },
-      ],
+        hasPermission('BANNER_MANAGE') && {
+          name: '首頁輪播',
+          path: '/admin/banners',
+        },
+
+        hasPermission('ABOUT_MANAGE') && {
+          name: '關於我們',
+          path: '/admin/about',
+        },
+
+        hasPermission('NEWS_MANAGE') && {
+          name: '最新消息',
+          path: '/admin/news',
+        },
+
+        hasPermission('AUTHOR_MANAGE') && {
+          name: '作者管理',
+          path: '/admin/authors',
+        },
+
+        hasPermission('CATEGORY_MANAGE') && {
+          name: '分類管理',
+          path: '/admin/categories',
+        },
+
+        hasPermission('ART_MANAGE') && {
+          name: '作品管理',
+          path: '/admin/arts',
+        },
+
+        hasPermission('CONTACT_MESSAGE_MANAGE') && {
+          name: '聯絡我們',
+          path: '/admin/contact',
+        },
+      ].filter(Boolean),
     },
+
     {
       title: '表單填寫',
       items: [
-        { name: '聯絡訊息', path: '/admin/contact-message' },
-        { name: '租借申請', path: '/admin/rentals' },
-      ],
+        hasPermission('CONTACT_MANAGE') && {
+          name: '聯絡訊息',
+          path: '/admin/contact-message',
+        },
+
+        hasPermission('RENTAL_MANAGE') && {
+          name: '租借申請',
+          path: '/admin/rentals',
+        },
+      ].filter(Boolean),
     },
+
     {
       title: '系統管理',
-      items: [{ name: '使用者管理', path: '/admin/users' }],
+      items: [
+        hasPermission('USER_MANAGE') && {
+          name: '使用者管理',
+          path: '/admin/users',
+        },
+      ].filter(Boolean),
     },
   ];
 
@@ -70,35 +113,43 @@ function Sidebar() {
           </Link>
         </li>
 
-        {menus.map((group) => (
-          <li key={group.title} className="sidebar-group">
-            <div
-              className="sidebar-group-title"
-              onClick={() => toggleMenu(group.title)}
-            >
-              <span>{group.title}</span>
+        {menus
+          .filter((group) => group.items.length > 0)
+          .map((group) => (
+            <li key={group.title} className="sidebar-group">
+              <div
+                className="sidebar-group-title"
+                onClick={() => toggleMenu(group.title)}
+              >
+                <span>{group.title}</span>
 
-              {openMenus[group.title] ? <FiChevronDown /> : <FiChevronRight />}
-            </div>
+                {openMenus[group.title] ? (
+                  <FiChevronDown />
+                ) : (
+                  <FiChevronRight />
+                )}
+              </div>
 
-            {openMenus[group.title] && (
-              <ul className="sidebar-submenu">
-                {group.items.map((menu) => (
-                  <li key={menu.path}>
-                    <Link
-                      to={menu.path}
-                      className={
-                        location.pathname.startsWith(menu.path) ? 'active' : ''
-                      }
-                    >
-                      {menu.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+              {openMenus[group.title] && (
+                <ul className="sidebar-submenu">
+                  {group.items.map((menu) => (
+                    <li key={menu.path}>
+                      <Link
+                        to={menu.path}
+                        className={
+                          location.pathname.startsWith(menu.path)
+                            ? 'active'
+                            : ''
+                        }
+                      >
+                        {menu.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
 
         <li className="logout-item">
           <button className="logout-btn" onClick={handleLogout}>

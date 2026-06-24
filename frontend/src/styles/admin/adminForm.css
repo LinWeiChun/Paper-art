@@ -64,6 +64,10 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   background: #fafafa;
+
+  /* 新增 */
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .list-box h4 {
@@ -71,6 +75,24 @@
   font-size: 15px;
   font-weight: 600;
   color: #555;
+}
+
+.list-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list-box::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.list-box::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
+.list-box::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
 /* 按鈕共用 */
@@ -156,4 +178,26 @@
   margin: 0;
   accent-color: #4b6b4b;
   cursor: pointer;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  color: #666;
+  font-size: 18px;
 }

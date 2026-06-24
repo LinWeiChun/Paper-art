@@ -1,4 +1,4 @@
-package com.paperart.backend.entity;
+package com.paperart.backend.enums;
 
 public enum PublishStatus {
     DRAFT,

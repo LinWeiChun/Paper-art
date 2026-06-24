@@ -2,7 +2,7 @@ package com.paperart.backend.dto.response;
 
 import java.time.LocalDate;
 
-import com.paperart.backend.entity.PublishStatus;
+import com.paperart.backend.enums.PublishStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

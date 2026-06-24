@@ -1,5 +1,8 @@
 package com.paperart.backend.entity;
 
+import com.paperart.backend.enums.MediaType;
+import com.paperart.backend.enums.RelatedType;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
