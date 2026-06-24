@@ -6,4 +6,14 @@ const api = axios.create({
   baseURL: 'https://paper-art-production.up.railway.app/paper/api',
 });
 
+api.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 export default api;
