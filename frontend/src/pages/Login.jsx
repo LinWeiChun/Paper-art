@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../api/authApi';
 
 import '../styles/pages/login.css';
 
@@ -13,7 +14,19 @@ function Login() {
   const [errorCount, setErrorCount] = useState(0);
   const [lockUntil, setLockUntil] = useState(null);
 
-  const handleSubmit = (e) => {
+  const generateCaptcha = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    let code = '';
+
+    for (let i = 0; i < 4; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    setCaptcha(code);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 是否鎖定
@@ -30,14 +43,23 @@ function Login() {
       return;
     }
 
-    // 帳密驗證
-    if (username === 'admin' && password === '123456') {
-      sessionStorage.setItem('token', 'fake-token');
+    try {
+      const response = await login({
+        username,
+        password,
+      });
+
+      // JWT 資料存入 sessionStorage
+      sessionStorage.setItem('token', response.data.token);
+      sessionStorage.setItem('username', response.data.username);
+      sessionStorage.setItem('role', response.data.role);
 
       setErrorCount(0);
 
+      alert('登入成功');
+
       navigate('/admin');
-    } else {
+    } catch (error) {
       const count = errorCount + 1;
 
       setErrorCount(count);
@@ -55,33 +77,21 @@ function Login() {
     }
   };
 
-  const generateCaptcha = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-    let code = '';
-
-    for (let i = 0; i < 4; i++) {
-      code += chars[Math.floor(Math.random() * chars.length)];
-    }
-
-    setCaptcha(code);
-  };
-
-  // 進入登入頁就登出
   useEffect(() => {
-    // 進入登入頁就登出
+    // 進入登入頁即登出
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('role');
 
-    // 產生驗證碼
     generateCaptcha();
 
-    // 隱藏登入頁 scrollbar
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
+
   return (
     <div className="login-page">
       <form className="login-card" onSubmit={handleSubmit}>
@@ -94,6 +104,7 @@ function Login() {
             placeholder="請輸入帳號"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
 
@@ -104,8 +115,10 @@ function Login() {
             placeholder="請輸入密碼"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
+
         <div className="form-group">
           <label>驗證碼</label>
 
@@ -114,8 +127,8 @@ function Login() {
 
             <button
               type="button"
-              onClick={generateCaptcha}
               className="refresh-btn"
+              onClick={generateCaptcha}
             >
               重新產生
             </button>
@@ -126,6 +139,7 @@ function Login() {
             placeholder="請輸入驗證碼"
             value={inputCaptcha}
             onChange={(e) => setInputCaptcha(e.target.value)}
+            required
           />
         </div>
 

@@ -15,6 +15,9 @@ function Sidebar() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('role');
+
     navigate('/login');
   };
 
