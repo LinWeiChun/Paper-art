@@ -9,8 +9,12 @@ function AdminCategoryEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [sortOrder, setSortOrder] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    sortOrder: 0,
+  });
 
   useEffect(() => {
     fetchCategory();
@@ -20,43 +24,59 @@ function AdminCategoryEdit() {
     try {
       const response = await getCategoryById(id);
 
-      setName(response.data.name);
-      setSortOrder(response.data.sortOrder);
+      setFormData({
+        name: response.data.name || '',
+        sortOrder: response.data.sortOrder || 0,
+      });
     } catch (error) {
-      console.error('取得分類失敗：', error);
+      console.error(error);
       alert('取得分類失敗');
     }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]:
+        e.target.name === 'sortOrder' ? Number(e.target.value) : e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
-      await updateCategory(id, {
-        name,
-        sortOrder,
-      });
+      await updateCategory(id, formData);
 
       alert('修改成功');
+
       navigate('/admin/categories');
     } catch (error) {
-      console.error('修改失敗：', error);
+      console.error(error);
+
       alert('修改失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-form-container">
       <h1>編輯分類</h1>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>分類名稱</label>
 
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             required
           />
         </div>
@@ -66,8 +86,9 @@ function AdminCategoryEdit() {
 
           <input
             type="number"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(Number(e.target.value))}
+            name="sortOrder"
+            value={formData.sortOrder}
+            onChange={handleChange}
           />
         </div>
 
@@ -80,8 +101,8 @@ function AdminCategoryEdit() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { deleteCategory, getAdminCategories } from '../../../api/categoryApi';
 
 import Pagination from '../../../components/common/Pagination';
@@ -10,13 +11,25 @@ const ITEMS_PER_PAGE = 10;
 function AdminCategories() {
   const navigate = useNavigate();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [categories, setCategories] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get('page')) || 1,
+  );
+
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     fetchCategories();
   }, [currentPage]);
+
+  useEffect(() => {
+    setSearchParams({
+      page: currentPage.toString(),
+    });
+  }, [currentPage, setSearchParams]);
 
   const fetchCategories = async () => {
     try {
@@ -38,6 +51,8 @@ function AdminCategories() {
     try {
       await deleteCategory(id);
 
+      alert('刪除成功');
+
       if (categories.length === 1 && currentPage > 1) {
         setCurrentPage((prev) => prev - 1);
       } else {
@@ -55,7 +70,7 @@ function AdminCategories() {
         <h1>分類管理</h1>
 
         <button
-          className="btn btn-primary"
+          className="btn btn-add"
           onClick={() => navigate('/admin/categories/create')}
         >
           ＋ 新增分類
@@ -65,25 +80,26 @@ function AdminCategories() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>編號</th>
-            <th>分類名稱</th>
-            <th>排序</th>
-            <th>操作</th>
+            <th style={{ width: '10%' }}>#</th>
+            <th style={{ width: '50%' }}>分類名稱</th>
+            <th style={{ width: '15%' }}>排序</th>
+            <th style={{ width: '25%' }}>操作</th>
           </tr>
         </thead>
 
         <tbody>
           {categories.length === 0 ? (
             <tr>
-              <td colSpan="4">目前沒有分類資料</td>
+              <td colSpan="4" className="empty-data">
+                目前沒有分類資料
+              </td>
             </tr>
           ) : (
             categories.map((category, index) => (
               <tr key={category.id}>
-                {/* 顯示流水號，不顯示 UUID */}
                 <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
 
-                <td>{category.name}</td>
+                <td title={category.name}>{category.name}</td>
 
                 <td>{category.sortOrder}</td>
 
@@ -92,7 +108,11 @@ function AdminCategories() {
                     <button
                       className="btn btn-edit"
                       onClick={() =>
-                        navigate(`/admin/categories/edit/${category.id}`)
+                        navigate(`/admin/categories/edit/${category.id}`, {
+                          state: {
+                            page: currentPage,
+                          },
+                        })
                       }
                     >
                       編輯

@@ -1,20 +1,18 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { memo } from 'react';
 
 function TextEditor({ value, onChange }) {
   return (
     <CKEditor
+      key={value ? 'loaded' : 'empty'}
       editor={ClassicEditor}
-      data={value || ''}
+      data={value ?? ''}
       onChange={(event, editor) => {
-        const data = editor.getData();
-
-        if (data !== value) {
-          onChange(data);
-        }
+        onChange(editor.getData());
       }}
     />
   );
 }
 
-export default TextEditor;
+export default memo(TextEditor);

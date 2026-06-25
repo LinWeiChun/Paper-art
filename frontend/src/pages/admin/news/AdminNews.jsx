@@ -77,7 +77,7 @@ function AdminNews() {
         <h1>最新消息管理</h1>
 
         <button
-          className="btn btn-primary"
+          className="btn btn-add"
           onClick={() => navigate('/admin/news/create')}
         >
           ＋ 新增消息
@@ -87,10 +87,10 @@ function AdminNews() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>標題</th>
-            <th>日期</th>
-            <th>操作</th>
+            <th style={{ width: '8%' }}>#</th>
+            <th style={{ width: '52%' }}>標題</th>
+            <th style={{ width: '20%' }}>日期</th>
+            <th style={{ width: '20%' }}>操作</th>
           </tr>
         </thead>
 

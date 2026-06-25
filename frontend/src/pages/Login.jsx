@@ -12,25 +12,36 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState('');
+  const [captchaRotate, setCaptchaRotate] = useState(0);
   const [inputCaptcha, setInputCaptcha] = useState('');
   const [errorCount, setErrorCount] = useState(0);
   const [lockUntil, setLockUntil] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 產生驗證碼
   const generateCaptcha = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+
+    const length = Math.floor(Math.random() * 3) + 4;
 
     let code = '';
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < length; i++) {
       code += chars[Math.floor(Math.random() * chars.length)];
     }
 
     setCaptcha(code);
+
+    // 只在重新產生驗證碼時改變角度
+    setCaptchaRotate(Math.floor(Math.random() * 11) - 5);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     // 是否鎖定
     if (lockUntil && new Date().getTime() < lockUntil) {
@@ -39,7 +50,7 @@ function Login() {
     }
 
     // 驗證碼
-    if (inputCaptcha.toUpperCase() !== captcha) {
+    if (inputCaptcha !== captcha) {
       alert('驗證碼錯誤');
       generateCaptcha();
       setInputCaptcha('');
@@ -141,7 +152,16 @@ function Login() {
           <label>驗證碼</label>
 
           <div className="captcha-box">
-            <span>{captcha}</span>
+            <span className="captcha-text">
+              <span
+                className="captcha-code"
+                style={{
+                  transform: `rotate(${captchaRotate}deg)`,
+                }}
+              >
+                {captcha}
+              </span>
+            </span>
 
             <button
               type="button"
@@ -161,8 +181,8 @@ function Login() {
           />
         </div>
 
-        <button type="submit" className="login-btn">
-          登入
+        <button type="submit" className="login-btn" disabled={isSubmitting}>
+          {isSubmitting ? '登入中...' : '登入'}
         </button>
       </form>
     </div>

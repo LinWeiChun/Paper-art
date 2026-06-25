@@ -75,19 +75,66 @@ body {
 /* 驗證碼區塊 */
 .captcha-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  padding: 14px 16px;
-  background: #f8f8f8;
-  border-radius: 12px;
+  gap: 10px;
 }
 
-.captcha-box span {
+.captcha-text {
+  min-width: 120px;
+  padding: 10px 20px;
+
+  background: #f3f4f6;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  user-select: none;
+  overflow: hidden;
+}
+
+.captcha-code {
+  display: inline-block;
+
   font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 5px;
-  color: #b22222;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 4px;
+
+  color: #333;
+  font-family: 'Courier New', monospace;
+}
+/* 雜訊線 */
+.captcha-code::before {
+  content: '';
+
+  position: absolute;
+  left: -10%;
+  top: 50%;
+
+  width: 120%;
+  height: 2px;
+
+  background: rgba(0, 0, 0, 0.3);
+
+  transform: rotate(-10deg);
+}
+
+.captcha-code::after {
+  content: '';
+
+  position: absolute;
+  left: -10%;
+  top: 30%;
+
+  width: 120%;
+  height: 2px;
+
+  background: rgba(0, 0, 0, 0.15);
+
+  transform: rotate(8deg);
 }
 
 /* 重新產生 */

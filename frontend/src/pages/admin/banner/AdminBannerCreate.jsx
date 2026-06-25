@@ -7,6 +7,7 @@ import '../../../styles/admin/adminForm.css';
 
 function AdminBannerCreate() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -38,6 +39,10 @@ function AdminBannerCreate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
       await createBanner(formData, image);
@@ -126,9 +131,8 @@ function AdminBannerCreate() {
           >
             返回列表
           </button>
-
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

@@ -9,7 +9,7 @@ import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorCreate() {
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     title: '',
@@ -39,6 +39,10 @@ function AdminAuthorCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       await createAuthor(formData, image);
 
@@ -49,12 +53,14 @@ function AdminAuthorCreate() {
       console.error(error);
 
       alert('新增失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="admin-page">
-      <h1>新增作者</h1>
+      <h1 className="admin-title">新增作者</h1>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         {/* 姓名 */}
@@ -66,6 +72,7 @@ function AdminAuthorCreate() {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -101,7 +108,7 @@ function AdminAuthorCreate() {
 
           {preview && (
             <>
-              <p>圖片預覽：</p>
+              <label style={{ marginTop: '12px' }}>圖片預覽</label>
 
               <img src={preview} alt="preview" className="preview-image" />
             </>
@@ -115,10 +122,10 @@ function AdminAuthorCreate() {
           <TextEditor
             value={formData.description}
             onChange={(value) =>
-              setFormData({
-                ...formData,
+              setFormData((prev) => ({
+                ...prev,
                 description: value,
-              })
+              }))
             }
           />
         </div>
@@ -132,8 +139,8 @@ function AdminAuthorCreate() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

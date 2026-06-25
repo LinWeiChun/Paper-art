@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { createNews } from '../../../api/newsApi';
 import SummaryEditor from '../../../components/admin/SummaryEditor';
 import TextEditor from '../../../components/admin/TextEditor';
+
 import '../../../styles/admin/adminForm.css';
 
 function AdminNewsCreate() {
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -22,10 +23,12 @@ function AdminNewsCreate() {
   const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -40,7 +43,9 @@ function AdminNewsCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
       const news = {
@@ -74,15 +79,15 @@ function AdminNewsCreate() {
       console.error(error);
       alert('新增失敗');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div>
+    <div className="admin-page">
       <h1>新增最新消息</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form className="admin-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>標題</label>
 
@@ -91,31 +96,29 @@ function AdminNewsCreate() {
             name="title"
             value={formData.title}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div className="form-group">
-          <label>日期</label>
+          <label>發布日期</label>
 
           <input
             type="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div className="form-group">
-          <label>上傳圖片</label>
+          <label>消息圖片</label>
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
-            <>
-              <p>圖片預覽：</p>
-
-              <img src={preview} alt="預覽" className="preview-image" />
-            </>
+            <img src={preview} alt="preview" className="preview-image" />
           )}
         </div>
 
@@ -125,24 +128,24 @@ function AdminNewsCreate() {
           <SummaryEditor
             value={formData.summary}
             onChange={(value) =>
-              setFormData({
-                ...formData,
+              setFormData((prev) => ({
+                ...prev,
                 summary: value,
-              })
+              }))
             }
           />
         </div>
 
         <div className="form-group">
-          <label>詳細資訊</label>
+          <label>詳細內容</label>
 
           <TextEditor
             value={formData.content}
             onChange={(value) =>
-              setFormData({
-                ...formData,
+              setFormData((prev) => ({
+                ...prev,
                 content: value,
-              })
+              }))
             }
           />
         </div>
@@ -156,8 +159,8 @@ function AdminNewsCreate() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? '儲存中...' : '儲存'}
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

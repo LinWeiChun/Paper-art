@@ -65,23 +65,22 @@ function AdminArts() {
         <h1>作品管理</h1>
 
         <button
-          className="btn btn-primary"
+          className="btn btn-add"
           onClick={() => navigate('/admin/arts/create')}
         >
           ＋ 新增作品
         </button>
       </div>
-
-      <table className="admin-table">
+      <table className="admin-table admin-table-fixed">
         <thead>
           <tr>
-            <th>#</th>
-            <th>縮圖</th>
-            <th>作品名稱</th>
-            <th>作者</th>
-            <th>分類</th>
-            <th>精選</th>
-            <th>操作</th>
+            <th style={{ width: '5%' }}>#</th>
+            <th style={{ width: '12%' }}>縮圖</th>
+            <th style={{ width: '25%' }}>作品名稱</th>
+            <th style={{ width: '18%' }}>作者</th>
+            <th style={{ width: '18%' }}>分類</th>
+            <th style={{ width: '7%' }}>精選</th>
+            <th style={{ width: '15%' }}>操作</th>
           </tr>
         </thead>
 
