@@ -48,7 +48,7 @@ function AdminBanners() {
         <h1>Banner 管理</h1>
 
         <button
-          className="btn btn-primary"
+          className="btn btn-add"
           onClick={() => navigate('/admin/banners/create')}
         >
           ＋ 新增 Banner
@@ -58,13 +58,12 @@ function AdminBanners() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>圖片</th>
-            <th>標題</th>
-            <th>副標題</th>
-            <th>排序</th>
-            <th>狀態</th>
-            <th>操作</th>
+            <th style={{ width: '5%' }}>#</th>
+            <th style={{ width: '22%' }}>圖片</th>
+            <th style={{ width: '38%' }}>標題</th>
+            <th style={{ width: '10%' }}>排序</th>
+            <th style={{ width: '10%' }}>狀態</th>
+            <th style={{ width: '15%' }}>操作</th>
           </tr>
         </thead>
 
@@ -98,8 +97,6 @@ function AdminBanners() {
                 </td>
 
                 <td>{banner.title}</td>
-
-                <td>{banner.subtitle || '-'}</td>
 
                 <td>{banner.sortOrder}</td>
 

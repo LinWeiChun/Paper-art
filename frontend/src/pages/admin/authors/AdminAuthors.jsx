@@ -80,10 +80,10 @@ function AdminAuthors() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>姓名</th>
-            <th>職稱</th>
-            <th>操作</th>
+            <th style={{ width: '10%' }}>#</th>
+            <th style={{ width: '35%' }}>姓名</th>
+            <th style={{ width: '35%' }}>職稱</th>
+            <th style={{ width: '20%' }}>操作</th>
           </tr>
         </thead>
 

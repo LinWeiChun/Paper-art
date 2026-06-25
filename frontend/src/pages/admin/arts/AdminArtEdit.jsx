@@ -13,6 +13,7 @@ import '../../../styles/admin/adminForm.css';
 function AdminArtEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -124,12 +125,11 @@ function AdminArtEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 防止連點
-    if (loading) return;
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
-      setLoading(true);
-
       await updateArt(id, formData, image);
 
       alert('修改成功');
@@ -139,15 +139,15 @@ function AdminArtEdit() {
       console.error(error);
       alert('修改失敗');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-form-container">
       <h1>編輯作品</h1>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {/* 標題 */}
         <div className="form-group">
           <label>作品名稱</label>
@@ -250,14 +250,16 @@ function AdminArtEdit() {
 
         {/* 精選 */}
         <div className="form-group checkbox-group">
-          <label>
+          <label>作品設定</label>
+
+          <label className="checkbox-label">
             <input
               type="checkbox"
               name="featured"
               checked={formData.featured}
               onChange={handleChange}
             />
-            <span>精選作品</span>
+            精選作品
           </label>
         </div>
 
@@ -266,12 +268,15 @@ function AdminArtEdit() {
           <label>封面圖片</label>
 
           {preview && (
-            <img src={preview} alt="preview" className="preview-image" />
+            <>
+              <p>目前圖片：</p>
+
+              <img src={preview} alt="preview" className="preview-image" />
+            </>
           )}
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
-
         {/* 介紹 */}
         <div className="form-group">
           <label>作品介紹</label>
@@ -292,13 +297,13 @@ function AdminArtEdit() {
             type="button"
             className="btn btn-secondary"
             onClick={() => navigate('/admin/arts')}
-            disabled={loading}
+            disabled={isSubmitting}
           >
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? '儲存中...' : '儲存'}
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

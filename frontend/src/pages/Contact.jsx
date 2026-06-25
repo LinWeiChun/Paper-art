@@ -1,7 +1,52 @@
+import { useEffect, useState } from 'react';
+
+import { getContact } from '../api/contactApi';
 import Layout from '../layouts/Layout';
+
 import '../styles/pages/contact.css';
 
 function Contact() {
+  const [contact, setContact] = useState({
+    contactPerson: '',
+    phone: '',
+    mobile: '',
+    email: '',
+    address: '',
+    facebook: '',
+    instagram: '',
+    line: '',
+    website: '',
+    businessHours: '',
+    googleMap: '',
+  });
+
+  useEffect(() => {
+    fetchContact();
+  }, []);
+
+  const fetchContact = async () => {
+    try {
+      const response = await getContact();
+      setContact(response.data || {});
+    } catch (error) {
+      console.error('取得聯絡資訊失敗：', error);
+    }
+  };
+
+  const hasContactInfo = [
+    contact.contactPerson,
+    contact.phone,
+    contact.mobile,
+    contact.email,
+    contact.address,
+    contact.facebook,
+    contact.instagram,
+    contact.line,
+    contact.website,
+    contact.businessHours,
+    contact.googleMap,
+  ].some(Boolean);
+
   return (
     <Layout>
       <div className="contact-container">
@@ -13,29 +58,117 @@ function Contact() {
 
         <div className="contact-content">
           {/* 聯絡資訊 */}
-          <section className="contact-info-section">
-            <div className="contact-card">
-              <h3>聯絡人</h3>
-              <p>李煥章老師</p>
-            </div>
+          {hasContactInfo && (
+            <section className="contact-info-section">
+              <h2>聯絡資訊</h2>
 
-            <div className="contact-card">
-              <h3>電話</h3>
-              <p>0912-345-678</p>
-            </div>
+              {contact.contactPerson && (
+                <div className="info-row">
+                  <span>聯絡人</span>
+                  <p>{contact.contactPerson}</p>
+                </div>
+              )}
 
-            <div className="contact-card">
-              <h3>Email</h3>
-              <p>example@email.com</p>
-            </div>
+              {contact.phone && (
+                <div className="info-row">
+                  <span>公司電話</span>
+                  <p>{contact.phone}</p>
+                </div>
+              )}
 
-            <div className="contact-card">
-              <h3>地址</h3>
-              <p>新北市板橋區 xxx 路 xxx 號</p>
-            </div>
-          </section>
+              {contact.mobile && (
+                <div className="info-row">
+                  <span>手機</span>
+                  <p>{contact.mobile}</p>
+                </div>
+              )}
 
-          {/* 表單 */}
+              {contact.email && (
+                <div className="info-row">
+                  <span>Email</span>
+                  <p>{contact.email}</p>
+                </div>
+              )}
+
+              {contact.address && (
+                <div className="info-row">
+                  <span>地址</span>
+                  <p>{contact.address}</p>
+                </div>
+              )}
+
+              {contact.website && (
+                <div className="info-row">
+                  <span>官方網站</span>
+                  <a
+                    href={contact.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {contact.website}
+                  </a>
+                </div>
+              )}
+
+              {contact.businessHours && (
+                <div className="info-row">
+                  <span>營業時間</span>
+                  <p>{contact.businessHours}</p>
+                </div>
+              )}
+
+              {(contact.facebook || contact.instagram || contact.line) && (
+                <div className="info-row">
+                  <span>社群平台</span>
+
+                  <div className="social-links">
+                    {contact.facebook && (
+                      <a
+                        href={contact.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Facebook
+                      </a>
+                    )}
+
+                    {contact.instagram && (
+                      <a
+                        href={contact.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Instagram
+                      </a>
+                    )}
+
+                    {contact.line && (
+                      <a
+                        href={contact.line}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        LINE
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {contact.googleMap && (
+                <div className="map-wrapper">
+                  <iframe
+                    src={contact.googleMap}
+                    title="Google Map"
+                    loading="lazy"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* 聯絡表單 */}
           <section className="contact-form-section">
             <h2>留言給我們</h2>
 
@@ -44,7 +177,6 @@ function Contact() {
 
               <input type="email" placeholder="電子郵件" />
 
-              {/* 主旨選單 */}
               <select>
                 <option value="">請選擇主旨</option>
                 <option value="課程資訊">課程資訊</option>

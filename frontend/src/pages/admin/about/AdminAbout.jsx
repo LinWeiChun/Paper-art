@@ -6,6 +6,9 @@ import TextEditor from '../../../components/admin/TextEditor';
 import '../../../styles/admin/adminForm.css';
 
 function AdminAbout() {
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     bannerTitle: '',
     bannerSubtitle: '',
@@ -23,56 +26,91 @@ function AdminAbout() {
     try {
       const response = await getAbout();
 
-      setFormData(response.data);
+      const data = response.data;
+
+      setFormData({
+        bannerTitle: data.bannerTitle ?? '',
+        bannerSubtitle: data.bannerSubtitle ?? '',
+        storyTitle: data.storyTitle ?? '',
+        storyContent: data.storyContent ?? '',
+        vision: data.vision ?? '',
+        values: data.values ?? [],
+      });
     } catch (error) {
       console.error(error);
-
       alert('取得資料失敗');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleValueChange = (index, field, value) => {
-    const newValues = [...formData.values];
+    setFormData((prev) => {
+      const newValues = [...prev.values];
 
-    newValues[index][field] = value;
+      newValues[index] = {
+        ...newValues[index],
+        [field]: value,
+      };
 
-    setFormData({
-      ...formData,
-      values: newValues,
+      return {
+        ...prev,
+        values: newValues,
+      };
     });
   };
 
   const handleAddValue = () => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       values: [
-        ...formData.values,
+        ...prev.values,
         {
           id: Date.now(),
           title: '',
           description: '',
-          sortOrder: formData.values.length + 1,
+          sortOrder: prev.values.length + 1,
         },
       ],
-    });
+    }));
   };
 
   const handleDeleteValue = (id) => {
-    setFormData({
-      ...formData,
-      values: formData.values.filter((item) => item.id !== id),
-    });
+    setFormData((prev) => ({
+      ...prev,
+      values: prev.values.filter((item) => item.id !== id),
+    }));
+  };
+
+  const handleStoryChange = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      storyContent: value,
+    }));
+  };
+
+  const handleVisionChange = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      vision: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
       const requestData = {
@@ -82,52 +120,37 @@ function AdminAbout() {
         storyContent: formData.storyContent,
         vision: formData.vision,
 
-        values: formData.values.map((item, index) => ({
-          title: item.title,
-          description: item.description,
-          sortOrder: index + 1,
-        })),
+        values: formData.values
+          .filter((item) => item.title?.trim() && item.description?.trim())
+          .map((item, index) => ({
+            title: item.title.trim(),
+            description: item.description.trim(),
+            sortOrder: index + 1,
+          })),
       };
 
       await updateAbout(requestData);
 
       alert('儲存成功');
+      // 重新載入最新資料
+      await fetchAbout();
     } catch (error) {
       console.error(error);
-
       alert('儲存失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (loading) {
+    return <div className="admin-page">資料載入中...</div>;
+  }
+
   return (
-    <div className="admin-form-container">
+    <div className="admin-page">
       <h1>關於我們維護</h1>
 
       <form onSubmit={handleSubmit}>
-        {/* Banner */}
-        {/* <h2>Banner 區塊</h2>
-
-        <div className="form-group">
-          <label>Banner 標題</label>
-
-          <input
-            name="bannerTitle"
-            value={formData.bannerTitle}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Banner 副標題</label>
-
-          <input
-            name="bannerSubtitle"
-            value={formData.bannerSubtitle}
-            onChange={handleChange}
-          />
-        </div> */}
-
-        {/* 品牌故事 */}
         <h2>品牌故事</h2>
 
         <div className="form-group">
@@ -145,33 +168,18 @@ function AdminAbout() {
 
           <TextEditor
             value={formData.storyContent}
-            onChange={(value) =>
-              setFormData({
-                ...formData,
-                storyContent: value,
-              })
-            }
+            onChange={handleStoryChange}
           />
         </div>
 
-        {/* 願景 */}
         <h2>願景</h2>
 
         <div className="form-group">
           <label>願景內容</label>
 
-          <TextEditor
-            value={formData.vision}
-            onChange={(value) =>
-              setFormData({
-                ...formData,
-                vision: value,
-              })
-            }
-          />
+          <TextEditor value={formData.vision} onChange={handleVisionChange} />
         </div>
 
-        {/* 核心價值 */}
         <h2>核心價值</h2>
 
         <div className="form-group">
@@ -207,19 +215,18 @@ function AdminAbout() {
 
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-add"
             onClick={handleAddValue}
           >
             ＋ 新增核心價值
           </button>
         </div>
 
-        <br />
-        <br />
-
-        <button type="submit" className="btn btn-primary">
-          儲存資料
-        </button>
+        <div className="action-buttons">
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
+          </button>
+        </div>
       </form>
     </div>
   );

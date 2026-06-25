@@ -11,6 +11,7 @@ import '../../../styles/admin/adminForm.css';
 
 function AdminArtCreate() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -102,6 +103,10 @@ function AdminArtCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       await createArt(formData, image);
 
@@ -111,14 +116,15 @@ function AdminArtCreate() {
     } catch (error) {
       console.error(error);
       alert('新增失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
   return (
-    <div className="admin-page">
+    <div className="admin-form-container">
       <h1>新增作品</h1>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {/* 標題 */}
         <div className="form-group">
           <label>作品名稱</label>
@@ -221,15 +227,14 @@ function AdminArtCreate() {
 
         {/* 精選 */}
         <div className="form-group checkbox-group">
-          <label>
+          <label className="checkbox-label">
             <input
               type="checkbox"
               name="featured"
               checked={formData.featured}
               onChange={handleChange}
             />
-
-            <span>精選作品</span>
+            精選作品
           </label>
         </div>
 
@@ -240,7 +245,11 @@ function AdminArtCreate() {
           <input type="file" accept="image/*" onChange={handleImageChange} />
 
           {preview && (
-            <img src={preview} alt="preview" className="preview-image" />
+            <>
+              <p>圖片預覽：</p>
+
+              <img src={preview} alt="preview" className="preview-image" />
+            </>
           )}
         </div>
 

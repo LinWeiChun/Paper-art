@@ -8,6 +8,7 @@ import '../../../styles/admin/adminForm.css';
 function AdminBannerEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -66,6 +67,9 @@ function AdminBannerEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       await updateBanner(id, formData, image);
 
@@ -158,8 +162,8 @@ function AdminBannerEdit() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存修改
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

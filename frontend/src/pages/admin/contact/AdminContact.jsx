@@ -1,80 +1,197 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-import '../../../styles/admin/adminTable.css';
+import { useEffect } from 'react';
+import { getContact, updateContact } from '../../../api/contactApi';
+import '../../../styles/admin/adminForm.css';
 
 function AdminContact() {
-  const [contacts, setContacts] = useState([
-    {
-      id: 1,
-      name: '王小明',
-      email: 'test@gmail.com',
-      subject: '合作邀約',
-      createdAt: '2026-06-12',
-      status: '未處理',
-    },
-    {
-      id: 2,
-      name: '陳小姐',
-      email: 'abc@yahoo.com',
-      subject: '課程問題',
-      createdAt: '2026-06-11',
-      status: '處理中',
-    },
-  ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    contactPerson: '',
+    phone: '',
+    mobile: '',
+    email: '',
+    address: '',
+    facebook: '',
+    instagram: '',
+    line: '',
+    website: '',
+    businessHours: '',
+    googleMap: '',
+  });
 
-  const handleStatusChange = (id, newStatus) => {
-    setContacts(
-      contacts.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              status: newStatus,
-            }
-          : item,
-      ),
-    );
+  useEffect(() => {
+    fetchContact();
+  }, []);
+
+  const fetchContact = async () => {
+    try {
+      const response = await getContact();
+
+      setFormData({
+        contactPerson: response.data.contactPerson || '',
+        phone: response.data.phone || '',
+        mobile: response.data.mobile || '',
+        email: response.data.email || '',
+        address: response.data.address || '',
+        facebook: response.data.facebook || '',
+        instagram: response.data.instagram || '',
+        line: response.data.line || '',
+        website: response.data.website || '',
+        businessHours: response.data.businessHours || '',
+        googleMap: response.data.googleMap || '',
+      });
+    } catch (error) {
+      console.error('取得聯絡資訊失敗：', error);
+    }
+  };
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      await updateContact(formData);
+
+      alert('儲存成功');
+      await fetchContact();
+    } catch (error) {
+      console.error(error);
+      alert('儲存失敗');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="admin-table-container">
-      <h1>聯絡表單管理</h1>
+    <div className="admin-form-container">
+      <h1>聯絡資訊維護</h1>
 
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>姓名</th>
-            <th>Email</th>
-            <th>主旨</th>
-            <th>日期</th>
-            <th>狀態</th>
-            <th>操作</th>
-          </tr>
-        </thead>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>聯絡人</label>
+          <input
+            type="text"
+            name="contactPerson"
+            value={formData.contactPerson}
+            onChange={handleChange}
+          />
+        </div>
 
-        <tbody>
-          {contacts.map((item) => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>{item.email}</td>
-              <td>{item.subject}</td>
-              <td>{item.createdAt}</td>
+        <div className="form-group">
+          <label>公司電話</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+        </div>
 
-              <td>
-                <span className={`status-badge status-${item.status}`}>
-                  {item.status}
-                </span>
-              </td>
+        <div className="form-group">
+          <label>手機號碼</label>
+          <input
+            type="text"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+          />
+        </div>
 
-              <td>
-                <Link to={`/admin/contact/${item.id}`} className="btn btn-edit">
-                  查看詳情
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>地址</label>
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Facebook</label>
+          <input
+            type="text"
+            name="facebook"
+            value={formData.facebook}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Instagram</label>
+          <input
+            type="text"
+            name="instagram"
+            value={formData.instagram}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>LINE</label>
+          <input
+            type="text"
+            name="line"
+            value={formData.line}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>官方網站</label>
+          <input
+            type="text"
+            name="website"
+            value={formData.website}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>營業時間</label>
+          <input
+            type="text"
+            name="businessHours"
+            value={formData.businessHours}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Google Map 嵌入網址</label>
+          <textarea
+            rows="4"
+            name="googleMap"
+            value={formData.googleMap}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="action-buttons">
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

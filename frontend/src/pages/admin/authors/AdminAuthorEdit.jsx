@@ -10,6 +10,7 @@ function AdminAuthorEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const previousPage = location.state?.page || 1;
 
@@ -68,6 +69,10 @@ function AdminAuthorEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       await updateAuthor(id, formData, image);
 
@@ -78,14 +83,16 @@ function AdminAuthorEdit() {
       console.error(error);
 
       alert('修改失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-form-container">
       <h1>編輯作者</h1>
 
-      <form className="admin-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {/* 作者姓名 */}
         <div className="form-group">
           <label>作者姓名</label>
@@ -116,6 +123,7 @@ function AdminAuthorEdit() {
 
           <input
             type="number"
+            min="0"
             name="sortOrder"
             value={formData.sortOrder}
             onChange={handleChange}
@@ -123,19 +131,18 @@ function AdminAuthorEdit() {
         </div>
 
         {/* 目前照片 */}
-        {preview && (
-          <div className="form-group">
-            <label>目前照片</label>
-
-            <img src={preview} alt="作者照片" className="preview-image" />
-          </div>
-        )}
-
-        {/* 更換照片 */}
         <div className="form-group">
-          <label>更換照片</label>
+          <label>作者照片</label>
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
+
+          {preview && (
+            <>
+              <p>圖片預覽：</p>
+
+              <img src={preview} alt="作者照片" className="preview-image" />
+            </>
+          )}
         </div>
 
         {/* 作者介紹 */}
@@ -163,8 +170,8 @@ function AdminAuthorEdit() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

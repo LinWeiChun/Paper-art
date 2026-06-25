@@ -1,0 +1,39 @@
+/* ========================================
+   Theme
+======================================== */
+:root {
+  /* 主色 */
+  --primary-color: #4b6b4b;
+  --primary-hover: #395339;
+
+  /* 新增 */
+  --add-color: #2e7d32;
+  --add-hover: #1b5e20;
+
+  /* 編輯 */
+  --edit-color: #1976d2;
+  --edit-hover: #1565c0;
+
+  /* 刪除 */
+  --delete-color: #d32f2f;
+  --delete-hover: #c62828;
+
+  /* 返回 */
+  --secondary-color: #757575;
+  --secondary-hover: #616161;
+
+  /* Layout */
+  --sidebar-color: #2f3b52;
+  --sidebar-hover: #3d4c69;
+  --sidebar-active: #ffffff;
+
+  --border-color: #e0e0e0;
+  --background-color: #f5f6fa;
+
+  --text-color: #333;
+  --text-light: #666;
+
+  --sidebar-text: #f5f5f5;
+  --sidebar-text-muted: #c7d0dd;
+  --sidebar-text-active: #2f3b52;
+}

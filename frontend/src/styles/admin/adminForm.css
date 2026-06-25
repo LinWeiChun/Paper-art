@@ -1,4 +1,6 @@
-/* ===== 共用欄位 ===== */
+/* ========================================
+   Form
+======================================== */
 .form-group {
   margin-bottom: 24px;
 }
@@ -10,7 +12,6 @@
   color: #333;
 }
 
-/* input、textarea、select 共用 */
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -19,7 +20,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus,
@@ -30,15 +31,67 @@
   box-shadow: 0 0 0 3px rgba(75, 107, 75, 0.1);
 }
 
-/* ===== 圖片 ===== */
+/* ========================================
+   Image Preview
+======================================== */
 .preview-image {
   width: 250px;
   margin-top: 15px;
-  border-radius: 10px;
   border: 1px solid #ddd;
+  border-radius: 10px;
 }
 
-/* ===== 經歷欄位 ===== */
+/* ========================================
+   Checkbox
+======================================== */
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.checkbox-group input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #4b6b4b;
+}
+
+/* ========================================
+   Password Input
+======================================== */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  color: #666;
+  font-size: 18px;
+}
+
+.password-toggle:hover {
+  color: #333;
+}
+
+/* ========================================
+   Experience
+======================================== */
 .experience-row {
   display: flex;
   gap: 12px;
@@ -49,25 +102,45 @@
   flex: 1;
 }
 
-/* ===== 左右選單 ===== */
+/* ========================================
+   Core Value
+======================================== */
+.value-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.value-row input:first-child {
+  flex: 1;
+}
+
+.value-row input:nth-child(2) {
+  flex: 2;
+}
+
+/* ========================================
+   Dual List
+======================================== */
 .dual-list {
   display: flex;
   gap: 20px;
   margin-top: 10px;
 }
 
-/* 左右區塊 */
 .list-box {
   flex: 1;
-  min-height: 250px;
   padding: 18px;
+
+  min-height: 250px;
+  max-height: 300px;
+
+  overflow-y: auto;
+
   border: 1px solid #ddd;
   border-radius: 10px;
   background: #fafafa;
-
-  /* 新增 */
-  max-height: 300px;
-  overflow-y: auto;
 }
 
 .list-box h4 {
@@ -77,6 +150,7 @@
   color: #555;
 }
 
+/* Scrollbar */
 .list-box::-webkit-scrollbar {
   width: 8px;
 }
@@ -95,21 +169,23 @@
   background: #999;
 }
 
-/* 按鈕共用 */
+/* Items */
 .list-item,
 .selected-item {
   width: 100%;
-  margin-bottom: 10px;
   padding: 12px 14px;
+  margin-bottom: 10px;
+
   border: none;
   border-radius: 8px;
+
   text-align: left;
   font-size: 14px;
+
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* 可選項目 */
 .list-item {
   background: #f1f1f1;
   color: #333;
@@ -119,7 +195,6 @@
   background: #e2e2e2;
 }
 
-/* 已選項目 */
 .selected-item {
   background: #4b6b4b;
   color: #fff;
@@ -129,26 +204,17 @@
   background: #395339;
 }
 
-/* ===== 核心價值 ===== */
-.value-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  align-items: center;
-}
-
-.value-row input:first-child {
-  flex: 1;
-}
-
-.value-row input:nth-child(2) {
-  flex: 2;
-}
-
-/* ===== RWD ===== */
+/* ========================================
+   Responsive
+======================================== */
 @media (max-width: 768px) {
-  .dual-list {
+  .dual-list,
+  .value-row {
     flex-direction: column;
+  }
+
+  .value-row {
+    align-items: stretch;
   }
 
   .list-box {
@@ -158,46 +224,4 @@
   .preview-image {
     width: 100%;
   }
-  .value-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-/* ===== Checkbox ===== */
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 0;
-  cursor: pointer;
-}
-
-.checkbox-group input[type='checkbox'] {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: #4b6b4b;
-  cursor: pointer;
-}
-
-.password-wrapper {
-  position: relative;
-}
-
-.password-wrapper input {
-  width: 100%;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  color: #666;
-  font-size: 18px;
 }

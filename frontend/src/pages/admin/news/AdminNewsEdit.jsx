@@ -12,7 +12,7 @@ function AdminNewsEdit() {
   const { id } = useParams();
 
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const location = useLocation();
 
   const page = location.state?.page || 1;
@@ -78,6 +78,10 @@ function AdminNewsEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       const newsData = {
         title: formData.title,
@@ -97,7 +101,6 @@ function AdminNewsEdit() {
         }),
       );
 
-      // 有選新圖片才上傳
       if (image) {
         requestData.append('image', image);
       }
@@ -109,8 +112,9 @@ function AdminNewsEdit() {
       navigate(`/admin/news?page=${page}`);
     } catch (error) {
       console.error(error);
-
       alert('修改失敗');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -120,7 +124,7 @@ function AdminNewsEdit() {
 
   return (
     <div className="admin-page">
-      <h1>編輯最新消息</h1>
+      <h1 className="admin-title">編輯最新消息</h1>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         {/* 標題 */}
@@ -151,8 +155,10 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>目前圖片</label>
 
-          {currentImage && (
-            <img src={currentImage} alt="原圖" className="preview-image" />
+          {currentImage ? (
+            <img src={currentImage} alt="目前圖片" className="preview-image" />
+          ) : (
+            <p>尚未上傳圖片</p>
           )}
         </div>
 
@@ -164,9 +170,9 @@ function AdminNewsEdit() {
 
           {preview && (
             <>
-              <p>新圖片預覽：</p>
+              <label style={{ marginTop: '12px' }}>新圖片預覽</label>
 
-              <img src={preview} alt="新圖" className="preview-image" />
+              <img src={preview} alt="新圖片預覽" className="preview-image" />
             </>
           )}
         </div>
@@ -210,8 +216,8 @@ function AdminNewsEdit() {
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button type="submit" className="btn btn-add" disabled={isSubmitting}>
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>
