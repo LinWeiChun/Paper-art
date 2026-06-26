@@ -3,8 +3,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { getNewsById, updateNews } from '../../../api/newsApi';
 
-import SummaryEditor from '../../../components/admin/SummaryEditor';
-import TextEditor from '../../../components/admin/TextEditor';
+import Editor from '../../../components/editor/Editor';
+import SummaryEditor from '../../../components/editor/SummaryEditor';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -196,7 +196,7 @@ function AdminNewsEdit() {
         <div className="form-group">
           <label>詳細資訊</label>
 
-          <TextEditor
+          <Editor
             value={formData.content}
             onChange={(value) =>
               setFormData({

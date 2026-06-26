@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createNews } from '../../../api/newsApi';
-import SummaryEditor from '../../../components/admin/SummaryEditor';
-import TextEditor from '../../../components/admin/TextEditor';
+import Editor from '../../../components/editor/Editor';
+import SummaryEditor from '../../../components/editor/SummaryEditor';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -139,7 +139,7 @@ function AdminNewsCreate() {
         <div className="form-group">
           <label>詳細內容</label>
 
-          <TextEditor
+          <Editor
             value={formData.content}
             onChange={(value) =>
               setFormData((prev) => ({

@@ -70,7 +70,7 @@ function AdminAuthors() {
         <h1>作者管理</h1>
 
         <button
-          className="btn btn-primary"
+          className="btn btn-add"
           onClick={() => navigate('/admin/authors/create')}
         >
           ＋ 新增作者

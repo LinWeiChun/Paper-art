@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { getAuthorById, updateAuthor } from '../../../api/authorsApi';
-import TextEditor from '../../../components/admin/TextEditor';
+import Editor from '../../../components/editor/Editor';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -149,7 +149,7 @@ function AdminAuthorEdit() {
         <div className="form-group">
           <label>作者介紹</label>
 
-          <TextEditor
+          <Editor
             value={formData.description}
             onChange={(value) =>
               setFormData((prev) => ({

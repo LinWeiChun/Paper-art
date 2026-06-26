@@ -1,0 +1,50 @@
+.image-library-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.image-library-modal {
+  width: 1200px;
+  max-width: 90vw;
+
+  height: 80vh;
+
+  background: #fff;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.image-library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 24px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.image-library-body {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+}
+
+.image-library-close {
+  background: none;
+  border: none;
+
+  font-size: 26px;
+  cursor: pointer;
+}

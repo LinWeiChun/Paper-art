@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { getAbout, updateAbout } from '../../../api/aboutApi';
-import TextEditor from '../../../components/admin/TextEditor';
+import Editor from '../../../components/editor/Editor';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -166,10 +166,7 @@ function AdminAbout() {
         <div className="form-group">
           <label>品牌故事內容</label>
 
-          <TextEditor
-            value={formData.storyContent}
-            onChange={handleStoryChange}
-          />
+          <Editor value={formData.storyContent} onChange={handleStoryChange} />
         </div>
 
         <h2>願景</h2>
@@ -177,7 +174,7 @@ function AdminAbout() {
         <div className="form-group">
           <label>願景內容</label>
 
-          <TextEditor value={formData.vision} onChange={handleVisionChange} />
+          <Editor value={formData.vision} onChange={handleVisionChange} />
         </div>
 
         <h2>核心價值</h2>
