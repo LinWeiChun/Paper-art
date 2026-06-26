@@ -1,8 +1,33 @@
 package com.paperart.backend.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.paperart.backend.dto.response.UploadFileResponse;
+import com.paperart.backend.dto.response.UploadPageResponse;
+import com.paperart.backend.dto.response.UploadResponse;
 
 public interface FileUploadService {
 
-    String upload(MultipartFile file, String folder);
+    /**
+     * 上傳檔案
+     */
+    UploadResponse upload(MultipartFile file, String folder);
+
+    /**
+     * 取得指定資料夾所有檔案
+     */
+    UploadPageResponse listFiles(
+    	        String folder,
+    	        int page,
+    	        int size,
+    	        String keyword
+    	);
+
+    /**
+     * 刪除指定檔案
+     */
+    void delete(String key);
+
 }

@@ -5,7 +5,7 @@ import { createArt } from '../../../api/artApi';
 import { getAllAuthors } from '../../../api/authorsApi';
 import { getAllCategories } from '../../../api/categoryApi';
 
-import TextEditor from '../../../components/admin/TextEditor';
+import Editor from '../../../components/editor/Editor';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -257,7 +257,7 @@ function AdminArtCreate() {
         <div className="form-group">
           <label>作品介紹</label>
 
-          <TextEditor
+          <Editor
             value={formData.description}
             onChange={(value) =>
               setFormData((prev) => ({
