@@ -1,7 +1,6 @@
 package com.paperart.backend.dto.response;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,10 +10,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DashboardResponse {
 
-    private long artCount;
-    private long authorCount;
-    private long newsCount;
+  private long artCount;
+  private long authorCount;
+  private long newsCount;
 
-    private List<OptionResponse> recentArts;
-    private List<OptionResponse> recentNews;
+  private List<OptionResponse> recentArts;
+  private List<OptionResponse> recentNews;
 }

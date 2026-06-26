@@ -40,10 +40,10 @@ function News() {
     <Layout>
       <div className="news-container">
         {/* Banner */}
-        <section className="page-banner news-banner">
+        {/* <section className="page-banner news-banner">
           <h1>最新消息</h1>
           <p>展覽、課程與最新公告資訊</p>
-        </section>
+        </section> */}
 
         {/* News List */}
         <section className="news-list">

@@ -1,7 +1,8 @@
 package com.paperart.backend.entity;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,16 +12,15 @@ import lombok.Setter;
 @Setter
 public class Author extends BaseEntity {
 
-    private String name;
+  private String name;
 
-    private String title;
+  private String title;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String description;
+  @Column(columnDefinition = "LONGTEXT")
+  private String description;
 
-    private String avatarUrl;
+  private String avatarUrl;
 
-    @Column(nullable = false)
-    private Integer sortOrder = 0;
-
+  @Column(nullable = false)
+  private Integer sortOrder = 0;
 }

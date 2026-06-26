@@ -89,10 +89,10 @@ function WorkDetail() {
             {work.authors?.map((author) => author.name).join('、')}
           </p>
 
-          <p>
+          {/* <p>
             <strong>年份：</strong>
             {work.year || '未提供'}
-          </p>
+          </p> */}
 
           {/* 分類 */}
           <div className="detail-tags">

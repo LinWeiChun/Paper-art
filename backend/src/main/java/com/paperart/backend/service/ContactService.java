@@ -5,7 +5,7 @@ import com.paperart.backend.dto.response.ContactResponse;
 
 public interface ContactService {
 
-    ContactResponse getContact();
+  ContactResponse getContact();
 
-    ContactResponse update(ContactRequest request);
+  ContactResponse update(ContactRequest request);
 }

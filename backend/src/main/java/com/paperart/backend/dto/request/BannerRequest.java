@@ -1,21 +1,20 @@
 package com.paperart.backend.dto.request;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 public class BannerRequest {
 
-    private String title;
+  private String title;
 
-    private String subtitle;
+  private String subtitle;
 
-    private MultipartFile image;
+  private MultipartFile image;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 
-    private Boolean active;
+  private Boolean active;
 }

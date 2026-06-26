@@ -1,20 +1,13 @@
 package com.paperart.backend.entity;
 
-import java.time.LocalDate;
-
 import com.paperart.backend.enums.PublishStatus;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.time.LocalDate;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -23,27 +16,27 @@ import lombok.Setter;
 @Setter
 public class News extends BaseEntity {
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String content;
+  @Column(columnDefinition = "LONGTEXT")
+  private String content;
 
-    @Column(columnDefinition = "TEXT")
-    private String summary;
+  @Column(columnDefinition = "TEXT")
+  private String summary;
 
-    @Column(nullable = false)
-    private String coverImage;
+  @Column(nullable = false)
+  private String coverImage;
 
-    @Column(nullable = false)
-    private Boolean featured = false;
+  @Column(nullable = false)
+  private Boolean featured = false;
 
-    private LocalDate publishDate;
+  private LocalDate publishDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PublishStatus status = PublishStatus.DRAFT;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private PublishStatus status = PublishStatus.DRAFT;
 
-    @Column(nullable = false)
-    private Integer sortOrder = 0;
+  @Column(nullable = false)
+  private Integer sortOrder = 0;
 }

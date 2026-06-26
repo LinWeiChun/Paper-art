@@ -9,15 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UploadResponse {
 
-    /**
-     * R2 Object Key
-     * ex: ckeditor/6fa7d8b0_test.jpg
-     */
-    private String key;
+  /** R2 Object Key ex: ckeditor/6fa7d8b0_test.jpg */
+  private String key;
 
-    /**
-     * 公開網址
-     */
-    private String url;
-
+  /** 公開網址 */
+  private String url;
 }

@@ -7,25 +7,25 @@ import lombok.Setter;
 @Setter
 public class ContactRequest {
 
-    private String contactPerson;
+  private String contactPerson;
 
-    private String phone;
+  private String phone;
 
-    private String mobile;
+  private String mobile;
 
-    private String email;
+  private String email;
 
-    private String address;
+  private String address;
 
-    private String facebook;
+  private String facebook;
 
-    private String instagram;
+  private String instagram;
 
-    private String line;
+  private String line;
 
-    private String website;
+  private String website;
 
-    private String businessHours;
+  private String businessHours;
 
-    private String googleMap;
+  private String googleMap;
 }

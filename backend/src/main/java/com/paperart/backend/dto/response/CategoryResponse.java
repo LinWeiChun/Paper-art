@@ -9,9 +9,9 @@ import lombok.Setter;
 @Builder
 public class CategoryResponse {
 
-    private String id;
+  private String id;
 
-    private String name;
+  private String name;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 }

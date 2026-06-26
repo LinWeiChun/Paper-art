@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class AuthorRequest {
 
-    private String name;
+  private String name;
 
-    private String title;
+  private String title;
 
-    private String description;
+  private String description;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 }

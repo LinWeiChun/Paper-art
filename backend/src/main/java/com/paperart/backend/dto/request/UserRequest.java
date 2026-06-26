@@ -1,7 +1,6 @@
 package com.paperart.backend.dto.request;
 
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class UserRequest {
 
-    private String username;
+  private String username;
 
-    private String password;
+  private String password;
 
-    private Boolean enabled;
+  private Boolean enabled;
 
-    private List<String> roles;
+  private List<String> roles;
 }

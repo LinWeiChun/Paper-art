@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class TagResponse {
 
-    private String id;
+  private String id;
 
-    private String name;
+  private String name;
 }

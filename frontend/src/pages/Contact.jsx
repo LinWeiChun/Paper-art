@@ -51,10 +51,10 @@ function Contact() {
     <Layout>
       <div className="contact-container">
         {/* Banner */}
-        <section className="page-banner contact-banner">
+        {/* <section className="page-banner contact-banner">
           <h1>聯絡我們</h1>
           <p>歡迎與我們交流剪紙藝術、展覽合作與課程資訊</p>
-        </section>
+        </section> */}
 
         <div className="contact-content">
           {/* 聯絡資訊 */}

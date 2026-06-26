@@ -1,6 +1,18 @@
 import api from './api';
 
-// 分頁作品（前後台共用）
+// 前台作品搜尋
+export const searchArts = (request) => {
+  return api.post(`/arts/search?page=${request.page}&size=${request.size}`, {
+    keyword: request.keyword,
+    categoryIds: request.categoryIds,
+    authorIds: request.authorIds,
+    featured: request.featured,
+    rentable: request.rentable,
+    sort: request.sort,
+  });
+};
+
+// 後台/一般分頁
 export const getArts = (page = 0, size = 12) => {
   return api.get('/arts', {
     params: {

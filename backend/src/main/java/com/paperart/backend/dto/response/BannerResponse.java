@@ -9,15 +9,15 @@ import lombok.Setter;
 @Builder
 public class BannerResponse {
 
-    private String id;
+  private String id;
 
-    private String title;
+  private String title;
 
-    private String subtitle;
+  private String subtitle;
 
-    private String image;
+  private String image;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 
-    private Boolean active;
+  private Boolean active;
 }

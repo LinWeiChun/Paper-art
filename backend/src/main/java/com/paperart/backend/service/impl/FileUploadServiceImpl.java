@@ -1,20 +1,16 @@
 package com.paperart.backend.service.impl;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.paperart.backend.dto.response.UploadFileResponse;
 import com.paperart.backend.dto.response.UploadPageResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.service.FileUploadService;
-
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -26,147 +22,111 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @RequiredArgsConstructor
 public class FileUploadServiceImpl implements FileUploadService {
 
-    private final S3Client s3Client;
+  private final S3Client s3Client;
 
-    @Value("${cloudflare.r2.bucket}")
-    private String bucket;
+  @Value("${cloudflare.r2.bucket}")
+  private String bucket;
 
-    @Value("${cloudflare.r2.public-url}")
-    private String publicUrl;
+  @Value("${cloudflare.r2.public-url}")
+  private String publicUrl;
 
-    @Override
-    public UploadResponse upload(MultipartFile file, String folder) {
+  @Override
+  public UploadResponse upload(MultipartFile file, String folder) {
 
-        try {
+    try {
 
-        	String originalName = file.getOriginalFilename();
+      String originalName = file.getOriginalFilename();
 
-        	int dotIndex = originalName.lastIndexOf('.');
-        	String extension = "";
-        	String fileName = originalName;
+      int dotIndex = originalName.lastIndexOf('.');
+      String extension = "";
+      String fileName = originalName;
 
-        	if (dotIndex > -1) {
-        	    extension = originalName.substring(dotIndex);
-        	    fileName = originalName.substring(0, dotIndex);
-        	}
+      if (dotIndex > -1) {
+        extension = originalName.substring(dotIndex);
+        fileName = originalName.substring(0, dotIndex);
+      }
 
-        	String key = folder
-        	        + fileName
-        	        + "_"
-        	        + UUID.randomUUID()
-        	        + extension;
-        	
-            PutObjectRequest request = PutObjectRequest.builder()
-                    .bucket(bucket)
-                    .key(key)
-                    .contentType(file.getContentType())
-                    .build();
+      String key = folder + fileName + "_" + UUID.randomUUID() + extension;
 
-            s3Client.putObject(
-                    request,
-                    RequestBody.fromBytes(file.getBytes()));
+      PutObjectRequest request =
+          PutObjectRequest.builder()
+              .bucket(bucket)
+              .key(key)
+              .contentType(file.getContentType())
+              .build();
 
-            return new UploadResponse(
-                    key,
-                    publicUrl + "/" + key
-            );
+      s3Client.putObject(request, RequestBody.fromBytes(file.getBytes()));
 
-        } catch (Exception e) {
-            throw new RuntimeException("檔案上傳失敗", e);
-        }
+      return new UploadResponse(key, publicUrl + "/" + key);
+
+    } catch (Exception e) {
+      throw new RuntimeException("檔案上傳失敗", e);
+    }
+  }
+
+  @Override
+  public UploadPageResponse listFiles(String folder, int page, int size, String keyword) {
+
+    ListObjectsV2Request request =
+        ListObjectsV2Request.builder().bucket(bucket).prefix(folder + "/").build();
+
+    // 先取得所有圖片
+    List<UploadFileResponse> allFiles =
+        s3Client.listObjectsV2(request).contents().stream()
+            .map(this::toUploadFileResponse)
+            .sorted((a, b) -> b.getLastModified().compareTo(a.getLastModified()))
+            .collect(Collectors.toList());
+
+    // 搜尋
+    if (keyword != null && !keyword.isBlank()) {
+      String search = keyword.toLowerCase();
+
+      allFiles =
+          allFiles.stream()
+              .filter(file -> file.getName().toLowerCase().contains(search))
+              .collect(Collectors.toList());
     }
 
-    @Override
-    public UploadPageResponse listFiles(
-            String folder,
-            int page,
-            int size,
-            String keyword) {
+    // 分頁
+    int totalElements = allFiles.size();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
 
-        ListObjectsV2Request request = ListObjectsV2Request.builder()
-                .bucket(bucket)
-                .prefix(folder + "/")
-                .build();
+    int fromIndex = page * size;
+    int toIndex = Math.min(fromIndex + size, totalElements);
 
-        // 先取得所有圖片
-        List<UploadFileResponse> allFiles = s3Client.listObjectsV2(request)
-                .contents()
-                .stream()
-                .map(this::toUploadFileResponse)
-                .sorted((a, b) -> b.getLastModified().compareTo(a.getLastModified()))
-                .collect(Collectors.toList());
+    List<UploadFileResponse> content;
 
-        // 搜尋
-        if (keyword != null && !keyword.isBlank()) {
-            String search = keyword.toLowerCase();
-
-            allFiles = allFiles.stream()
-                    .filter(file ->
-                            file.getName().toLowerCase().contains(search))
-                    .collect(Collectors.toList());
-        }
-
-        // 分頁
-        int totalElements = allFiles.size();
-        int totalPages = (int) Math.ceil((double) totalElements / size);
-
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalElements);
-
-        List<UploadFileResponse> content;
-
-        if (fromIndex >= totalElements) {
-            content = List.of();
-        } else {
-            content = allFiles.subList(fromIndex, toIndex);
-        }
-
-        return new UploadPageResponse(
-                content,
-                page,
-                size,
-                totalElements,
-                totalPages,
-                page + 1 < totalPages
-        );
+    if (fromIndex >= totalElements) {
+      content = List.of();
+    } else {
+      content = allFiles.subList(fromIndex, toIndex);
     }
 
-    @Override
-    public void delete(String key) {
+    return new UploadPageResponse(
+        content, page, size, totalElements, totalPages, page + 1 < totalPages);
+  }
 
-        DeleteObjectRequest request = DeleteObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build();
+  @Override
+  public void delete(String key) {
 
-        s3Client.deleteObject(request);
-    }
+    DeleteObjectRequest request = DeleteObjectRequest.builder().bucket(bucket).key(key).build();
 
-    /**
-     * S3Object -> UploadFileResponse
-     */
-    /**
-     * S3Object -> UploadFileResponse
-     */
-    private UploadFileResponse toUploadFileResponse(S3Object object) {
+    s3Client.deleteObject(request);
+  }
 
-        String key = object.key();
+  /** S3Object -> UploadFileResponse */
+  /** S3Object -> UploadFileResponse */
+  private UploadFileResponse toUploadFileResponse(S3Object object) {
 
-        // 取得檔名
-        String fileName = key.substring(key.lastIndexOf("/") + 1);
+    String key = object.key();
 
-        // 移除 UUID，只保留原始檔名
-        fileName = fileName.replaceFirst(
-                "_[0-9a-fA-F\\-]{36}(?=\\.)",
-                ""
-        );
+    // 取得檔名
+    String fileName = key.substring(key.lastIndexOf("/") + 1);
 
-        return new UploadFileResponse(
-                key,
-                fileName,
-                publicUrl + "/" + key,
-                object.size(),
-                object.lastModified()
-        );
-    }	
+    // 移除 UUID，只保留原始檔名
+    fileName = fileName.replaceFirst("_[0-9a-fA-F\\-]{36}(?=\\.)", "");
+
+    return new UploadFileResponse(
+        key, fileName, publicUrl + "/" + key, object.size(), object.lastModified());
+  }
 }

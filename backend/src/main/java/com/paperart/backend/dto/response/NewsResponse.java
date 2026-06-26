@@ -1,9 +1,7 @@
 package com.paperart.backend.dto.response;
 
-import java.time.LocalDate;
-
 import com.paperart.backend.enums.PublishStatus;
-
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,19 +15,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NewsResponse {
 
-    private String id;
+  private String id;
 
-    private String title;
+  private String title;
 
-    private String content;
+  private String content;
 
-    private String summary;
+  private String summary;
 
-    private String coverImage;
+  private String coverImage;
 
-    private Boolean featured;
+  private Boolean featured;
 
-    private LocalDate publishDate;
+  private LocalDate publishDate;
 
-    private PublishStatus status;
+  private PublishStatus status;
 }
