@@ -1,96 +1,84 @@
 package com.paperart.backend.service.impl;
 
+import com.paperart.backend.dto.request.CategoryRequest;
+import com.paperart.backend.dto.response.CategoryResponse;
+import com.paperart.backend.entity.Category;
+import com.paperart.backend.repository.CategoryRepository;
+import com.paperart.backend.service.CategoryService;
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.paperart.backend.dto.request.CategoryRequest;
-import com.paperart.backend.dto.response.CategoryResponse;
-import com.paperart.backend.entity.Category;
-import com.paperart.backend.repository.CategoryRepository;
-import com.paperart.backend.service.CategoryService;
-
-import lombok.RequiredArgsConstructor;
-
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository categoryRepository;
+  private final CategoryRepository categoryRepository;
 
-    @Override
-    public Page<CategoryResponse> getAll(int page, int size) {
+  @Override
+  public Page<CategoryResponse> getAll(int page, int size) {
 
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("sortOrder")
-                        .ascending()
-                        .and(Sort.by("createdAt").descending()));
+    Pageable pageable =
+        PageRequest.of(
+            page, size, Sort.by("sortOrder").ascending().and(Sort.by("createdAt").descending()));
 
-        return categoryRepository
-                .findAll(pageable)
-                .map(this::toResponse);
-    }
-    
-    @Override
-    public List<CategoryResponse> getAll() {
-        return categoryRepository
-                .findAllByOrderBySortOrderAscCreatedAtDesc()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-    
-    @Override
-    public CategoryResponse getById(String id) {
+    return categoryRepository.findAll(pageable).map(this::toResponse);
+  }
 
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("分類不存在"));
+  @Override
+  public List<CategoryResponse> getAll() {
+    return categoryRepository.findAllByOrderBySortOrderAscCreatedAtDesc().stream()
+        .map(this::toResponse)
+        .toList();
+  }
 
-        return toResponse(category);
-    }
+  @Override
+  public CategoryResponse getById(String id) {
 
-    @Override
-    public CategoryResponse create(CategoryRequest request) {
+    Category category =
+        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
 
-        Category category = new Category();
+    return toResponse(category);
+  }
 
-        category.setName(request.getName());
-        category.setSortOrder(request.getSortOrder());
+  @Override
+  public CategoryResponse create(CategoryRequest request) {
 
-        return toResponse(categoryRepository.save(category));
-    }
+    Category category = new Category();
 
-    @Override
-    public CategoryResponse update(
-            String id,
-            CategoryRequest request) {
+    category.setName(request.getName());
+    category.setSortOrder(request.getSortOrder());
 
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("分類不存在"));
+    return toResponse(categoryRepository.save(category));
+  }
 
-        category.setName(request.getName());
-        category.setSortOrder(request.getSortOrder());
+  @Override
+  public CategoryResponse update(String id, CategoryRequest request) {
 
-        return toResponse(categoryRepository.save(category));
-    }
+    Category category =
+        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
 
-    @Override
-    public void delete(String id) {
-        categoryRepository.deleteById(id);
-    }
+    category.setName(request.getName());
+    category.setSortOrder(request.getSortOrder());
 
-    private CategoryResponse toResponse(Category category) {
+    return toResponse(categoryRepository.save(category));
+  }
 
-        return CategoryResponse.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .sortOrder(category.getSortOrder())
-                .build();
-    }
+  @Override
+  public void delete(String id) {
+    categoryRepository.deleteById(id);
+  }
+
+  private CategoryResponse toResponse(Category category) {
+
+    return CategoryResponse.builder()
+        .id(category.getId())
+        .name(category.getName())
+        .sortOrder(category.getSortOrder())
+        .build();
+  }
 }

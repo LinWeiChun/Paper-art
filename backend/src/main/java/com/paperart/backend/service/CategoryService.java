@@ -1,23 +1,21 @@
 package com.paperart.backend.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 import com.paperart.backend.dto.request.CategoryRequest;
 import com.paperart.backend.dto.response.CategoryResponse;
+import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface CategoryService {
 
-    Page<CategoryResponse> getAll(int page, int size);
+  Page<CategoryResponse> getAll(int page, int size);
 
-    List<CategoryResponse> getAll();
-    
-    CategoryResponse getById(String id);
+  List<CategoryResponse> getAll();
 
-    CategoryResponse create(CategoryRequest request);
+  CategoryResponse getById(String id);
 
-    CategoryResponse update(String id, CategoryRequest request);
+  CategoryResponse create(CategoryRequest request);
 
-    void delete(String id);
+  CategoryResponse update(String id, CategoryRequest request);
+
+  void delete(String id);
 }

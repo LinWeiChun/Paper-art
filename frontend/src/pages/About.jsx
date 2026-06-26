@@ -34,10 +34,10 @@ function About() {
     <Layout>
       <div className="about-container">
         {/* Banner */}
-        <section className="page-banner about-banner">
+        {/* <section className="page-banner about-banner">
           <h1>{about.bannerTitle}</h1>
           <p>{about.bannerSubtitle}</p>
-        </section>
+        </section> */}
 
         {/* 品牌故事 */}
         <section className="about-story">

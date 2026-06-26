@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class TagRequest {
 
-    private String name;
-
+  private String name;
 }

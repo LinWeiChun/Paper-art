@@ -1,9 +1,7 @@
 package com.paperart.backend.dto.request;
 
-import java.time.LocalDate;
-
 import com.paperart.backend.enums.PublishStatus;
-
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,17 +9,17 @@ import lombok.Setter;
 @Setter
 public class NewsRequest {
 
-    private String title;
+  private String title;
 
-    private String content;
+  private String content;
 
-    private String summary;
+  private String summary;
 
-    private String coverImage;
+  private String coverImage;
 
-    private Boolean featured;
+  private Boolean featured;
 
-    private LocalDate publishDate;
+  private LocalDate publishDate;
 
-    private PublishStatus status;
+  private PublishStatus status;
 }

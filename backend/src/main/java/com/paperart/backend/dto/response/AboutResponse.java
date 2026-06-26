@@ -1,7 +1,6 @@
 package com.paperart.backend.dto.response;
 
 import java.util.List;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,17 +10,17 @@ import lombok.Setter;
 @Builder
 public class AboutResponse {
 
-    private String id;
+  private String id;
 
-    private String bannerTitle;
+  private String bannerTitle;
 
-    private String bannerSubtitle;
+  private String bannerSubtitle;
 
-    private String storyTitle;
+  private String storyTitle;
 
-    private String storyContent;
+  private String storyContent;
 
-    private String vision;
+  private String vision;
 
-    private List<AboutValueResponse> values;
+  private List<AboutValueResponse> values;
 }

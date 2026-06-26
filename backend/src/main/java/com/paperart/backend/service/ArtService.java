@@ -1,31 +1,27 @@
 package com.paperart.backend.service;
 
+import com.paperart.backend.dto.request.ArtRequest;
+import com.paperart.backend.dto.request.ArtSearchRequest;
+import com.paperart.backend.dto.response.ArtResponse;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.paperart.backend.dto.request.ArtRequest;
-import com.paperart.backend.dto.response.ArtResponse;
-
 public interface ArtService {
 
-    List<ArtResponse> getAll();
+  List<ArtResponse> getAll();
 
-    Page<ArtResponse> getAll(int page, int size);
+  Page<ArtResponse> getAll(int page, int size);
 
-    ArtResponse getById(String id);
+  Page<ArtResponse> search(ArtSearchRequest request, int page, int size);
 
-    ArtResponse create(
-            ArtRequest request,
-            MultipartFile thumbnail);
+  ArtResponse getById(String id);
 
-    ArtResponse update(
-            String id,
-            ArtRequest request,
-            MultipartFile thumbnail);
+  ArtResponse create(ArtRequest request, MultipartFile thumbnail);
 
-    void delete(String id);
-    
-    public List<ArtResponse> getFeaturedArts();
+  ArtResponse update(String id, ArtRequest request, MultipartFile thumbnail);
+
+  void delete(String id);
+
+  public List<ArtResponse> getFeaturedArts();
 }

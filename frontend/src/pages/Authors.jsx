@@ -15,10 +15,10 @@ function Authors() {
   return (
     <Layout>
       <div className="authors-container">
-        <section className="page-banner authors-banner">
+        {/* <section className="page-banner authors-banner">
           <h1>作者介紹</h1>
           <p>探索每位藝術家的創作故事</p>
-        </section>
+        </section> */}
 
         <section className="authors-grid">
           {!loading &&

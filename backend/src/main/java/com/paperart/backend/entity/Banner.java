@@ -12,15 +12,15 @@ import lombok.Setter;
 @Table(name = "banners")
 public class Banner extends BaseEntity {
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    private String subtitle;
+  private String subtitle;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String image;
+  @Column(nullable = false, columnDefinition = "TEXT")
+  private String image;
 
-    private Integer sortOrder = 0;
+  private Integer sortOrder = 0;
 
-    private Boolean active = true;
+  private Boolean active = true;
 }

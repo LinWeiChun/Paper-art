@@ -1,7 +1,6 @@
 package com.paperart.backend.dto.response;
 
 import java.time.Instant;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,14 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UploadFileResponse {
 
-    private String key;
+  private String key;
 
-    private String name;
+  private String name;
 
-    private String url;
+  private String url;
 
-    private Long size;
+  private Long size;
 
-    private Instant lastModified;
-
+  private Instant lastModified;
 }

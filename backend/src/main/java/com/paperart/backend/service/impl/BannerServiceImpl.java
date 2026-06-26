@@ -7,116 +7,98 @@ import com.paperart.backend.entity.Banner;
 import com.paperart.backend.repository.BannerRepository;
 import com.paperart.backend.service.BannerService;
 import com.paperart.backend.service.FileUploadService;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class BannerServiceImpl implements BannerService {
-	
-	private final BannerRepository bannerRepository;
-	private final FileUploadService fileUploadService;
-	
-    @Override
-    public List<BannerResponse> getAll() {
-        return bannerRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+
+  private final BannerRepository bannerRepository;
+  private final FileUploadService fileUploadService;
+
+  @Override
+  public List<BannerResponse> getAll() {
+    return bannerRepository.findAll().stream().map(this::toResponse).toList();
+  }
+
+  @Override
+  public List<BannerResponse> getByActiveTrueOrderBySortOrderAsc() {
+    return bannerRepository.findByActiveTrueOrderBySortOrderAsc().stream()
+        .map(this::toResponse)
+        .toList();
+  }
+
+  @Override
+  public BannerResponse getById(String id) {
+
+    Banner banner =
+        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner 不存在"));
+
+    return toResponse(banner);
+  }
+
+  @Override
+  public BannerResponse create(BannerRequest request, MultipartFile image) {
+
+    Banner banner = new Banner();
+
+    banner.setTitle(request.getTitle());
+    banner.setSubtitle(request.getSubtitle());
+    banner.setSortOrder(request.getSortOrder());
+    banner.setActive(request.getActive());
+
+    // 上傳圖片
+    if (image != null && !image.isEmpty()) {
+
+      UploadResponse uploadResponse = fileUploadService.upload(image, "banners/");
+
+      banner.setImage(uploadResponse.getUrl());
     }
-    @Override
-    public List<BannerResponse> getByActiveTrueOrderBySortOrderAsc() {
-        return bannerRepository.findByActiveTrueOrderBySortOrderAsc()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-    @Override
-    public BannerResponse getById(String id) {
+    return toResponse(bannerRepository.save(banner));
+  }
 
-        Banner banner = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner 不存在"));
+  @Override
+  public BannerResponse update(String id, BannerRequest request, MultipartFile image) {
 
-        return toResponse(banner);
-    }
+    Banner banner =
+        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner 不存在"));
 
-    @Override
-    public BannerResponse create(
-            BannerRequest request,
-            MultipartFile image
-    ) {
+    banner.setTitle(request.getTitle());
+    banner.setSubtitle(request.getSubtitle());
+    banner.setSortOrder(request.getSortOrder());
+    banner.setActive(request.getActive());
 
-        Banner banner = new Banner();
+    if (image != null && !image.isEmpty()) {
 
-        banner.setTitle(request.getTitle());
-        banner.setSubtitle(request.getSubtitle());
-        banner.setSortOrder(request.getSortOrder());
-        banner.setActive(request.getActive());
+      UploadResponse uploadResponse = fileUploadService.upload(image, "banners/");
 
-        // 上傳圖片
-        if (image != null && !image.isEmpty()) {
-
-            UploadResponse uploadResponse =
-                    fileUploadService.upload(image, "banners/");
-
-            banner.setImage(uploadResponse.getUrl());
-        }
-        return toResponse(
-                bannerRepository.save(banner)
-        );
-    }
-
-    @Override
-    public BannerResponse update(
-            String id,
-            BannerRequest request,
-            MultipartFile image
-    ) {
-
-        Banner banner = bannerRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Banner 不存在"));
-
-        banner.setTitle(request.getTitle());
-        banner.setSubtitle(request.getSubtitle());
-        banner.setSortOrder(request.getSortOrder());
-        banner.setActive(request.getActive());
-
-        if (image != null && !image.isEmpty()) {
-
-            UploadResponse uploadResponse =
-                    fileUploadService.upload(image, "banners/");
-
-            banner.setImage(uploadResponse.getUrl());
-        }
-
-        return toResponse(
-                bannerRepository.save(banner)
-        );
+      banner.setImage(uploadResponse.getUrl());
     }
 
-    @Override
-    public void delete(String id) {
+    return toResponse(bannerRepository.save(banner));
+  }
 
-        Banner banner = bannerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Banner 不存在"));
+  @Override
+  public void delete(String id) {
 
-        bannerRepository.delete(banner);
-    }
+    Banner banner =
+        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner 不存在"));
 
-    private BannerResponse toResponse(Banner banner) {
+    bannerRepository.delete(banner);
+  }
 
-        return BannerResponse.builder()
-                .id(banner.getId())
-                .title(banner.getTitle())
-                .subtitle(banner.getSubtitle())
-                .image(banner.getImage())
-                .sortOrder(banner.getSortOrder())
-                .active(banner.getActive())
-                .build();
-    }
+  private BannerResponse toResponse(Banner banner) {
+
+    return BannerResponse.builder()
+        .id(banner.getId())
+        .title(banner.getTitle())
+        .subtitle(banner.getSubtitle())
+        .image(banner.getImage())
+        .sortOrder(banner.getSortOrder())
+        .active(banner.getActive())
+        .build();
+  }
 }

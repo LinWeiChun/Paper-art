@@ -1,7 +1,6 @@
 package com.paperart.backend.dto.request;
 
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,15 +8,15 @@ import lombok.Setter;
 @Setter
 public class AboutRequest {
 
-    private String bannerTitle;
+  private String bannerTitle;
 
-    private String bannerSubtitle;
+  private String bannerSubtitle;
 
-    private String storyTitle;
+  private String storyTitle;
 
-    private String storyContent;
+  private String storyContent;
 
-    private String vision;
+  private String vision;
 
-    private List<AboutValueRequest> values;
+  private List<AboutValueRequest> values;
 }

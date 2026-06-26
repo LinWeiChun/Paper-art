@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { getArts } from '../api/artApi';
+import { searchArts } from '../api/artApi';
 import Pagination from '../components/common/Pagination';
 import { useRental } from '../contexts/RentalContext';
 import useAuthors from '../hooks/useAuthors';
@@ -35,10 +35,16 @@ function Works() {
 
   const fetchWorks = async () => {
     try {
-      const response = await getArts(currentPage - 1, 12);
+      const response = await searchArts({
+        page: currentPage - 1,
+        size: 12,
+        keyword: search || undefined,
+        categoryIds: selectedCategories,
+        authorIds: selectedAuthors,
+      });
 
-      setWorks(response.data.content || []);
-      setTotalPages(response.data.totalPages || 0);
+      setWorks(response.data.content);
+      setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('取得作品失敗：', error);
     }
@@ -62,7 +68,12 @@ function Works() {
 
   useEffect(() => {
     fetchWorks();
-  }, [currentPage]);
+  }, [
+    currentPage,
+    search,
+    selectedCategories.join(','),
+    selectedAuthors.join(','),
+  ]);
 
   /* ===== 更新 URL ===== */
   const updateFilters = ({
@@ -116,24 +127,6 @@ function Works() {
     });
   };
 
-  /* ===== 篩選作品 ===== */
-  const filteredWorks = works.filter((work) => {
-    const matchSearch = work.title.toLowerCase().includes(search.toLowerCase());
-
-    const matchCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.some((category) =>
-        work.categories?.some((c) => c.name === category),
-      );
-
-    const matchAuthor =
-      selectedAuthors.length === 0 ||
-      selectedAuthors.some((author) =>
-        work.authors?.some((a) => a.name === author),
-      );
-
-    return matchSearch && matchCategory && matchAuthor;
-  });
   /* ===== 分頁 ===== */
   const handlePageChange = (page) => {
     updateFilters({ page });
@@ -150,10 +143,10 @@ function Works() {
   return (
     <Layout>
       <div className="works-container">
-        <section className="page-banner works-banner">
+        {/* <section className="page-banner works-banner">
           <h1>作品集</h1>
           <p>探索剪紙藝術作品</p>
-        </section>
+        </section> */}
 
         {/* 搜尋列 */}
         <section className="works-toolbar" ref={toolbarRef}>
@@ -186,29 +179,38 @@ function Works() {
           <section className="active-filters">
             <div className="filter-tags">
               {/* 分類 */}
-              {selectedCategories.map((category) => (
-                <button
-                  key={category}
-                  className="active-tag"
-                  onClick={() => handleCategoryChange(category)}
-                >
-                  {category}
-                  <span className="tag-remove">×</span>
-                </button>
-              ))}
+              {selectedCategories.map((categoryId) => {
+                const categoryName =
+                  categories.find((c) => c.id === categoryId)?.name ??
+                  categoryId;
 
+                return (
+                  <button
+                    key={categoryId}
+                    className="active-tag"
+                    onClick={() => handleCategoryChange(categoryId)}
+                  >
+                    {categoryName}
+                    <span className="tag-remove">×</span>
+                  </button>
+                );
+              })}
               {/* 作者 */}
-              {selectedAuthors.map((author) => (
-                <button
-                  key={author}
-                  className="active-tag"
-                  onClick={() => handleAuthorChange(author)}
-                >
-                  {author}
-                  <span className="tag-remove">×</span>
-                </button>
-              ))}
+              {selectedAuthors.map((authorId) => {
+                const authorName =
+                  authors.find((a) => a.id === authorId)?.name ?? authorId;
 
+                return (
+                  <button
+                    key={authorId}
+                    className="active-tag"
+                    onClick={() => handleAuthorChange(authorId)}
+                  >
+                    {authorName}
+                    <span className="tag-remove">×</span>
+                  </button>
+                );
+              })}
               {/* 搜尋關鍵字 */}
               {search && (
                 <button
@@ -267,15 +269,14 @@ function Works() {
                     <label key={category.id} className="checkbox-item">
                       <input
                         type="checkbox"
-                        checked={selectedCategories.includes(category.name)}
-                        onChange={() => handleCategoryChange(category.name)}
+                        checked={selectedCategories.includes(category.id)}
+                        onChange={() => handleCategoryChange(category.id)}
                       />
 
                       <span>{category.name}</span>
                     </label>
                   ))}
               </div>
-
               {/* 作者 */}
               <div className="filter-group">
                 <h3>作者</h3>
@@ -285,8 +286,8 @@ function Works() {
                     <label key={author.id} className="checkbox-item">
                       <input
                         type="checkbox"
-                        checked={selectedAuthors.includes(author.name)}
-                        onChange={() => handleAuthorChange(author.name)}
+                        checked={selectedAuthors.includes(author.id)}
+                        onChange={() => handleAuthorChange(author.id)}
                       />
 
                       <span>{author.name}</span>
@@ -319,7 +320,7 @@ function Works() {
 
         {/* 作品列表 */}
         <section className="works-grid">
-          {filteredWorks.map((work) => (
+          {works.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
               {/* <button
                 className={`add-rental-btn ${

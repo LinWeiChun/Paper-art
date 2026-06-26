@@ -9,11 +9,11 @@ import lombok.Setter;
 @Builder
 public class AboutValueResponse {
 
-    private String id;
+  private String id;
 
-    private String title;
+  private String title;
 
-    private String description;
+  private String description;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 }

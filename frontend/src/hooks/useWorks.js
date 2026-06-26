@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
-import { getArts } from '../api/artApi';
+import { searchArts } from '../api/artApi';
 
-function useWorks(page = 0, size = 12) {
+function useWorks(searchCondition = {}, page = 0, size = 12) {
   const [works, setWorks] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchWorks();
-  }, [page]);
+  }, [page, size, JSON.stringify(searchCondition)]);
 
   const fetchWorks = async () => {
-    try {
-      const response = await getArts(page, size);
+    setLoading(true);
 
-      setWorks(response.data.content || []);
-      setTotalPages(response.data.totalPages || 0);
+    try {
+      const { data } = await searchArts(searchCondition, page, size);
+
+      setWorks(data.content ?? []);
+      setTotalPages(data.totalPages ?? 0);
     } catch (error) {
       console.error('取得作品失敗：', error);
     } finally {

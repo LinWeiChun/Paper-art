@@ -1,14 +1,12 @@
 package com.paperart.backend.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,25 +16,19 @@ import lombok.Setter;
 @Setter
 public class About extends BaseEntity {
 
-    // Banner
-    private String bannerTitle;
+  // Banner
+  private String bannerTitle;
 
-    private String bannerSubtitle;
+  private String bannerSubtitle;
 
-    // 品牌故事
-    private String storyTitle;
+  // 品牌故事
+  private String storyTitle;
 
-    @Lob
-    private String storyContent;
+  @Lob private String storyContent;
 
-    // 願景
-    @Lob
-    private String vision;
+  // 願景
+  @Lob private String vision;
 
-    @OneToMany(
-        mappedBy = "about",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    private List<AboutValue> values = new ArrayList<>();
+  @OneToMany(mappedBy = "about", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<AboutValue> values = new ArrayList<>();
 }

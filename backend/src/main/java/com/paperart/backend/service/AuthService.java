@@ -5,6 +5,5 @@ import com.paperart.backend.dto.response.LoginResponse;
 
 public interface AuthService {
 
-    LoginResponse login(LoginRequest request);
-
+  LoginResponse login(LoginRequest request);
 }

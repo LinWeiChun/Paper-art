@@ -9,15 +9,15 @@ import lombok.Setter;
 @Builder
 public class AuthorResponse {
 
-    private String id;
+  private String id;
 
-    private String name;
+  private String name;
 
-    private String title;
+  private String title;
 
-    private String description;
+  private String description;
 
-    private String avatarUrl;
+  private String avatarUrl;
 
-    private Integer sortOrder;
+  private Integer sortOrder;
 }
