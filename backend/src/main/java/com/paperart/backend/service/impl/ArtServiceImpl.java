@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.paperart.backend.dto.request.ArtRequest;
 import com.paperart.backend.dto.response.ArtResponse;
 import com.paperart.backend.dto.response.OptionResponse;
+import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Art;
 import com.paperart.backend.entity.Author;
 import com.paperart.backend.entity.Category;
@@ -129,10 +130,10 @@ public class ArtServiceImpl implements ArtService {
         // 上傳縮圖
         if (thumbnail != null && !thumbnail.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(thumbnail, "arts/");
 
-            art.setThumbnail(imageUrl);
+            art.setThumbnail(uploadResponse.getUrl());
         }
 
         artRepository.save(art);
@@ -174,10 +175,10 @@ public class ArtServiceImpl implements ArtService {
         // 更新圖片
         if (thumbnail != null && !thumbnail.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(thumbnail, "arts/");
 
-            art.setThumbnail(imageUrl);
+            art.setThumbnail(uploadResponse.getUrl());
         }
 
         artRepository.save(art);
