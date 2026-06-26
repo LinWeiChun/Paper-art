@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.paperart.backend.dto.request.AuthorRequest;
 import com.paperart.backend.dto.response.AuthorResponse;
+import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Author;
 import com.paperart.backend.repository.AuthorRepository;
 import com.paperart.backend.service.AuthorService;
@@ -74,10 +75,10 @@ public class AuthorServiceImpl implements AuthorService {
 
         if (avatar != null && !avatar.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(avatar, "authors/");
 
-            author.setAvatarUrl(imageUrl);
+            author.setAvatarUrl(uploadResponse.getUrl());
         }
 
         return toResponse(authorRepository.save(author));
@@ -99,10 +100,10 @@ public class AuthorServiceImpl implements AuthorService {
 
         if (avatar != null && !avatar.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(avatar, "authors/");
 
-            author.setAvatarUrl(imageUrl);
+            author.setAvatarUrl(uploadResponse.getUrl());
         }
 
         return toResponse(authorRepository.save(author));

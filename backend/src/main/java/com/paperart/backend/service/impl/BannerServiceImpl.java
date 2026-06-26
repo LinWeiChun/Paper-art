@@ -2,6 +2,7 @@ package com.paperart.backend.service.impl;
 
 import com.paperart.backend.dto.request.BannerRequest;
 import com.paperart.backend.dto.response.BannerResponse;
+import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Banner;
 import com.paperart.backend.repository.BannerRepository;
 import com.paperart.backend.service.BannerService;
@@ -59,12 +60,11 @@ public class BannerServiceImpl implements BannerService {
         // 上傳圖片
         if (image != null && !image.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(image, "banners/");
 
-            banner.setImage(imageUrl);
+            banner.setImage(uploadResponse.getUrl());
         }
-
         return toResponse(
                 bannerRepository.save(banner)
         );
@@ -88,10 +88,10 @@ public class BannerServiceImpl implements BannerService {
 
         if (image != null && !image.isEmpty()) {
 
-            String imageUrl =
+            UploadResponse uploadResponse =
                     fileUploadService.upload(image, "banners/");
 
-            banner.setImage(imageUrl);
+            banner.setImage(uploadResponse.getUrl());
         }
 
         return toResponse(

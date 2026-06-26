@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.paperart.backend.dto.request.NewsRequest;
 import com.paperart.backend.dto.response.NewsResponse;
+import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.News;
 import com.paperart.backend.repository.NewsRepository;
 import com.paperart.backend.service.FileUploadService;
@@ -60,11 +61,11 @@ public class NewsServiceImpl implements NewsService {
 
         if (image != null && !image.isEmpty()) {
 
-            String imageUrl = fileUploadService.upload(image, "news/");
+            UploadResponse uploadResponse =
+                    fileUploadService.upload(image, "news//");
 
-            news.setCoverImage(imageUrl);
+            news.setCoverImage(uploadResponse.getUrl());
         }
-
         newsRepository.save(news);
 
         return toResponse(news);
@@ -89,11 +90,12 @@ public class NewsServiceImpl implements NewsService {
         // 有新圖片才更新
         if (image != null && !image.isEmpty()) {
 
-            String imageUrl = fileUploadService.upload(image, "news/");
+            UploadResponse uploadResponse =
+                    fileUploadService.upload(image, "news//");
 
-            news.setCoverImage(imageUrl);
+            news.setCoverImage(uploadResponse.getUrl());
         }
-
+        
         newsRepository.save(news);
 
         return toResponse(news);
