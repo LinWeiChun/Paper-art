@@ -17,7 +17,7 @@ function Works() {
 
   /* ===== Hooks ===== */
   const { categories, loading } = useCategories();
-  const { authors, loading: authorLoading } = useAuthors();
+  const { authors, loading: authorLoading } = useAuthors(null);
   const { addToRental, isInRental } = useRental();
 
   /* ===== URL 參數 ===== */
@@ -28,6 +28,8 @@ function Works() {
   /* ===== State ===== */
   const [searchInput, setSearchInput] = useState(search);
   const [showFilter, setShowFilter] = useState(false);
+  const [draftCategories, setDraftCategories] = useState([]);
+  const [draftAuthors, setDraftAuthors] = useState([]);
   const [works, setWorks] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -127,6 +129,38 @@ function Works() {
     });
   };
 
+  const openFilter = () => {
+    setDraftCategories(selectedCategories);
+    setDraftAuthors(selectedAuthors);
+    setShowFilter(true);
+  };
+
+  const handleDraftCategoryChange = (category) => {
+    setDraftCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((item) => item !== category)
+        : [...prev, category],
+    );
+  };
+
+  const handleDraftAuthorChange = (author) => {
+    setDraftAuthors((prev) =>
+      prev.includes(author)
+        ? prev.filter((item) => item !== author)
+        : [...prev, author],
+    );
+  };
+
+  const applyDraftFilters = () => {
+    updateFilters({
+      categories: draftCategories,
+      authors: draftAuthors,
+      keyword: search,
+      page: 1,
+    });
+    setShowFilter(false);
+  };
+
   /* ===== 分頁 ===== */
   const handlePageChange = (page) => {
     updateFilters({ page });
@@ -166,7 +200,7 @@ function Works() {
             className="search-input"
           />
 
-          <button className="filter-btn" onClick={() => setShowFilter(true)}>
+          <button className="filter-btn" onClick={openFilter}>
             <FiFilter />
             <span>篩選</span>
           </button>
@@ -269,8 +303,8 @@ function Works() {
                     <label key={category.id} className="checkbox-item">
                       <input
                         type="checkbox"
-                        checked={selectedCategories.includes(category.id)}
-                        onChange={() => handleCategoryChange(category.id)}
+                        checked={draftCategories.includes(category.id)}
+                        onChange={() => handleDraftCategoryChange(category.id)}
                       />
 
                       <span>{category.name}</span>
@@ -286,8 +320,8 @@ function Works() {
                     <label key={author.id} className="checkbox-item">
                       <input
                         type="checkbox"
-                        checked={selectedAuthors.includes(author.id)}
-                        onChange={() => handleAuthorChange(author.id)}
+                        checked={draftAuthors.includes(author.id)}
+                        onChange={() => handleDraftAuthorChange(author.id)}
                       />
 
                       <span>{author.name}</span>
@@ -299,18 +333,14 @@ function Works() {
                 <button
                   className="reset-btn"
                   onClick={() => {
-                    setSearchParams({
-                      page: '1',
-                    });
+                    setDraftCategories([]);
+                    setDraftAuthors([]);
                   }}
                 >
-                  清除篩選
+                  清除勾選
                 </button>
 
-                <button
-                  className="apply-btn"
-                  onClick={() => setShowFilter(false)}
-                >
+                <button className="apply-btn" onClick={applyDraftFilters}>
                   套用篩選
                 </button>
               </div>
@@ -322,7 +352,7 @@ function Works() {
         <section className="works-grid">
           {works.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
-              {/* <button
+              <button
                 className={`add-rental-btn ${
                   isInRental(work.id) ? 'added' : ''
                 }`}
@@ -333,7 +363,7 @@ function Works() {
                 }}
               >
                 {isInRental(work.id) ? '已加入' : '＋ 租借'}
-              </button> */}
+              </button>
               <Link
                 to={`/works/${work.id}`}
                 className="work-card"
