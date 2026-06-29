@@ -1,23 +1,8 @@
-/* ===== 容器 ===== */
-
-.works-container {
-  min-height: 100vh;
-}
-
-/* ===== Banner ===== */
-
-.works-banner {
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/images/about-banner.jpg');
-}
-
-/* ===== 搜尋列 ===== */
+/* ===== Toolbar ===== */
 
 .works-toolbar {
   max-width: 1200px;
   margin: 40px auto;
-
   padding: 0 20px;
 
   display: flex;
@@ -26,10 +11,7 @@
 
 .search-input {
   flex: 1;
-
   padding: 12px 16px;
-
-  border: 1px solid #ddd;
   border-radius: 8px;
 }
 
@@ -39,109 +21,43 @@
   gap: 8px;
 
   padding: 12px 20px;
-  background: #b22222;
-  color: white;
-  border-radius: 8px;
-
   font-size: 1rem;
-  transition: 0.3s;
-}
-
-.filter-btn:hover {
-  background: #8b1a1a;
 }
 
 .filter-btn svg {
   font-size: 1.1rem;
 }
 
-/* 遮罩 */
-
-.filter-overlay {
-  position: fixed;
-  inset: 0;
-
-  background: rgba(0, 0, 0, 0.5);
-
-  z-index: 999;
-}
-
-/* 彈跳視窗 */
+/* ===== Filter Drawer ===== */
 
 .filter-modal {
   position: fixed;
+  top: 0;
+  right: 0;
 
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  width: 600px;
-  max-width: 90%;
-
-  max-height: 80vh;
+  width: 420px;
+  max-width: 92vw;
+  height: 100vh;
+  padding: 30px 30px 110px;
 
   overflow-y: auto;
-
   background: white;
-
-  border-radius: 16px;
-
-  padding: 30px;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
   z-index: 1000;
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .filter-modal h2 {
-  color: #b22222;
   margin-bottom: 25px;
 }
-.close-btn {
-  position: absolute;
 
-  top: 15px;
-  right: 15px;
-
-  width: 35px;
-  height: 35px;
-
-  border-radius: 50%;
-
-  background: #f5f5f5;
-
-  font-size: 1.2rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: 0.3s;
-}
-
-.close-btn:hover {
-  background: #ddd;
-}
 .filter-group {
   margin-bottom: 30px;
 }
 
 .filter-group h3 {
   margin-bottom: 15px;
-}
-
-/* ===== Checkbox ===== */
-
-.checkbox-item {
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 12px;
-
-  cursor: pointer;
 }
 
 .checkbox-item input {
@@ -153,24 +69,23 @@
   font-size: 0.95rem;
 }
 
-/* ===== 套用按鈕 ===== */
-
 .apply-btn {
   width: 100%;
-
   padding: 12px;
-
-  background: #b22222;
-  color: white;
-
-  border-radius: 8px;
 }
 
 .filter-actions {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 30px;
+
   display: flex;
   gap: 15px;
 
-  margin-top: 30px;
+  margin-top: 0;
+  padding-top: 20px;
+  background: #fff;
 }
 
 .reset-btn,
@@ -178,9 +93,7 @@
   flex: 1;
 
   padding: 12px;
-
   border-radius: 8px;
-
   font-size: 1rem;
 }
 
@@ -193,54 +106,33 @@
   background: #ddd;
 }
 
-.apply-btn {
-  background: #b22222;
-  color: white;
-}
-
-.apply-btn:hover {
-  background: #8b1a1a;
-}
-/* ===== 作品列表 ===== */
+/* ===== Works Grid ===== */
 
 .works-grid {
   max-width: 1200px;
-
   margin: 0 auto 80px;
-
   padding: 0 20px;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-
   gap: 30px;
 }
 
 .work-card {
   background: white;
-
   border-radius: 12px;
-
   overflow: hidden;
-
   text-decoration: none;
-
   transition: 0.3s;
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
 }
 
 .work-card:hover {
-  transform: translateY(-8px);
-
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .work-card img {
-  width: 100%;
   height: 240px;
-
-  object-fit: cover;
 }
 
 .work-content {
@@ -248,37 +140,26 @@
 }
 
 .work-content h3 {
-  color: #b22222;
-
   margin-bottom: 10px;
 }
 
 .work-content p {
   color: #666;
-
   margin-bottom: 15px;
 }
 
-/* ===== 標籤 ===== */
-
 .work-tags {
-  display: flex;
-  flex-wrap: wrap;
-
   gap: 8px;
 }
 
 .work-tags span {
-  background: #f3f3f3;
-
   padding: 6px 12px;
-
-  border-radius: 20px;
-
   font-size: 0.85rem;
-
   color: #555;
 }
+
+/* ===== Active Filters ===== */
+
 .active-filters {
   max-width: 1200px;
   margin: 0 auto 30px;
@@ -291,8 +172,6 @@
 }
 
 .filter-tags {
-  display: flex;
-  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -325,26 +204,16 @@
 }
 
 .active-tag:hover .tag-remove {
-  color: #b22222;
+  color: var(--brand-color);
 }
 
 .clear-filter-btn {
   flex-shrink: 0;
-
   padding: 10px 18px;
-  border: none;
   border-radius: 999px;
-
-  background: #b22222;
-  color: #fff;
-
-  cursor: pointer;
-  transition: 0.3s;
 }
 
-.clear-filter-btn:hover {
-  background: #8b1a1a;
-}
+/* ===== Rental Button ===== */
 
 .work-card-wrapper {
   position: relative;
@@ -354,16 +223,14 @@
   position: absolute;
   top: 12px;
   right: 12px;
-
   z-index: 10;
+
+  padding: 8px 14px;
 
   background: rgba(178, 34, 34, 0.95);
   color: white;
-
   border: none;
   border-radius: 20px;
-
-  padding: 8px 14px;
 
   cursor: pointer;
 }
@@ -376,7 +243,7 @@
   background: #ccc;
   cursor: default;
 }
-/* ===== 手機版 ===== */
+
 @media (max-width: 768px) {
   .works-toolbar {
     flex-direction: row;
@@ -397,12 +264,16 @@
   }
 
   .filter-modal {
-    width: 95%;
-    max-height: 85vh;
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    padding: 20px 20px 130px;
   }
 
   .filter-actions {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
     flex-direction: column;
   }
 

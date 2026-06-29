@@ -1,9 +1,10 @@
 // api/api.js
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const api = axios.create({
-  // baseURL: 'http://localhost:8080/paper/api',
-  baseURL: 'https://paper-art-production.up.railway.app/paper/api',
+  baseURL: `${API_BASE_URL}/paper/api`,
 });
 
 api.interceptors.request.use((config) => {

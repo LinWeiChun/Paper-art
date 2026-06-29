@@ -1,18 +1,23 @@
-import { useEffect, useState } from 'react';
-import { getAdminAuthors } from '../api/authorsApi';
+import { useCallback, useEffect, useState } from 'react';
+
+import { getAdminAuthors, getAllAuthors } from '../api/authorsApi';
 
 function useAuthors(page = 0, size = 6) {
   const [authors, setAuthors] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAuthors();
-  }, [page, size]);
-
-  const fetchAuthors = async () => {
+  const fetchAuthors = useCallback(async () => {
     try {
       setLoading(true);
+
+      if (page === null) {
+        const response = await getAllAuthors();
+
+        setAuthors(response.data || []);
+        setTotalPages(1);
+        return;
+      }
 
       const response = await getAdminAuthors(page, size);
 
@@ -23,7 +28,11 @@ function useAuthors(page = 0, size = 6) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, size]);
+
+  useEffect(() => {
+    fetchAuthors();
+  }, [fetchAuthors]);
 
   return {
     authors,
