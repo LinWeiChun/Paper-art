@@ -21,4 +21,8 @@ public class UserResponse {
   private Boolean enabled;
 
   private List<String> roles;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

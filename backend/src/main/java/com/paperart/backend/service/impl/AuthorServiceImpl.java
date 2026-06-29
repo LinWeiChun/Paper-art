@@ -5,6 +5,7 @@ import com.paperart.backend.dto.response.AuthorResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Author;
 import com.paperart.backend.repository.AuthorRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.AuthorService;
 import com.paperart.backend.service.FileUploadService;
 import java.util.List;
@@ -22,12 +23,13 @@ public class AuthorServiceImpl implements AuthorService {
 
   private final AuthorRepository authorRepository;
   private final FileUploadService fileUploadService;
+  private final AuditService auditService;
 
   // 前台：全部作者
   @Override
   public List<AuthorResponse> getAll() {
 
-    return authorRepository.findAll(Sort.by("sortOrder").ascending()).stream()
+    return authorRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc().stream()
         .map(this::toResponse)
         .toList();
   }
@@ -38,14 +40,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
 
-    return authorRepository.findAll(pageable).map(this::toResponse);
+    return authorRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   @Override
   public AuthorResponse getById(String id) {
 
-    Author author =
-        authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+    Author author = findActiveAuthor(id);
 
     return toResponse(author);
   }
@@ -59,6 +60,8 @@ public class AuthorServiceImpl implements AuthorService {
     author.setTitle(request.getTitle());
     author.setDescription(request.getDescription());
     author.setSortOrder(request.getSortOrder());
+    author.setPublished(request.getPublished() != null ? request.getPublished() : true);
+    auditService.markCreated(author);
 
     if (avatar != null && !avatar.isEmpty()) {
 
@@ -73,13 +76,14 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   public AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar) {
 
-    Author author =
-        authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+    Author author = findActiveAuthor(id);
 
     author.setName(request.getName());
     author.setTitle(request.getTitle());
     author.setDescription(request.getDescription());
     author.setSortOrder(request.getSortOrder());
+    author.setPublished(request.getPublished() != null ? request.getPublished() : true);
+    auditService.markUpdated(author);
 
     if (avatar != null && !avatar.isEmpty()) {
 
@@ -94,7 +98,9 @@ public class AuthorServiceImpl implements AuthorService {
   @Override
   public void delete(String id) {
 
-    authorRepository.deleteById(id);
+    Author author = findActiveAuthor(id);
+    auditService.markDeleted(author);
+    authorRepository.save(author);
   }
 
   private AuthorResponse toResponse(Author author) {
@@ -106,6 +112,20 @@ public class AuthorServiceImpl implements AuthorService {
         .description(author.getDescription())
         .avatarUrl(author.getAvatarUrl())
         .sortOrder(author.getSortOrder())
+        .published(author.getPublished())
+        .createdBy(auditService.toResponse(author.getCreatedBy()))
+        .updatedBy(auditService.toResponse(author.getUpdatedBy()))
         .build();
+  }
+
+  private Author findActiveAuthor(String id) {
+    Author author =
+        authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+
+    if (Boolean.TRUE.equals(author.getDeleted())) {
+      throw new RuntimeException("Author not found");
+    }
+
+    return author;
   }
 }

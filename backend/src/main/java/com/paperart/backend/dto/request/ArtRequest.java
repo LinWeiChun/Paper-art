@@ -20,6 +20,8 @@ public class ArtRequest {
 
   private Boolean rentable;
 
+  private Boolean published;
+
   private List<String> authorIds;
 
   private List<String> categoryIds;

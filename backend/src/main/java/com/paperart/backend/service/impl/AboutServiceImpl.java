@@ -8,6 +8,7 @@ import com.paperart.backend.entity.About;
 import com.paperart.backend.entity.AboutValue;
 import com.paperart.backend.repository.AboutRepository;
 import com.paperart.backend.service.AboutService;
+import com.paperart.backend.service.AuditService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AboutServiceImpl implements AboutService {
 
   private final AboutRepository aboutRepository;
+  private final AuditService auditService;
 
   @Override
   public AboutResponse getAbout() {
@@ -41,21 +43,19 @@ public class AboutServiceImpl implements AboutService {
   public AboutResponse updateAbout(AboutRequest request) {
 
     About about =
-        aboutRepository.findAll().stream()
-            .findFirst()
-            .orElseGet(
-                () -> {
-                  About newAbout = new About();
-                  newAbout.setBannerTitle("關於我們");
-                  newAbout.setBannerSubtitle("傳承剪紙文化，延續匠人精神");
-                  return aboutRepository.save(newAbout);
-                });
+        aboutRepository.findAll().stream().findFirst().orElseGet(this::createDefaultAbout);
 
     about.setBannerTitle(request.getBannerTitle());
     about.setBannerSubtitle(request.getBannerSubtitle());
     about.setStoryTitle(request.getStoryTitle());
     about.setStoryContent(request.getStoryContent());
     about.setVision(request.getVision());
+
+    if (about.getId() == null) {
+      auditService.markCreated(about);
+    } else {
+      auditService.markUpdated(about);
+    }
 
     // 清空原本 values
     about.getValues().clear();
@@ -70,6 +70,7 @@ public class AboutServiceImpl implements AboutService {
       value.setSortOrder(valueRequest.getSortOrder());
 
       value.setAbout(about);
+      auditService.markCreated(value);
 
       about.getValues().add(value);
     }
@@ -97,8 +98,20 @@ public class AboutServiceImpl implements AboutService {
                             .title(value.getTitle())
                             .description(value.getDescription())
                             .sortOrder(value.getSortOrder())
+                            .createdBy(auditService.toResponse(value.getCreatedBy()))
+                            .updatedBy(auditService.toResponse(value.getUpdatedBy()))
                             .build())
                 .collect(Collectors.toList()))
+        .createdBy(auditService.toResponse(about.getCreatedBy()))
+        .updatedBy(auditService.toResponse(about.getUpdatedBy()))
         .build();
+  }
+
+  private About createDefaultAbout() {
+    About about = new About();
+    about.setBannerTitle("關於我們");
+    about.setBannerSubtitle("傳承剪紙文化，延續匠人精神");
+
+    return about;
   }
 }

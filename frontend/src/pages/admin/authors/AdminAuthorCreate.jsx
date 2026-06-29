@@ -17,9 +17,11 @@ function AdminAuthorCreate() {
   const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
@@ -94,6 +96,18 @@ function AdminAuthorCreate() {
             value={formData.sortOrder}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+            />
+            發布到前台
+          </label>
         </div>
 
         {/* 圖片 */}

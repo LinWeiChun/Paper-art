@@ -4,6 +4,7 @@ import com.paperart.backend.dto.request.CategoryRequest;
 import com.paperart.backend.dto.response.CategoryResponse;
 import com.paperart.backend.entity.Category;
 import com.paperart.backend.repository.CategoryRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
+  private final AuditService auditService;
 
   @Override
   public Page<CategoryResponse> getAll(int page, int size) {
@@ -26,12 +28,12 @@ public class CategoryServiceImpl implements CategoryService {
         PageRequest.of(
             page, size, Sort.by("sortOrder").ascending().and(Sort.by("createdAt").descending()));
 
-    return categoryRepository.findAll(pageable).map(this::toResponse);
+    return categoryRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   @Override
   public List<CategoryResponse> getAll() {
-    return categoryRepository.findAllByOrderBySortOrderAscCreatedAtDesc().stream()
+    return categoryRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc().stream()
         .map(this::toResponse)
         .toList();
   }
@@ -39,8 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryResponse getById(String id) {
 
-    Category category =
-        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
+    Category category = findActiveCategory(id);
 
     return toResponse(category);
   }
@@ -52,6 +53,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     category.setName(request.getName());
     category.setSortOrder(request.getSortOrder());
+    category.setPublished(request.getPublished() != null ? request.getPublished() : true);
+    auditService.markCreated(category);
 
     return toResponse(categoryRepository.save(category));
   }
@@ -59,18 +62,21 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryResponse update(String id, CategoryRequest request) {
 
-    Category category =
-        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
+    Category category = findActiveCategory(id);
 
     category.setName(request.getName());
     category.setSortOrder(request.getSortOrder());
+    category.setPublished(request.getPublished() != null ? request.getPublished() : true);
+    auditService.markUpdated(category);
 
     return toResponse(categoryRepository.save(category));
   }
 
   @Override
   public void delete(String id) {
-    categoryRepository.deleteById(id);
+    Category category = findActiveCategory(id);
+    auditService.markDeleted(category);
+    categoryRepository.save(category);
   }
 
   private CategoryResponse toResponse(Category category) {
@@ -79,6 +85,20 @@ public class CategoryServiceImpl implements CategoryService {
         .id(category.getId())
         .name(category.getName())
         .sortOrder(category.getSortOrder())
+        .published(category.getPublished())
+        .createdBy(auditService.toResponse(category.getCreatedBy()))
+        .updatedBy(auditService.toResponse(category.getUpdatedBy()))
         .build();
+  }
+
+  private Category findActiveCategory(String id) {
+    Category category =
+        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
+
+    if (Boolean.TRUE.equals(category.getDeleted())) {
+      throw new RuntimeException("分類不存在");
+    }
+
+    return category;
   }
 }

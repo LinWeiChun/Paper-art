@@ -23,15 +23,15 @@ public class AdminDashboardController {
   public DashboardResponse getDashboard() {
 
     return DashboardResponse.builder()
-        .artCount(artRepository.count())
-        .authorCount(authorRepository.count())
-        .newsCount(newsRepository.count())
+        .artCount(artRepository.countByDeletedFalse())
+        .authorCount(authorRepository.countByDeletedFalse())
+        .newsCount(newsRepository.countByDeletedFalse())
         .recentArts(
-            artRepository.findTop5ByOrderByCreatedAtDesc().stream()
+            artRepository.findTop5ByDeletedFalseAndPublishedTrueOrderByCreatedAtDesc().stream()
                 .map(art -> new OptionResponse(art.getId(), art.getTitle()))
                 .toList())
         .recentNews(
-            newsRepository.findTop5ByOrderByCreatedAtDesc().stream()
+            newsRepository.findTop5ByDeletedFalseOrderByCreatedAtDesc().stream()
                 .map(news -> new OptionResponse(news.getId(), news.getTitle()))
                 .toList())
         .build();

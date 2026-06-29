@@ -14,4 +14,6 @@ public class AuthorRequest {
   private String description;
 
   private Integer sortOrder;
+
+  private Boolean published;
 }

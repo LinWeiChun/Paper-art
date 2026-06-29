@@ -30,4 +30,8 @@ public class NewsResponse {
   private LocalDate publishDate;
 
   private PublishStatus status;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

@@ -83,8 +83,9 @@ function AdminAuthors() {
         <thead>
           <tr>
             <th style={{ width: '10%' }}>#</th>
-            <th style={{ width: '35%' }}>姓名</th>
-            <th style={{ width: '35%' }}>職稱</th>
+            <th style={{ width: '32%' }}>姓名</th>
+            <th style={{ width: '30%' }}>職稱</th>
+            <th style={{ width: '12%' }}>狀態</th>
             <th style={{ width: '20%' }}>操作</th>
           </tr>
         </thead>
@@ -97,6 +98,8 @@ function AdminAuthors() {
               <td>{author.name}</td>
 
               <td>{author.title}</td>
+
+              <td>{author.published ? '已發布' : '未發布'}</td>
 
               <td>
                 <div className="action-buttons">
@@ -126,7 +129,7 @@ function AdminAuthors() {
 
           {authors.length === 0 && (
             <tr>
-              <td colSpan="4">目前沒有資料</td>
+              <td colSpan="5">目前沒有資料</td>
             </tr>
           )}
         </tbody>

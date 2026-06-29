@@ -5,6 +5,7 @@ import com.paperart.backend.dto.response.NewsResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.News;
 import com.paperart.backend.repository.NewsRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.FileUploadService;
 import com.paperart.backend.service.NewsService;
 import lombok.RequiredArgsConstructor;
@@ -21,20 +22,20 @@ public class NewsServiceImpl implements NewsService {
 
   private final NewsRepository newsRepository;
   private final FileUploadService fileUploadService;
+  private final AuditService auditService;
 
   @Override
   public Page<NewsResponse> getAllNews(int page, int size) {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("publishDate").descending());
 
-    return newsRepository.findAll(pageable).map(this::toResponse);
+    return newsRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   @Override
   public NewsResponse getNewsById(String id) {
 
-    News news =
-        newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
+    News news = findActiveNews(id);
 
     return toResponse(news);
   }
@@ -50,6 +51,7 @@ public class NewsServiceImpl implements NewsService {
     news.setFeatured(request.getFeatured());
     news.setPublishDate(request.getPublishDate());
     news.setStatus(request.getStatus());
+    auditService.markCreated(news);
 
     if (image != null && !image.isEmpty()) {
 
@@ -65,8 +67,7 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public NewsResponse updateNews(String id, NewsRequest request, MultipartFile image) {
 
-    News news =
-        newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
+    News news = findActiveNews(id);
 
     news.setTitle(request.getTitle());
     news.setContent(request.getContent());
@@ -74,6 +75,7 @@ public class NewsServiceImpl implements NewsService {
     news.setFeatured(request.getFeatured());
     news.setPublishDate(request.getPublishDate());
     news.setStatus(request.getStatus());
+    auditService.markUpdated(news);
 
     // 有新圖片才更新
     if (image != null && !image.isEmpty()) {
@@ -91,7 +93,9 @@ public class NewsServiceImpl implements NewsService {
   @Override
   public void deleteNews(String id) {
 
-    newsRepository.deleteById(id);
+    News news = findActiveNews(id);
+    auditService.markDeleted(news);
+    newsRepository.save(news);
   }
 
   private NewsResponse toResponse(News news) {
@@ -105,6 +109,19 @@ public class NewsServiceImpl implements NewsService {
         .featured(news.getFeatured())
         .publishDate(news.getPublishDate())
         .status(news.getStatus())
+        .createdBy(auditService.toResponse(news.getCreatedBy()))
+        .updatedBy(auditService.toResponse(news.getUpdatedBy()))
         .build();
+  }
+
+  private News findActiveNews(String id) {
+    News news =
+        newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
+
+    if (Boolean.TRUE.equals(news.getDeleted())) {
+      throw new RuntimeException("News not found");
+    }
+
+    return news;
   }
 }

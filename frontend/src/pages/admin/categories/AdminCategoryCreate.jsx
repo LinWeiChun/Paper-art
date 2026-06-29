@@ -14,10 +14,16 @@ function AdminCategoryCreate() {
   const [formData, setFormData] = useState(createDefaultCategoryForm);
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]:
-        e.target.name === 'sortOrder' ? Number(e.target.value) : e.target.value,
+      [name]:
+        type === 'checkbox'
+          ? checked
+          : name === 'sortOrder'
+            ? Number(value)
+            : value,
     });
   };
 
@@ -69,6 +75,18 @@ function AdminCategoryCreate() {
             value={formData.sortOrder}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+            />
+            發布到前台
+          </label>
         </div>
 
         <div className="action-buttons">

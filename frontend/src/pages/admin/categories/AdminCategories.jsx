@@ -80,8 +80,9 @@ function AdminCategories() {
         <thead>
           <tr>
             <th style={{ width: '10%' }}>#</th>
-            <th style={{ width: '50%' }}>分類名稱</th>
+            <th style={{ width: '40%' }}>分類名稱</th>
             <th style={{ width: '15%' }}>排序</th>
+            <th style={{ width: '10%' }}>狀態</th>
             <th style={{ width: '25%' }}>操作</th>
           </tr>
         </thead>
@@ -89,20 +90,20 @@ function AdminCategories() {
         <tbody>
           {categories.length === 0 ? (
             <tr>
-              <td colSpan="4" className="empty-data">
+              <td colSpan="5" className="empty-data">
                 目前沒有分類資料
               </td>
             </tr>
           ) : (
             categories.map((category, index) => (
               <tr key={category.id}>
-                <td>
-                  {(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}
-                </td>
+                <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
                 <td title={category.name}>{category.name}</td>
 
                 <td>{category.sortOrder}</td>
+
+                <td>{category.published ? '已發布' : '未發布'}</td>
 
                 <td>
                   <div className="action-buttons">

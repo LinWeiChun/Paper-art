@@ -30,6 +30,11 @@ public abstract class BaseEntity {
   @Column(nullable = false)
   private LocalDateTime updatedAt;
 
+  @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+  private Boolean deleted = false;
+
+  private LocalDateTime deletedAt;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "created_by")
   private User createdBy;

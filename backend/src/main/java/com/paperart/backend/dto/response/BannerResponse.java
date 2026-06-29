@@ -20,4 +20,8 @@ public class BannerResponse {
   private Integer sortOrder;
 
   private Boolean active;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

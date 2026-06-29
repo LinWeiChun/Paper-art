@@ -8,4 +8,6 @@ import lombok.Setter;
 public class TagRequest {
 
   private String name;
+
+  private Boolean published;
 }

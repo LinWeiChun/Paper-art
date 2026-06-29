@@ -16,4 +16,8 @@ public class AboutValueResponse {
   private String description;
 
   private Integer sortOrder;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }
