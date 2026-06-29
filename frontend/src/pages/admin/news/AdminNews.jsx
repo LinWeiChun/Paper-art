@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { deleteNews, getAllNews } from '../../../api/newsApi';
 import Pagination from '../../../components/common/Pagination';
+import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminTable.css';
 
@@ -10,8 +11,6 @@ function AdminNews() {
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const ITEMS_PER_PAGE = 10;
 
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +27,7 @@ function AdminNews() {
 
   const fetchNews = async () => {
     try {
-      const response = await getAllNews(currentPage - 1, ITEMS_PER_PAGE);
+      const response = await getAllNews(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
 
       console.log(response.data);
       setNewsList(response.data.content || []);
@@ -97,7 +96,7 @@ function AdminNews() {
         <tbody>
           {newsList.map((news, index) => (
             <tr key={news.id}>
-              <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+              <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
               <td>{news.title}</td>
 

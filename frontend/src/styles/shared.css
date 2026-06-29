@@ -1,0 +1,237 @@
+/* ===== Shared Frontend Styles ===== */
+
+:root {
+  --brand-color: #b22222;
+  --brand-hover: #8b1a1a;
+  --brand-hover-soft: #8f1b1b;
+  --brand-deep: #8b0000;
+  --surface-color: #fff;
+  --surface-soft: #fafafa;
+  --line-color: #eee;
+  --muted-color: #666;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.about-banner,
+.authors-banner,
+.news-banner,
+.rental-banner,
+.rental-request-banner,
+.works-banner {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url('/images/about-banner.jpg');
+}
+
+.authors-container,
+.news-container,
+.rental-container,
+.works-container {
+  min-height: 100vh;
+}
+
+.about-story,
+.about-values,
+.contact-content,
+.rental-intro,
+.rental-service,
+.rental-process,
+.rental-contact {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 40px;
+}
+
+.section-tag {
+  color: var(--brand-color);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.authors-grid,
+.news-list {
+  max-width: 1200px;
+  padding: 0 20px;
+  display: grid;
+  gap: 30px;
+}
+
+.author-card,
+.news-card {
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface-color);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.author-card:hover,
+.work-card:hover {
+  transform: translateY(-8px);
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+}
+
+.author-card img,
+.news-card img,
+.work-card img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.value-card,
+.rental-card,
+.process-item {
+  background: var(--surface-color);
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+}
+
+.value-card h3,
+.rental-card h3,
+.process-item span,
+.detail-content h1,
+.detail-description h3,
+.filter-modal h2,
+.work-content h3,
+.contact-form-section h2,
+.contact-info-section h2,
+.about-vision h2,
+.section-title {
+  color: var(--brand-color);
+}
+
+.explore-btn,
+.more-btn,
+.contact-btn,
+.author-work-btn,
+.filter-btn,
+.apply-btn,
+.clear-filter-btn,
+.submit-btn,
+.contact-form-section button {
+  background: var(--brand-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.explore-btn:hover,
+.more-btn:hover,
+.contact-btn:hover,
+.author-work-btn:hover,
+.filter-btn:hover,
+.apply-btn:hover,
+.clear-filter-btn:hover,
+.submit-btn:hover,
+.contact-form-section button:hover {
+  background: var(--brand-hover);
+}
+
+.action-btn,
+.detail-actions button {
+  border: none;
+  border-radius: 8px;
+  background: var(--brand-color);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover,
+.rental-btn:hover {
+  background: var(--brand-hover);
+}
+
+.search-input,
+.contact-form-section input,
+.contact-form-section select,
+.contact-form-section textarea,
+.request-form input,
+.request-form textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  font-family: inherit;
+  transition: 0.3s;
+}
+
+.contact-form-section input:focus,
+.contact-form-section select:focus,
+.contact-form-section textarea:focus {
+  outline: none;
+  border-color: var(--brand-color);
+  box-shadow: 0 0 0 3px rgba(178, 34, 34, 0.1);
+}
+
+.contact-info-section,
+.contact-form-section,
+.request-form,
+.selected-works {
+  background: var(--surface-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+}
+
+.work-tags,
+.detail-tags,
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.work-tags span,
+.detail-tags span {
+  background: #f3f3f3;
+  border-radius: 20px;
+}
+
+.filter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  background: #ddd;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.checkbox-item:hover {
+  background: var(--surface-soft);
+}

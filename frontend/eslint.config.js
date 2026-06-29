@@ -48,6 +48,8 @@ export default defineConfig([
       // React 17+ 不需要 import React
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
+      'react/prop-types': 'off',
+      'react-refresh/only-export-components': 'off',
 
       // 暫時不要自動刪 import
       'unused-imports/no-unused-imports': 'off',
@@ -89,6 +91,7 @@ export default defineConfig([
       // React Hooks 額外規則先關掉
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/purity': 'off',
+      'react-hooks/immutability': 'off',
     },
   },
 ]);

@@ -1,5 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import {
+  getContactMessageById,
+  updateContactMessageProcessed,
+} from '../../../api/contactApi';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -7,26 +12,53 @@ function AdminContactDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [contact, setContact] = useState({
-    id,
-    name: '王小明',
-    email: 'test@gmail.com',
-    phone: '0912-345-678',
-    subject: '合作邀約',
-    message: '您好，我們想邀請李煥章老師參與文化展覽活動。',
-    createdAt: '2026-06-12',
-    status: '未處理',
-  });
+  const [contact, setContact] = useState(null);
+  const [processed, setProcessed] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchContactMessage();
+  }, [id]);
+
+  const fetchContactMessage = async () => {
+    try {
+      setLoading(true);
+
+      const response = await getContactMessageById(id);
+
+      setContact(response.data);
+      setProcessed(Boolean(response.data.processed));
+    } catch (error) {
+      console.error('取得聯絡訊息失敗：', error);
+      alert('取得資料失敗');
+      navigate('/admin/contact-message');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('聯絡表單資料：', contact);
+    try {
+      setIsSubmitting(true);
 
-    alert('修改成功');
+      await updateContactMessageProcessed(id, processed);
 
-    navigate('/admin/contact');
+      alert('更新成功');
+      navigate('/admin/contact-message');
+    } catch (error) {
+      console.error('更新聯絡訊息失敗：', error);
+      alert('更新失敗');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (loading || !contact) {
+    return <div>載入中...</div>;
+  }
 
   return (
     <div className="admin-form-container">
@@ -35,64 +67,60 @@ function AdminContactDetail() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>姓名</label>
-          <input value={contact.name} readOnly />
+          <input value={contact.name || ''} readOnly />
         </div>
 
         <div className="form-group">
           <label>Email</label>
-          <input value={contact.email} readOnly />
+          <input value={contact.email || ''} readOnly />
         </div>
 
         <div className="form-group">
           <label>電話</label>
-          <input value={contact.phone} readOnly />
+          <input value={contact.phone || ''} readOnly />
         </div>
 
         <div className="form-group">
           <label>主旨</label>
-          <input value={contact.subject} readOnly />
+          <input value={contact.subject || ''} readOnly />
         </div>
 
         <div className="form-group">
-          <label>留言內容</label>
-          <textarea rows="8" value={contact.message} readOnly />
+          <label>訊息內容</label>
+          <textarea rows="8" value={contact.message || ''} readOnly />
         </div>
 
         <div className="form-group">
-          <label>建立時間</label>
-          <input value={contact.createdAt} readOnly />
+          <label>送出時間</label>
+          <input value={contact.createdAt?.replace('T', ' ') || ''} readOnly />
         </div>
 
-        <div className="form-group">
-          <label>狀態</label>
-
-          <select
-            className="status-select"
-            value={contact.status}
-            onChange={(e) =>
-              setContact({
-                ...contact,
-                status: e.target.value,
-              })
-            }
-          >
-            <option value="未處理">未處理</option>
-            <option value="處理中">處理中</option>
-            <option value="已完成">已完成</option>
-          </select>
+        <div className="form-group checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={processed}
+              onChange={(e) => setProcessed(e.target.checked)}
+            />
+            已處理
+          </label>
         </div>
 
         <div className="action-buttons">
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/contact')}
+            onClick={() => navigate('/admin/contact-message')}
           >
             返回列表
           </button>
 
-          <button type="submit" className="btn btn-primary">
-            儲存
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '儲存中...' : '儲存'}
           </button>
         </div>
       </form>

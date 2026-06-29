@@ -65,12 +65,7 @@
 }
 
 .explore-btn {
-  background: #b22222;
-  color: #fff;
   padding: 12px 30px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
 }
 
 /* ===== 作品區 ===== */
@@ -81,7 +76,6 @@
 
 .section-title {
   font-size: 2rem;
-  color: #b22222;
 }
 
 .section-subtitle {
@@ -120,10 +114,6 @@
 .more-btn {
   margin-top: 40px;
   padding: 12px 30px;
-  background: #b22222;
-  color: #fff;
-  border-radius: 8px;
-  border: none;
 }
 
 /* ===== 🔥 手機版 ===== */

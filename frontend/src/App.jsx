@@ -45,6 +45,7 @@ import AdminArts from './pages/admin/arts/AdminArts';
 
 import AdminContact from './pages/admin/contact/AdminContact';
 import AdminContactDetail from './pages/admin/contact/AdminContactDetail';
+import AdminContactMessage from './pages/admin/contact/AdminContactMessage';
 
 import AdminUser from './pages/admin/user/AdminUser';
 import AdminUserCreate from './pages/admin/user/AdminUserCreate';
@@ -103,7 +104,11 @@ function App() {
 
             {/* 聯絡我們 */}
             <Route path="contact" element={<AdminContact />} />
-            <Route path="contact/:id" element={<AdminContactDetail />} />
+            <Route path="contact-message" element={<AdminContactMessage />} />
+            <Route
+              path="contact-message/:id"
+              element={<AdminContactDetail />}
+            />
 
             {/* 管理者 */}
             <Route path="users" element={<AdminUser />} />

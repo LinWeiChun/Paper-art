@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createNews } from '../../../api/newsApi';
 import Editor from '../../../components/editor/Editor';
 import SummaryEditor from '../../../components/editor/SummaryEditor';
+import { createDefaultNewsForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -12,12 +13,7 @@ function AdminNewsCreate() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    date: '',
-    summary: '',
-    content: '',
-  });
+  const [formData, setFormData] = useState(createDefaultNewsForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);

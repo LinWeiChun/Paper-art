@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getCategoryById, updateCategory } from '../../../api/categoryApi';
+import { createDefaultCategoryForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -11,10 +12,7 @@ function AdminCategoryEdit() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    sortOrder: 0,
-  });
+  const [formData, setFormData] = useState(createDefaultCategoryForm);
 
   useEffect(() => {
     fetchCategory();

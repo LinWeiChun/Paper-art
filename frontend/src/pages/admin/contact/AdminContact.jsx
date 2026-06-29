@@ -2,23 +2,12 @@ import { useState } from 'react';
 
 import { useEffect } from 'react';
 import { getContact, updateContact } from '../../../api/contactApi';
+import { createDefaultContactForm } from '../../../constants/pageDefaults';
 import '../../../styles/admin/adminForm.css';
 
 function AdminContact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    contactPerson: '',
-    phone: '',
-    mobile: '',
-    email: '',
-    address: '',
-    facebook: '',
-    instagram: '',
-    line: '',
-    website: '',
-    businessHours: '',
-    googleMap: '',
-  });
+  const [formData, setFormData] = useState(createDefaultContactForm);
 
   useEffect(() => {
     fetchContact();

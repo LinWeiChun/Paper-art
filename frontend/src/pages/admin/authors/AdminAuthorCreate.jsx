@@ -4,18 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { createAuthor } from '../../../api/authorsApi';
 
 import Editor from '../../../components/editor/Editor';
+import { createDefaultAuthorForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
 function AdminAuthorCreate() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    title: '',
-    description: '',
-    sortOrder: 0,
-  });
+  const [formData, setFormData] = useState(createDefaultAuthorForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);

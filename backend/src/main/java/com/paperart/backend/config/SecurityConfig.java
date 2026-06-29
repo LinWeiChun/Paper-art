@@ -40,6 +40,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/contact")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/contact-messages")
+                    .permitAll()
                     .requestMatchers(
                         "/auth/**",
                         "/arts/**",
@@ -47,8 +51,7 @@ public class SecurityConfig {
                         "/authors/**",
                         "/categories/**",
                         "/about/**",
-                        "/banners/**",
-                        "/contact/**")
+                        "/banners/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

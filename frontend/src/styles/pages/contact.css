@@ -7,10 +7,6 @@
 }
 
 .contact-content {
-  max-width: 1200px;
-  margin: 80px auto;
-  padding: 0 40px;
-
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
@@ -20,15 +16,11 @@
 /* ===== 聯絡資訊 ===== */
 
 .contact-info-section {
-  background: #fff;
-  border-radius: 16px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .contact-info-section h2 {
   margin-bottom: 30px;
-  color: #b22222;
   border-bottom: 2px solid #f3f3f3;
   padding-bottom: 15px;
 }
@@ -103,15 +95,11 @@
 /* ===== 表單 ===== */
 
 .contact-form-section {
-  background: #fff;
-  border-radius: 16px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .contact-form-section h2 {
   margin-bottom: 30px;
-  color: #b22222;
 }
 
 .contact-form-section form {
@@ -123,21 +111,9 @@
 .contact-form-section input,
 .contact-form-section select,
 .contact-form-section textarea {
-  width: 100%;
   padding: 14px 16px;
-  border: 1px solid #ddd;
   border-radius: 10px;
   font-size: 1rem;
-  font-family: inherit;
-  transition: 0.3s;
-}
-
-.contact-form-section input:focus,
-.contact-form-section select:focus,
-.contact-form-section textarea:focus {
-  outline: none;
-  border-color: #b22222;
-  box-shadow: 0 0 0 3px rgba(178, 34, 34, 0.1);
 }
 
 .contact-form-section textarea {
@@ -146,15 +122,10 @@
 }
 
 .contact-form-section button {
-  background: #b22222;
-  color: #fff;
-  border: none;
   border-radius: 10px;
   padding: 15px;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
 }
 
 .contact-form-section button:hover {

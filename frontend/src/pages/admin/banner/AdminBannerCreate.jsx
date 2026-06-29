@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createBanner } from '../../../api/bannerApi';
+import { createDefaultBannerForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -9,12 +10,7 @@ function AdminBannerCreate() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    subtitle: '',
-    sortOrder: 0,
-    active: true,
-  });
+  const [formData, setFormData] = useState(createDefaultBannerForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
