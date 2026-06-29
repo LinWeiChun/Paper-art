@@ -13,6 +13,7 @@ import com.paperart.backend.repository.ArtRepository;
 import com.paperart.backend.repository.AuthorRepository;
 import com.paperart.backend.repository.CategoryRepository;
 import com.paperart.backend.repository.TagRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.ArtService;
 import com.paperart.backend.service.FileUploadService;
 import jakarta.persistence.criteria.Join;
@@ -37,12 +38,13 @@ public class ArtServiceImpl implements ArtService {
   private final CategoryRepository categoryRepository;
   private final TagRepository tagRepository;
   private final FileUploadService fileUploadService;
+  private final AuditService auditService;
 
   /** 前台全部作品 */
   @Override
   public List<ArtResponse> getAll() {
 
-    return artRepository.findAll(Sort.by("sortOrder").ascending()).stream()
+    return artRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc().stream()
         .map(this::toResponse)
         .toList();
   }
@@ -53,14 +55,14 @@ public class ArtServiceImpl implements ArtService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
 
-    return artRepository.findAll(pageable).map(this::toResponse);
+    return artRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   /** 單筆查詢 */
   @Override
   public ArtResponse getById(String id) {
 
-    Art art = artRepository.findById(id).orElseThrow(() -> new RuntimeException("Art not found"));
+    Art art = findActiveArt(id);
 
     return toResponse(art);
   }
@@ -77,6 +79,7 @@ public class ArtServiceImpl implements ArtService {
     art.setSortOrder(request.getSortOrder());
     art.setFeatured(request.getFeatured());
     art.setRentable(request.getRentable());
+    art.setPublished(request.getPublished() != null ? request.getPublished() : true);
 
     art.setAuthors(
         request.getAuthorIds() == null
@@ -92,6 +95,8 @@ public class ArtServiceImpl implements ArtService {
         request.getTagIds() == null
             ? new ArrayList<>()
             : tagRepository.findAllById(request.getTagIds()));
+    auditService.markCreated(art);
+
     // 上傳縮圖
     if (thumbnail != null && !thumbnail.isEmpty()) {
 
@@ -109,7 +114,7 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public ArtResponse update(String id, ArtRequest request, MultipartFile thumbnail) {
 
-    Art art = artRepository.findById(id).orElseThrow(() -> new RuntimeException("Art not found"));
+    Art art = findActiveArt(id);
 
     art.setTitle(request.getTitle());
     art.setDescription(request.getDescription());
@@ -117,6 +122,7 @@ public class ArtServiceImpl implements ArtService {
     art.setSortOrder(request.getSortOrder());
     art.setFeatured(request.getFeatured());
     art.setRentable(request.getRentable());
+    art.setPublished(request.getPublished() != null ? request.getPublished() : true);
 
     art.setAuthors(
         request.getAuthorIds() == null
@@ -132,6 +138,7 @@ public class ArtServiceImpl implements ArtService {
         request.getTagIds() == null
             ? new ArrayList<>()
             : tagRepository.findAllById(request.getTagIds()));
+    auditService.markUpdated(art);
 
     // 更新圖片
     if (thumbnail != null && !thumbnail.isEmpty()) {
@@ -154,6 +161,9 @@ public class ArtServiceImpl implements ArtService {
     Specification<Art> spec =
         (root, query, cb) -> {
           List<Predicate> predicates = new ArrayList<>();
+
+          predicates.add(cb.isFalse(root.get("deleted")));
+          predicates.add(cb.isTrue(root.get("published")));
 
           // 關鍵字
           if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
@@ -216,12 +226,14 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public void delete(String id) {
 
-    artRepository.deleteById(id);
+    Art art = findActiveArt(id);
+    auditService.markDeleted(art);
+    artRepository.save(art);
   }
 
   @Override
   public List<ArtResponse> getFeaturedArts() {
-    return artRepository.findByFeaturedTrueOrderBySortOrderAsc().stream()
+    return artRepository.findByFeaturedTrueAndPublishedTrueAndDeletedFalseOrderBySortOrderAsc().stream()
         .map(this::toResponse)
         .toList();
   }
@@ -238,6 +250,7 @@ public class ArtServiceImpl implements ArtService {
         .sortOrder(art.getSortOrder())
         .featured(art.getFeatured())
         .rentable(art.getRentable())
+        .published(art.getPublished())
         .authors(
             art.getAuthors().stream()
                 .map(author -> new OptionResponse(author.getId(), author.getName()))
@@ -250,6 +263,8 @@ public class ArtServiceImpl implements ArtService {
             art.getTags().stream()
                 .map(tag -> new OptionResponse(tag.getId(), tag.getName()))
                 .toList())
+        .createdBy(auditService.toResponse(art.getCreatedBy()))
+        .updatedBy(auditService.toResponse(art.getUpdatedBy()))
         .build();
   }
 
@@ -274,5 +289,15 @@ public class ArtServiceImpl implements ArtService {
 
       default -> Sort.by("sortOrder").ascending();
     };
+  }
+
+  private Art findActiveArt(String id) {
+    Art art = artRepository.findById(id).orElseThrow(() -> new RuntimeException("Art not found"));
+
+    if (Boolean.TRUE.equals(art.getDeleted())) {
+      throw new RuntimeException("Art not found");
+    }
+
+    return art;
   }
 }

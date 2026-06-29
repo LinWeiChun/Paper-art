@@ -42,6 +42,9 @@ public class Art extends BaseEntity {
   @Column(nullable = false)
   private Boolean rentable = true;
 
+  @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+  private Boolean published = true;
+
   // 作者
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

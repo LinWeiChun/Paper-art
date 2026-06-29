@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BannerRepository extends JpaRepository<Banner, String> {
 
-  List<Banner> findByActiveTrueOrderBySortOrderAsc();
+  List<Banner> findByDeletedFalseOrderBySortOrderAsc();
+
+  List<Banner> findByActiveTrueAndDeletedFalseOrderBySortOrderAsc();
 }

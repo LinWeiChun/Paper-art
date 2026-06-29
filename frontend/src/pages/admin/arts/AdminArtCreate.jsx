@@ -229,6 +229,16 @@ function AdminArtCreate() {
             />
             精選作品
           </label>
+
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+            />
+            發布到前台
+          </label>
         </div>
 
         {/* 圖片 */}

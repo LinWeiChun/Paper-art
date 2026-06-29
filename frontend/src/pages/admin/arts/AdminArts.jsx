@@ -76,22 +76,23 @@ function AdminArts() {
             <th style={{ width: '5%' }}>#</th>
             <th style={{ width: '12%' }}>縮圖</th>
             <th style={{ width: '25%' }}>作品名稱</th>
-            <th style={{ width: '18%' }}>作者</th>
-            <th style={{ width: '18%' }}>分類</th>
+            <th style={{ width: '16%' }}>作者</th>
+            <th style={{ width: '16%' }}>分類</th>
             <th style={{ width: '7%' }}>精選</th>
-            <th style={{ width: '15%' }}>操作</th>
+            <th style={{ width: '8%' }}>狀態</th>
+            <th style={{ width: '14%' }}>操作</th>
           </tr>
         </thead>
 
         <tbody>
           {arts.length === 0 ? (
             <tr>
-              <td colSpan="7">目前沒有作品資料</td>
+              <td colSpan="8">目前沒有作品資料</td>
             </tr>
           ) : (
             arts.map((art, index) => (
               <tr key={art.id}>
-              <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
+                <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
                 <td>
                   {art.thumbnail && (
@@ -123,6 +124,8 @@ function AdminArts() {
                 </td>
 
                 <td>{art.featured ? '是' : '否'}</td>
+
+                <td>{art.published ? '已發布' : '未發布'}</td>
 
                 <td>
                   <div className="action-buttons">

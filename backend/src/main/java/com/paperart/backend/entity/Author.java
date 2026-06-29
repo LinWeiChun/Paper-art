@@ -23,4 +23,7 @@ public class Author extends BaseEntity {
 
   @Column(nullable = false)
   private Integer sortOrder = 0;
+
+  @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+  private Boolean published = true;
 }

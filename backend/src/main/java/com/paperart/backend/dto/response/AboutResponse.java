@@ -23,4 +23,8 @@ public class AboutResponse {
   private String vision;
 
   private List<AboutValueResponse> values;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

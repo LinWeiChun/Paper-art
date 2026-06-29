@@ -53,6 +53,7 @@ function AdminArtEdit() {
         description: art.description || '',
         featured: art.featured ?? false,
         rentable: art.rentable ?? true,
+        published: art.published ?? true,
 
         // 將後端回傳的 id + name 轉成 id 陣列
         authorIds: art.authors?.map((a) => a.id) || [],
@@ -255,6 +256,16 @@ function AdminArtEdit() {
               onChange={handleChange}
             />
             精選作品
+          </label>
+
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+            />
+            發布到前台
           </label>
         </div>
 

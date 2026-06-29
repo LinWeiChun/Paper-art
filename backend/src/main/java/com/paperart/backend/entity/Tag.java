@@ -14,4 +14,7 @@ public class Tag extends BaseEntity {
 
   @Column(nullable = false, unique = true)
   private String name;
+
+  @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+  private Boolean published = true;
 }

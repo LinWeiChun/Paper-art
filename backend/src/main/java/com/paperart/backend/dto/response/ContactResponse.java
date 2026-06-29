@@ -30,4 +30,8 @@ public class ContactResponse {
   private String businessHours;
 
   private String googleMap;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

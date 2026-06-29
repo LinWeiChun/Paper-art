@@ -5,6 +5,7 @@ export const createDefaultArtForm = (overrides = {}) => ({
   description: '',
   featured: false,
   rentable: true,
+  published: true,
   authorIds: [],
   categoryIds: [],
   tagIds: [],
@@ -16,6 +17,7 @@ export const createDefaultAuthorForm = () => ({
   title: '',
   description: '',
   sortOrder: 0,
+  published: true,
 });
 
 export const createDefaultNewsForm = () => ({
@@ -35,6 +37,7 @@ export const createDefaultBannerForm = () => ({
 export const createDefaultCategoryForm = () => ({
   name: '',
   sortOrder: 0,
+  published: true,
 });
 
 export const createDefaultUserForm = () => ({

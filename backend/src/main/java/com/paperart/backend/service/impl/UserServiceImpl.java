@@ -6,6 +6,7 @@ import com.paperart.backend.entity.Role;
 import com.paperart.backend.entity.User;
 import com.paperart.backend.repository.RoleRepository;
 import com.paperart.backend.repository.UserRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.UserService;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
+  private final AuditService auditService;
 
   @Override
   public List<UserResponse> getAllUsers() {
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
       user.setRoles(roles);
     }
 
+    auditService.markCreated(user);
     userRepository.save(user);
 
     return convertToResponse(user);
@@ -101,6 +104,7 @@ public class UserServiceImpl implements UserService {
       user.setRoles(roles);
     }
 
+    auditService.markUpdated(user);
     userRepository.save(user);
 
     return convertToResponse(user);
@@ -112,6 +116,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
 
     user.setEnabled(false);
+    auditService.markUpdated(user);
 
     userRepository.save(user);
   }
@@ -122,6 +127,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
 
     user.setEnabled(true);
+    auditService.markUpdated(user);
 
     userRepository.save(user);
   }
@@ -138,6 +144,8 @@ public class UserServiceImpl implements UserService {
         .username(user.getUsername())
         .enabled(user.getEnabled())
         .roles(user.getRoles().stream().map(Role::getName).toList())
+        .createdBy(auditService.toResponse(user.getCreatedBy()))
+        .updatedBy(auditService.toResponse(user.getUpdatedBy()))
         .build();
   }
 }

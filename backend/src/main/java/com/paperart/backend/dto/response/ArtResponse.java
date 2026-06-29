@@ -26,7 +26,13 @@ public class ArtResponse {
 
   private Boolean rentable;
 
+  private Boolean published;
+
   private List<OptionResponse> authors;
   private List<OptionResponse> categories;
   private List<OptionResponse> tags;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

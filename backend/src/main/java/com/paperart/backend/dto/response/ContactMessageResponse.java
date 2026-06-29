@@ -23,4 +23,8 @@ public class ContactMessageResponse {
   private Boolean processed;
 
   private LocalDateTime createdAt;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

@@ -70,11 +70,11 @@ function AdminBanners() {
         <tbody>
           {loading ? (
             <tr>
-              <td colSpan="7">載入中...</td>
+              <td colSpan="6">載入中...</td>
             </tr>
           ) : banners.length === 0 ? (
             <tr>
-              <td colSpan="7">目前沒有 Banner 資料</td>
+              <td colSpan="6">目前沒有 Banner 資料</td>
             </tr>
           ) : (
             banners.map((banner, index) => (

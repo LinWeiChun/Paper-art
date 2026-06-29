@@ -36,6 +36,7 @@ function AdminAuthorEdit() {
         title: response.data.title || '',
         description: response.data.description || '',
         sortOrder: response.data.sortOrder || 0,
+        published: response.data.published ?? true,
       });
 
       setPreview(response.data.avatarUrl);
@@ -45,9 +46,11 @@ function AdminAuthorEdit() {
   };
   // 一般欄位
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -124,6 +127,18 @@ function AdminAuthorEdit() {
             value={formData.sortOrder}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-group checkbox-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              name="published"
+              checked={formData.published}
+              onChange={handleChange}
+            />
+            發布到前台
+          </label>
         </div>
 
         {/* 目前照片 */}

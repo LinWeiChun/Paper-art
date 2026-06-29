@@ -3,11 +3,16 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { getContact, updateContact } from '../../../api/contactApi';
 import { createDefaultContactForm } from '../../../constants/pageDefaults';
+import { displayAuditUser } from '../../../utils/audit';
 import '../../../styles/admin/adminForm.css';
 
 function AdminContact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState(createDefaultContactForm);
+  const [auditData, setAuditData] = useState({
+    createdBy: null,
+    updatedBy: null,
+  });
 
   useEffect(() => {
     fetchContact();
@@ -29,6 +34,10 @@ function AdminContact() {
         website: response.data.website || '',
         businessHours: response.data.businessHours || '',
         googleMap: response.data.googleMap || '',
+      });
+      setAuditData({
+        createdBy: response.data.createdBy || null,
+        updatedBy: response.data.updatedBy || null,
       });
     } catch (error) {
       console.error('取得聯絡資訊失敗：', error);
@@ -173,6 +182,16 @@ function AdminContact() {
             value={formData.googleMap}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-group">
+          <label>建立者</label>
+          <input value={displayAuditUser(auditData.createdBy)} readOnly />
+        </div>
+
+        <div className="form-group">
+          <label>更新者</label>
+          <input value={displayAuditUser(auditData.updatedBy)} readOnly />
         </div>
 
         <div className="action-buttons">

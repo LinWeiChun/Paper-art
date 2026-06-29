@@ -14,4 +14,10 @@ public class CategoryResponse {
   private String name;
 
   private Integer sortOrder;
+
+  private Boolean published;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

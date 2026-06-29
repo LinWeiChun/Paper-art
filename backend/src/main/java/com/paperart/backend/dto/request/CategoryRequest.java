@@ -10,4 +10,6 @@ public class CategoryRequest {
   private String name;
 
   private Integer sortOrder;
+
+  private Boolean published;
 }

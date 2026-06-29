@@ -20,4 +20,10 @@ public class AuthorResponse {
   private String avatarUrl;
 
   private Integer sortOrder;
+
+  private Boolean published;
+
+  private AuditUserResponse createdBy;
+
+  private AuditUserResponse updatedBy;
 }

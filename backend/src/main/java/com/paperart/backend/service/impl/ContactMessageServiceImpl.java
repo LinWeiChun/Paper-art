@@ -4,6 +4,7 @@ import com.paperart.backend.dto.request.ContactMessageRequest;
 import com.paperart.backend.dto.response.ContactMessageResponse;
 import com.paperart.backend.entity.ContactMessage;
 import com.paperart.backend.repository.ContactMessageRepository;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.ContactMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 public class ContactMessageServiceImpl implements ContactMessageService {
 
   private final ContactMessageRepository contactMessageRepository;
+  private final AuditService auditService;
 
   @Override
   public ContactMessageResponse create(ContactMessageRequest request) {
@@ -30,6 +32,7 @@ public class ContactMessageServiceImpl implements ContactMessageService {
     contactMessage.setSubject(request.getSubject().trim());
     contactMessage.setMessage(request.getMessage().trim());
     contactMessage.setProcessed(false);
+    auditService.markCreated(contactMessage);
 
     contactMessage = contactMessageRepository.save(contactMessage);
 
@@ -61,6 +64,7 @@ public class ContactMessageServiceImpl implements ContactMessageService {
             .orElseThrow(() -> new RuntimeException("Contact message not found"));
 
     contactMessage.setProcessed(Boolean.TRUE.equals(processed));
+    auditService.markUpdated(contactMessage);
     contactMessage = contactMessageRepository.save(contactMessage);
 
     return toResponse(contactMessage);
@@ -90,6 +94,8 @@ public class ContactMessageServiceImpl implements ContactMessageService {
         .message(contactMessage.getMessage())
         .processed(contactMessage.getProcessed())
         .createdAt(contactMessage.getCreatedAt())
+        .createdBy(auditService.toResponse(contactMessage.getCreatedBy()))
+        .updatedBy(auditService.toResponse(contactMessage.getUpdatedBy()))
         .build();
   }
 }
