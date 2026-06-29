@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { getArtById } from '../api/artApi';
-import { useRental } from '../contexts/RentalContext';
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/workDetail.css';
@@ -11,7 +10,6 @@ function WorkDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { addToRental, isInRental } = useRental();
 
   const [work, setWork] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -113,7 +111,7 @@ function WorkDetail() {
 
           {/* 按鈕 */}
           <div className="detail-actions">
-            {isInRental(work.id) ? (
+            {/* {isInRental(work.id) ? (
               <button className="rental-btn added" disabled>
                 ✓ 已加入租借清單
               </button>
@@ -121,7 +119,7 @@ function WorkDetail() {
               <button className="rental-btn" onClick={() => addToRental(work)}>
                 ＋ 加入租借清單
               </button>
-            )}
+            )} */}
 
             <button className="back-btn" onClick={handleBack}>
               返回作品集

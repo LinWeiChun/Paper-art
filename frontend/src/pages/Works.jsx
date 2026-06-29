@@ -3,7 +3,6 @@ import { FiFilter } from 'react-icons/fi';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { searchArts } from '../api/artApi';
 import Pagination from '../components/common/Pagination';
-import { useRental } from '../contexts/RentalContext';
 import useAuthors from '../hooks/useAuthors';
 import useCategories from '../hooks/useCategories';
 import Layout from '../layouts/Layout';
@@ -18,7 +17,6 @@ function Works() {
   /* ===== Hooks ===== */
   const { categories, loading } = useCategories();
   const { authors, loading: authorLoading } = useAuthors(null);
-  const { addToRental, isInRental } = useRental();
 
   /* ===== URL 參數 ===== */
   const search = searchParams.get('search') || '';
@@ -352,7 +350,7 @@ function Works() {
         <section className="works-grid">
           {works.map((work) => (
             <div className="work-card-wrapper" key={work.id}>
-              <button
+              {/* <button
                 className={`add-rental-btn ${
                   isInRental(work.id) ? 'added' : ''
                 }`}
@@ -363,7 +361,7 @@ function Works() {
                 }}
               >
                 {isInRental(work.id) ? '已加入' : '＋ 租借'}
-              </button>
+              </button> */}
               <Link
                 to={`/works/${work.id}`}
                 className="work-card"

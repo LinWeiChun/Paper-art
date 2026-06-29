@@ -69,9 +69,9 @@ function Header() {
               </ul>
             </li>
 
-            {/* <li>
+            <li>
               <Link to="/contact">聯絡我們</Link>
-            </li> */}
+            </li>
           </ul>
         </nav>
       </header>
