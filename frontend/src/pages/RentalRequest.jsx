@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useRental } from '../contexts/RentalContext';
+import { createDefaultRentalRequestForm } from '../constants/pageDefaults';
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/rentalRequest.css';
@@ -11,15 +12,7 @@ function RentalRequest() {
 
   const { rentalList, clearRental } = useRental();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    organization: '',
-    startDate: '',
-    endDate: '',
-    message: '',
-  });
+  const [formData, setFormData] = useState(createDefaultRentalRequestForm);
 
   const handleChange = (e) => {
     setFormData({

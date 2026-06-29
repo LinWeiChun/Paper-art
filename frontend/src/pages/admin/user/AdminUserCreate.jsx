@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { getAllRoles } from '../../../api/roleApi';
 import { createUser } from '../../../api/userApi';
+import { createDefaultUserForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -13,12 +14,7 @@ function AdminUserCreate() {
   const [showPassword, setShowPassword] = useState(false);
   const [allRoles, setAllRoles] = useState([]);
 
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    enabled: true,
-    roles: [],
-  });
+  const [formData, setFormData] = useState(createDefaultUserForm);
 
   useEffect(() => {
     fetchRoles();

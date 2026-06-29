@@ -1,24 +1,18 @@
 import { useEffect, useState } from 'react';
 
-import { getContact } from '../api/contactApi';
+import { getContact, submitContactMessage } from '../api/contactApi';
+import {
+  createDefaultContactForm,
+  createDefaultContactMessageForm,
+} from '../constants/pageDefaults';
 import Layout from '../layouts/Layout';
 
 import '../styles/pages/contact.css';
 
 function Contact() {
-  const [contact, setContact] = useState({
-    contactPerson: '',
-    phone: '',
-    mobile: '',
-    email: '',
-    address: '',
-    facebook: '',
-    instagram: '',
-    line: '',
-    website: '',
-    businessHours: '',
-    googleMap: '',
-  });
+  const [contact, setContact] = useState(createDefaultContactForm);
+  const [formData, setFormData] = useState(createDefaultContactMessageForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchContact();
@@ -46,6 +40,43 @@ function Contact() {
     contact.businessHours,
     contact.googleMap,
   ].some(Boolean);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.subject.trim() ||
+      !formData.message.trim()
+    ) {
+      alert('請填寫姓名、電子郵件、主旨與訊息');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await submitContactMessage(formData);
+
+      alert('訊息已送出，我們會盡快與您聯繫');
+      setFormData(createDefaultContactMessageForm());
+    } catch (error) {
+      console.error('送出聯絡訊息失敗：', error);
+      alert('送出失敗，請稍後再試');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Layout>
@@ -172,12 +203,39 @@ function Contact() {
           <section className="contact-form-section">
             <h2>留言給我們</h2>
 
-            <form>
-              <input type="text" placeholder="您的姓名" />
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="name"
+                placeholder="您的姓名"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
 
-              <input type="email" placeholder="電子郵件" />
+              <input
+                type="email"
+                name="email"
+                placeholder="電子郵件"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
 
-              <select>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="聯絡電話"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+
+              <select
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+              >
                 <option value="">請選擇主旨</option>
                 <option value="課程資訊">課程資訊</option>
                 <option value="展覽合作">展覽合作</option>
@@ -186,9 +244,18 @@ function Contact() {
                 <option value="其他">其他</option>
               </select>
 
-              <textarea rows="6" placeholder="請輸入您的訊息" />
+              <textarea
+                rows="6"
+                name="message"
+                placeholder="請輸入您的訊息"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
 
-              <button type="submit">送出訊息</button>
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? '送出中...' : '送出訊息'}
+              </button>
             </form>
           </section>
         </div>

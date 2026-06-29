@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createCategory } from '../../../api/categoryApi';
+import { createDefaultCategoryForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -10,10 +11,7 @@ function AdminCategoryCreate() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    sortOrder: 0,
-  });
+  const [formData, setFormData] = useState(createDefaultCategoryForm);
 
   const handleChange = (e) => {
     setFormData({

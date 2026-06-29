@@ -42,17 +42,6 @@
   margin-top: 30px;
 
   padding: 12px 24px;
-
-  background: #b22222;
-  color: white;
-
-  border-radius: 8px;
-
-  transition: 0.3s;
-}
-
-.author-work-btn:hover {
-  background: #8b1a1a;
 }
 .author-philosophy {
   margin-top: 80px;

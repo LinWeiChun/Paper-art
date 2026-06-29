@@ -7,6 +7,7 @@ import { getAllAuthors } from '../../../api/authorsApi';
 import { getAllCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
+import { createDefaultArtForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -18,15 +19,11 @@ function AdminArtEdit() {
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    featured: false,
-    rentable: false,
-    authorIds: [],
-    categoryIds: [],
-    tagIds: [],
-  });
+  const [formData, setFormData] = useState(() =>
+    createDefaultArtForm({
+      rentable: false,
+    }),
+  );
 
   const [image, setImage] = useState(null);
 
@@ -34,8 +31,6 @@ function AdminArtEdit() {
   const [preview, setPreview] = useState(null);
 
   // 防止重複送出
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     fetchData();
   }, [id]);

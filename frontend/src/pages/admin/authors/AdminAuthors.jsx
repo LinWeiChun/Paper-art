@@ -4,13 +4,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { deleteAuthor, getAdminAuthors } from '../../../api/authorsApi';
 
 import Pagination from '../../../components/common/Pagination';
+import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
 import '../../../styles/admin/adminTable.css';
 
 function AdminAuthors() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const ITEMS_PER_PAGE = 10;
 
   const [authors, setAuthors] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -22,7 +21,10 @@ function AdminAuthors() {
   // 取得作者
   const fetchAuthors = async () => {
     try {
-      const response = await getAdminAuthors(currentPage - 1, ITEMS_PER_PAGE);
+      const response = await getAdminAuthors(
+        currentPage - 1,
+        ADMIN_ITEMS_PER_PAGE,
+      );
 
       setAuthors(response.data.content);
       setTotalPages(response.data.totalPages);
@@ -90,7 +92,7 @@ function AdminAuthors() {
         <tbody>
           {authors.map((author, index) => (
             <tr key={author.id}>
-              <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+              <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
               <td>{author.name}</td>
 

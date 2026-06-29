@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getAllRoles } from '../../../api/roleApi';
 import { getUserById, updateUser } from '../../../api/userApi';
+import { createDefaultUserForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -14,12 +15,7 @@ function AdminUserEdit() {
   const [allRoles, setAllRoles] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    enabled: true,
-    roles: [],
-  });
+  const [formData, setFormData] = useState(createDefaultUserForm);
 
   useEffect(() => {
     fetchData();

@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { getAuthorById, updateAuthor } from '../../../api/authorsApi';
 import Editor from '../../../components/editor/Editor';
+import { createDefaultAuthorForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -14,12 +15,7 @@ function AdminAuthorEdit() {
 
   const previousPage = location.state?.page || 1;
 
-  const [formData, setFormData] = useState({
-    name: '',
-    title: '',
-    description: '',
-    sortOrder: 0,
-  });
+  const [formData, setFormData] = useState(createDefaultAuthorForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');

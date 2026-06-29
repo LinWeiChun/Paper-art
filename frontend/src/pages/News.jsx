@@ -12,7 +12,7 @@ function News() {
 
   const [totalPages, setTotalPages] = useState(0);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get('page')) || 1,

@@ -19,20 +19,17 @@
 .admin-title {
   margin-bottom: 30px;
   font-size: 2rem;
-  color: #333;
+  color: var(--text-color);
 }
 
 /* ========================================
-   Action Buttons Container
+   Action Buttons
 ======================================== */
 .action-buttons {
   display: flex;
   gap: 10px;
 }
 
-/* ========================================
-   Common Button
-======================================== */
 .btn {
   padding: 10px 18px;
 
@@ -51,9 +48,6 @@
   pointer-events: none;
 }
 
-/* ========================================
-   Primary Button
-======================================== */
 .btn-primary {
   background: var(--primary-color);
   color: #fff;
@@ -63,99 +57,6 @@
   background: var(--primary-hover);
 }
 
-/* ========================================
-   Secondary Button
-======================================== */
-.btn-secondary {
-  background: #f3f3f3;
-  color: #333;
-  border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-  background: #e5e5e5;
-}
-
-/* ========================================
-   Edit Button
-======================================== */
-.btn-edit {
-  background: var(--edit-color);
-  color: #fff;
-}
-
-.btn-edit:hover {
-  background: var(--edit-hover);
-}
-
-/* ========================================
-   Delete Button
-======================================== */
-.btn-delete {
-  background: var(--delete-color);
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background: var(--delete-hover);
-}
-
-/* ========================================
-   Layout
-======================================== */
-.admin-layout {
-  display: flex;
-  min-height: 100vh;
-  background: var(--background-color);
-}
-
-.admin-content {
-  flex: 1;
-  padding: 40px;
-}
-
-.admin-page {
-  padding: 30px;
-}
-
-.admin-title {
-  margin-bottom: 30px;
-  font-size: 2rem;
-  color: var(--text-color);
-}
-
-/* ========================================
-   Action Buttons Container
-======================================== */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-/* ========================================
-   Common Button
-======================================== */
-.btn {
-  padding: 10px 18px;
-
-  border: none;
-  border-radius: 8px;
-
-  font-weight: 600;
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* ========================================
-   Add Button
-======================================== */
 .btn-add {
   background: var(--add-color);
   color: #fff;
@@ -165,9 +66,6 @@
   background: var(--add-hover);
 }
 
-/* ========================================
-   Secondary Button
-======================================== */
 .btn-secondary {
   background: #f3f3f3;
   color: #333;
@@ -178,9 +76,6 @@
   background: #e5e5e5;
 }
 
-/* ========================================
-   Edit Button
-======================================== */
 .btn-edit {
   background: var(--edit-color);
   color: #fff;
@@ -190,9 +85,6 @@
   background: var(--edit-hover);
 }
 
-/* ========================================
-   Delete Button
-======================================== */
 .btn-delete {
   background: var(--delete-color);
   color: #fff;
@@ -200,27 +92,6 @@
 
 .btn-delete:hover {
   background: var(--delete-hover);
-}
-
-/* ========================================
-   Responsive
-======================================== */
-@media (max-width: 768px) {
-  .admin-layout {
-    flex-direction: column;
-  }
-
-  .admin-content {
-    padding: 20px;
-  }
-
-  .admin-page {
-    padding: 20px;
-  }
-
-  .action-buttons {
-    flex-wrap: wrap;
-  }
 }
 
 /* ========================================

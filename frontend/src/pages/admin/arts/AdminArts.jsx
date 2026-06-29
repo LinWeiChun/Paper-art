@@ -4,9 +4,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { deleteArt, getArts } from '../../../api/artApi';
 
 import Pagination from '../../../components/common/Pagination';
+import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
 import '../../../styles/admin/adminTable.css';
-
-const ITEMS_PER_PAGE = 10;
 
 function AdminArts() {
   const navigate = useNavigate();
@@ -31,7 +30,7 @@ function AdminArts() {
 
   const fetchArts = async () => {
     try {
-      const response = await getArts(currentPage - 1, ITEMS_PER_PAGE);
+      const response = await getArts(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
 
       setArts(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);
@@ -92,7 +91,7 @@ function AdminArts() {
           ) : (
             arts.map((art, index) => (
               <tr key={art.id}>
-                <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+              <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
                 <td>
                   {art.thumbnail && (

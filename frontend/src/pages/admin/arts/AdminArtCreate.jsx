@@ -6,6 +6,7 @@ import { getAllAuthors } from '../../../api/authorsApi';
 import { getAllCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
+import { createDefaultArtForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -16,15 +17,7 @@ function AdminArtCreate() {
   const [authors, setAuthors] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    featured: false,
-    rentable: true,
-    authorIds: [],
-    categoryIds: [],
-    tagIds: [],
-  });
+  const [formData, setFormData] = useState(createDefaultArtForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);

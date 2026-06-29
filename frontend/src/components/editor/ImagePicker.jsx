@@ -31,12 +31,6 @@ function ImagePicker({ folder = 'ckeditor', onSelect }) {
     setKeyword(searchText.trim());
   };
 
-  const handleClear = () => {
-    setSearchText('');
-    setKeyword('');
-    setPage(0);
-  };
-
   const handleDelete = async (key) => {
     if (!window.confirm('確定刪除此圖片？')) {
       return;

@@ -4,9 +4,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { deleteCategory, getAdminCategories } from '../../../api/categoryApi';
 
 import Pagination from '../../../components/common/Pagination';
+import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
 import '../../../styles/admin/adminTable.css';
-
-const ITEMS_PER_PAGE = 10;
 
 function AdminCategories() {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ function AdminCategories() {
     try {
       const response = await getAdminCategories(
         currentPage - 1,
-        ITEMS_PER_PAGE,
+        ADMIN_ITEMS_PER_PAGE,
       );
 
       setCategories(response.data.content || []);
@@ -97,7 +96,9 @@ function AdminCategories() {
           ) : (
             categories.map((category, index) => (
               <tr key={category.id}>
-                <td>{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
+                <td>
+                  {(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}
+                </td>
 
                 <td title={category.name}>{category.name}</td>
 

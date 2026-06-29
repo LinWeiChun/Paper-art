@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getBannerById, updateBanner } from '../../../api/bannerApi';
+import { createDefaultBannerForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -12,12 +13,7 @@ function AdminBannerEdit() {
 
   const [loading, setLoading] = useState(true);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    subtitle: '',
-    sortOrder: 0,
-    active: true,
-  });
+  const [formData, setFormData] = useState(createDefaultBannerForm);
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');

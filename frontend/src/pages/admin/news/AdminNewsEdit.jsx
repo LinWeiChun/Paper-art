@@ -5,6 +5,7 @@ import { getNewsById, updateNews } from '../../../api/newsApi';
 
 import Editor from '../../../components/editor/Editor';
 import SummaryEditor from '../../../components/editor/SummaryEditor';
+import { createDefaultNewsForm } from '../../../constants/pageDefaults';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -19,12 +20,7 @@ function AdminNewsEdit() {
 
   const [loading, setLoading] = useState(true);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    date: '',
-    summary: '',
-    content: '',
-  });
+  const [formData, setFormData] = useState(createDefaultNewsForm);
 
   const [currentImage, setCurrentImage] = useState('');
 
