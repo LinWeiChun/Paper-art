@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getContactMessages } from '../../../api/contactApi';
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminTable.css';
 
@@ -93,7 +94,9 @@ function AdminContactMessage() {
                 <button
                   type="button"
                   className="btn btn-edit"
-                  onClick={() => navigate(`/admin/contact-message/${item.id}`)}
+                  onClick={() =>
+                    navigate(adminPath(`contact-message/${item.id}`))
+                  }
                 >
                   查看
                 </button>

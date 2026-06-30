@@ -6,6 +6,7 @@ import { getNewsById, updateNews } from '../../../api/newsApi';
 import Editor from '../../../components/editor/Editor';
 import SummaryEditor from '../../../components/editor/SummaryEditor';
 import { createDefaultNewsForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -105,7 +106,7 @@ function AdminNewsEdit() {
 
       alert('修改成功');
 
-      navigate(`/admin/news?page=${page}`);
+      navigate(`${adminPath('news')}?page=${page}`);
     } catch (error) {
       console.error(error);
       alert('修改失敗');
@@ -207,7 +208,7 @@ function AdminNewsEdit() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate(`/admin/news?page=${page}`)}
+            onClick={() => navigate(`${adminPath('news')}?page=${page}`)}
           >
             返回列表
           </button>

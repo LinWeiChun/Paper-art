@@ -5,6 +5,7 @@ import {
   getContactMessageById,
   updateContactMessageProcessed,
 } from '../../../api/contactApi';
+import { adminPath } from '../../../routes/adminRoutes';
 import { displayAuditUser } from '../../../utils/audit';
 
 import '../../../styles/admin/adminForm.css';
@@ -33,7 +34,7 @@ function AdminContactDetail() {
     } catch (error) {
       console.error('取得聯絡訊息失敗：', error);
       alert('取得資料失敗');
-      navigate('/admin/contact-message');
+      navigate(adminPath('contact-message'));
     } finally {
       setLoading(false);
     }
@@ -48,7 +49,7 @@ function AdminContactDetail() {
       await updateContactMessageProcessed(id, processed);
 
       alert('更新成功');
-      navigate('/admin/contact-message');
+      navigate(adminPath('contact-message'));
     } catch (error) {
       console.error('更新聯絡訊息失敗：', error);
       alert('更新失敗');
@@ -121,7 +122,7 @@ function AdminContactDetail() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/contact-message')}
+            onClick={() => navigate(adminPath('contact-message'))}
           >
             返回列表
           </button>

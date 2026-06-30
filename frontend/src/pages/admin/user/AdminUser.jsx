@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { disableUser, enableUser, getUsers } from '../../../api/userApi';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminTable.css';
 
@@ -58,7 +59,7 @@ function AdminUser() {
 
         <button
           className="btn btn-primary"
-          onClick={() => navigate('/admin/users/create')}
+          onClick={() => navigate(adminPath('users/create'))}
         >
           ＋ 新增管理者
         </button>
@@ -93,7 +94,7 @@ function AdminUser() {
                 <div className="action-buttons">
                   <button
                     className="btn btn-edit"
-                    onClick={() => navigate(`/admin/users/edit/${admin.id}`)}
+                    onClick={() => navigate(adminPath(`users/edit/${admin.id}`))}
                   >
                     編輯
                   </button>

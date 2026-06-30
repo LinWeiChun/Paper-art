@@ -5,6 +5,7 @@ import { deleteArt, getArts } from '../../../api/artApi';
 
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 import '../../../styles/admin/adminTable.css';
 
 function AdminArts() {
@@ -65,7 +66,7 @@ function AdminArts() {
 
         <button
           className="btn btn-add"
-          onClick={() => navigate('/admin/arts/create')}
+          onClick={() => navigate(adminPath('arts/create'))}
         >
           ＋ 新增作品
         </button>
@@ -132,7 +133,7 @@ function AdminArts() {
                     <button
                       className="btn btn-edit"
                       onClick={() =>
-                        navigate(`/admin/arts/edit/${art.id}`, {
+                        navigate(adminPath(`arts/edit/${art.id}`), {
                           state: {
                             page: currentPage,
                           },

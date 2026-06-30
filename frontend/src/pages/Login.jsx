@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/authApi';
+import { adminPath } from '../routes/adminRoutes';
 
 import '../styles/pages/login.css';
 
@@ -72,7 +73,7 @@ function Login() {
 
       alert('登入成功');
 
-      navigate('/admin');
+      navigate(adminPath());
     } catch (error) {
       const count = errorCount + 1;
 
@@ -96,7 +97,7 @@ function Login() {
   useEffect(() => {
     // 已登入則直接進後台
     if (sessionStorage.getItem('token')) {
-      navigate('/admin');
+      navigate(adminPath());
       return;
     }
 

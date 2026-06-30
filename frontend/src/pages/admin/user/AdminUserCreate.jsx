@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAllRoles } from '../../../api/roleApi';
 import { createUser } from '../../../api/userApi';
 import { createDefaultUserForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -66,7 +67,7 @@ function AdminUserCreate() {
 
       alert('新增成功');
 
-      navigate('/admin/users');
+      navigate(adminPath('users'));
     } catch (error) {
       console.error(error);
       alert('新增失敗');
@@ -171,7 +172,7 @@ function AdminUserCreate() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate(adminPath('users'))}
           >
             返回列表
           </button>

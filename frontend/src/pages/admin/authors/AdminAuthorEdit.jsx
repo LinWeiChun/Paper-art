@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getAuthorById, updateAuthor } from '../../../api/authorsApi';
 import Editor from '../../../components/editor/Editor';
 import { createDefaultAuthorForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -77,7 +78,7 @@ function AdminAuthorEdit() {
 
       alert('修改成功');
 
-      navigate(`/admin/authors?page=${previousPage}`);
+      navigate(`${adminPath('authors')}?page=${previousPage}`);
     } catch (error) {
       console.error(error);
 
@@ -176,7 +177,7 @@ function AdminAuthorEdit() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate(`/admin/authors?page=${previousPage}`)}
+            onClick={() => navigate(`${adminPath('authors')}?page=${previousPage}`)}
           >
             返回列表
           </button>

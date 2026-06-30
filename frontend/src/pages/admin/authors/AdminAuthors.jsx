@@ -5,6 +5,7 @@ import { deleteAuthor, getAdminAuthors } from '../../../api/authorsApi';
 
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 import '../../../styles/admin/adminTable.css';
 
 function AdminAuthors() {
@@ -73,7 +74,7 @@ function AdminAuthors() {
 
         <button
           className="btn btn-add"
-          onClick={() => navigate('/admin/authors/create')}
+          onClick={() => navigate(adminPath('authors/create'))}
         >
           ＋ 新增作者
         </button>
@@ -106,7 +107,7 @@ function AdminAuthors() {
                   <button
                     className="btn btn-edit"
                     onClick={() =>
-                      navigate(`/admin/authors/edit/${author.id}`, {
+                      navigate(adminPath(`authors/edit/${author.id}`), {
                         state: {
                           page: currentPage,
                         },

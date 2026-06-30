@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { adminLoginPath, adminPath } from '../../routes/adminRoutes';
 import { hasPermission } from '../../utils/permission.js';
 
 import '../../styles/admin/sidebar.css';
@@ -20,7 +21,7 @@ function Sidebar() {
     sessionStorage.removeItem('username');
     sessionStorage.removeItem('roles');
 
-    navigate('/login');
+    navigate(adminLoginPath());
   };
 
   const toggleMenu = (title) => {
@@ -36,37 +37,37 @@ function Sidebar() {
       items: [
         hasPermission('BANNER_MANAGE') && {
           name: '首頁輪播',
-          path: '/admin/banners',
+          path: adminPath('banners'),
         },
 
         hasPermission('ABOUT_MANAGE') && {
           name: '關於我們',
-          path: '/admin/about',
+          path: adminPath('about'),
         },
 
         hasPermission('NEWS_MANAGE') && {
           name: '最新消息',
-          path: '/admin/news',
+          path: adminPath('news'),
         },
 
         hasPermission('AUTHOR_MANAGE') && {
           name: '作者管理',
-          path: '/admin/authors',
+          path: adminPath('authors'),
         },
 
         hasPermission('CATEGORY_MANAGE') && {
           name: '分類管理',
-          path: '/admin/categories',
+          path: adminPath('categories'),
         },
 
         hasPermission('ART_MANAGE') && {
           name: '作品管理',
-          path: '/admin/arts',
+          path: adminPath('arts'),
         },
 
         hasPermission('CONTACT_MESSAGE_MANAGE') && {
           name: '聯絡我們',
-          path: '/admin/contact',
+          path: adminPath('contact'),
         },
       ].filter(Boolean),
     },
@@ -76,12 +77,12 @@ function Sidebar() {
       items: [
         hasPermission('CONTACT_MANAGE') && {
           name: '聯絡訊息',
-          path: '/admin/contact-message',
+          path: adminPath('contact-message'),
         },
 
         hasPermission('RENTAL_MANAGE') && {
           name: '租借申請',
-          path: '/admin/rentals',
+          path: adminPath('rentals'),
         },
       ].filter(Boolean),
     },
@@ -91,7 +92,7 @@ function Sidebar() {
       items: [
         hasPermission('USER_MANAGE') && {
           name: '使用者管理',
-          path: '/admin/users',
+          path: adminPath('users'),
         },
       ].filter(Boolean),
     },
@@ -106,8 +107,8 @@ function Sidebar() {
       <ul className="sidebar-menu">
         <li>
           <Link
-            to="/admin"
-            className={location.pathname === '/admin' ? 'active' : ''}
+            to={adminPath()}
+            className={location.pathname === adminPath() ? 'active' : ''}
           >
             Dashboard
           </Link>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { createBanner } from '../../../api/bannerApi';
 import { createDefaultBannerForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -45,7 +46,7 @@ function AdminBannerCreate() {
 
       alert('新增成功');
 
-      navigate('/admin/banners');
+      navigate(adminPath('banners'));
     } catch (error) {
       console.error(error);
       alert('新增失敗');
@@ -123,7 +124,7 @@ function AdminBannerCreate() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/banners')}
+            onClick={() => navigate(adminPath('banners'))}
           >
             返回列表
           </button>

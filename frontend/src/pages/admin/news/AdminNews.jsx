@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { deleteNews, getAllNews } from '../../../api/newsApi';
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminTable.css';
 
@@ -77,7 +78,7 @@ function AdminNews() {
 
         <button
           className="btn btn-add"
-          onClick={() => navigate('/admin/news/create')}
+          onClick={() => navigate(adminPath('news/create'))}
         >
           ＋ 新增消息
         </button>
@@ -107,7 +108,7 @@ function AdminNews() {
                   <button
                     className="btn btn-edit"
                     onClick={() =>
-                      navigate(`/admin/news/edit/${news.id}`, {
+                      navigate(adminPath(`news/edit/${news.id}`), {
                         state: {
                           page: currentPage,
                         },
