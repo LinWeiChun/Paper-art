@@ -18,7 +18,8 @@ public class CorsConfig {
 
         registry
             .addMapping("/**")
-            .allowedOrigins("http://localhost:5173", "https://paper-art.vercel.app")
+            .allowedOrigins(
+                "http://localhost:5173", "https://paper-cut.org", "https://www.paper-cut.org")
             .allowedMethods("*")
             .allowedHeaders("*")
             .allowCredentials(true);
