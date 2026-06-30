@@ -5,6 +5,7 @@ import { createNews } from '../../../api/newsApi';
 import Editor from '../../../components/editor/Editor';
 import SummaryEditor from '../../../components/editor/SummaryEditor';
 import { createDefaultNewsForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -70,7 +71,7 @@ function AdminNewsCreate() {
 
       alert('新增成功');
 
-      navigate('/admin/news');
+      navigate(adminPath('news'));
     } catch (error) {
       console.error(error);
       alert('新增失敗');
@@ -150,7 +151,7 @@ function AdminNewsCreate() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/news')}
+            onClick={() => navigate(adminPath('news'))}
           >
             返回列表
           </button>

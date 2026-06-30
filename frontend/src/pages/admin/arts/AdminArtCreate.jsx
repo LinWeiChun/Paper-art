@@ -7,6 +7,7 @@ import { getAllCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
 import { createDefaultArtForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -105,7 +106,7 @@ function AdminArtCreate() {
 
       alert('新增成功');
 
-      navigate('/admin/arts');
+      navigate(adminPath('arts'));
     } catch (error) {
       console.error(error);
       alert('新增失敗');
@@ -275,7 +276,7 @@ function AdminArtCreate() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/arts')}
+            onClick={() => navigate(adminPath('arts'))}
           >
             返回列表
           </button>

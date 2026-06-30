@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { deleteBanner, getAllBanners } from '../../../api/bannerApi';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminTable.css';
 
@@ -49,7 +50,7 @@ function AdminBanners() {
 
         <button
           className="btn btn-add"
-          onClick={() => navigate('/admin/banners/create')}
+          onClick={() => navigate(adminPath('banners/create'))}
         >
           ＋ 新增 Banner
         </button>
@@ -107,7 +108,7 @@ function AdminBanners() {
                     <button
                       className="btn btn-edit"
                       onClick={() =>
-                        navigate(`/admin/banners/edit/${banner.id}`)
+                        navigate(adminPath(`banners/edit/${banner.id}`))
                       }
                     >
                       編輯

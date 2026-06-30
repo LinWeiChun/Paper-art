@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { createCategory } from '../../../api/categoryApi';
 import { createDefaultCategoryForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -39,7 +40,7 @@ function AdminCategoryCreate() {
 
       alert('新增成功');
 
-      navigate('/admin/categories');
+      navigate(adminPath('categories'));
     } catch (error) {
       console.error(error);
 
@@ -93,7 +94,7 @@ function AdminCategoryCreate() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/categories')}
+            onClick={() => navigate(adminPath('categories'))}
           >
             返回列表
           </button>

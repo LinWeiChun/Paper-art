@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getAllRoles } from '../../../api/roleApi';
 import { getUserById, updateUser } from '../../../api/userApi';
 import { createDefaultUserForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -86,7 +87,7 @@ function AdminUserEdit() {
 
       alert('修改成功');
 
-      navigate('/admin/users');
+      navigate(adminPath('users'));
     } catch (error) {
       console.error(error);
       alert('修改失敗');
@@ -191,7 +192,7 @@ function AdminUserEdit() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate(adminPath('users'))}
           >
             返回列表
           </button>

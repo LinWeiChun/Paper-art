@@ -5,6 +5,7 @@ import { deleteCategory, getAdminCategories } from '../../../api/categoryApi';
 
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 import '../../../styles/admin/adminTable.css';
 
 function AdminCategories() {
@@ -70,7 +71,7 @@ function AdminCategories() {
 
         <button
           className="btn btn-add"
-          onClick={() => navigate('/admin/categories/create')}
+          onClick={() => navigate(adminPath('categories/create'))}
         >
           ＋ 新增分類
         </button>
@@ -110,7 +111,7 @@ function AdminCategories() {
                     <button
                       className="btn btn-edit"
                       onClick={() =>
-                        navigate(`/admin/categories/edit/${category.id}`, {
+                        navigate(adminPath(`categories/edit/${category.id}`), {
                           state: {
                             page: currentPage,
                           },

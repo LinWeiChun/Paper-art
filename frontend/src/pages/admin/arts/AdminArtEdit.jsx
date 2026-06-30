@@ -8,6 +8,7 @@ import { getAllCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
 import { createDefaultArtForm } from '../../../constants/pageDefaults';
+import { adminPath } from '../../../routes/adminRoutes';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -130,7 +131,7 @@ function AdminArtEdit() {
 
       alert('修改成功');
 
-      navigate('/admin/arts');
+      navigate(adminPath('arts'));
     } catch (error) {
       console.error(error);
       alert('修改失敗');
@@ -302,7 +303,7 @@ function AdminArtEdit() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/admin/arts')}
+            onClick={() => navigate(adminPath('arts'))}
             disabled={isSubmitting}
           >
             返回列表
