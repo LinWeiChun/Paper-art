@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAbout } from '../api/aboutApi';
 import Layout from '../layouts/Layout';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 import '../styles/pages/about.css';
 
 function About() {
@@ -52,7 +53,7 @@ function About() {
 
             <div
               dangerouslySetInnerHTML={{
-                __html: about.storyContent,
+                __html: sanitizeHtml(about.storyContent),
               }}
             />
           </div>
@@ -64,7 +65,7 @@ function About() {
             <h2>願景</h2>
             <p
               dangerouslySetInnerHTML={{
-                __html: about.vision,
+                __html: sanitizeHtml(about.vision),
               }}
             ></p>
           </section>

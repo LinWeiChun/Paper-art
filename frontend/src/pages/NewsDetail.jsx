@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getNewsById } from '../api/newsApi';
 
 import Layout from '../layouts/Layout';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 import '../styles/pages/newsDetail.css';
 
 function NewsDetail() {
@@ -77,7 +78,9 @@ function NewsDetail() {
           <h1>{news.title}</h1>
 
           {/* 如果 content 是純文字 */}
-          <div dangerouslySetInnerHTML={{ __html: news.content }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content) }}
+          />
           <button
             className="back-btn"
             onClick={() => navigate(`/news?page=${page}`)}

@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getAllNews } from '../api/newsApi';
 import Pagination from '../components/common/Pagination';
 import Layout from '../layouts/Layout';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 import '../styles/pages/news.css';
 
@@ -28,7 +29,6 @@ function News() {
         currentPage - 1,
         9, // 每頁 9 筆
       );
-      console.log(response.data);
       setNewsList(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);
     } catch (error) {
@@ -71,7 +71,7 @@ function News() {
 
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: item.summary,
+                      __html: sanitizeHtml(item.summary),
                     }}
                   />
                 </div>

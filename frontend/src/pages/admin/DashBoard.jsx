@@ -23,8 +23,6 @@ function Dashboard() {
     try {
       const response = await getDashboard();
 
-      console.log(response.data); // ← 建議保留
-
       setDashboard(response.data);
     } catch (error) {
       console.error('取得 Dashboard 資料失敗：', error);

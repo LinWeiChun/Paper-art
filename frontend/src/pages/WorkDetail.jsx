@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { getArtById } from '../api/artApi';
 import Layout from '../layouts/Layout';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 import '../styles/pages/workDetail.css';
 
@@ -104,7 +105,7 @@ function WorkDetail() {
 
             <div
               dangerouslySetInnerHTML={{
-                __html: work.description || '',
+                __html: sanitizeHtml(work.description),
               }}
             />
           </div>
