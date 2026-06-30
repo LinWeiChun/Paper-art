@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getAuthorById } from '../api/authorsApi';
 
 import Layout from '../layouts/Layout';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 import '../styles/pages/authorDetail.css';
 
 function AuthorDetail() {
@@ -69,7 +70,7 @@ function AuthorDetail() {
 
             <div
               dangerouslySetInnerHTML={{
-                __html: author.description,
+                __html: sanitizeHtml(author.description),
               }}
             />
 

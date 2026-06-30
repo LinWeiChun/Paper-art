@@ -20,8 +20,6 @@ function AdminUser() {
     try {
       const response = await getUsers();
 
-      console.log(response.data);
-
       setAdminList(response.data || []);
     } catch (error) {
       console.error(error);

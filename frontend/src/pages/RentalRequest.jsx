@@ -24,13 +24,6 @@ function RentalRequest() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log({
-      ...formData,
-
-      // 只送作品 id 即可
-      artIds: rentalList.map((work) => work.id),
-    });
-
     alert('租借申請已送出');
 
     clearRental();

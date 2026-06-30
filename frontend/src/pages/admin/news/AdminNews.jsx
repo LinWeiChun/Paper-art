@@ -30,7 +30,6 @@ function AdminNews() {
     try {
       const response = await getAllNews(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
 
-      console.log(response.data);
       setNewsList(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);
     } catch (error) {
