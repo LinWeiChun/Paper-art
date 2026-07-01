@@ -7,7 +7,7 @@ import ImagePicker from './ImagePicker';
 
 import '../../styles/components/editor/ImageLibraryModal.css';
 
-function ImageLibraryModal({ open, onClose, onSelect, folder = 'ckeditor' }) {
+function ImageLibraryModal({ open, onClose, onSelect }) {
   // Esc 關閉
   useEffect(() => {
     if (!open) {
@@ -68,7 +68,7 @@ function ImageLibraryModal({ open, onClose, onSelect, folder = 'ckeditor' }) {
         </div>
 
         <div className="image-library-body">
-          <ImagePicker folder={folder} onSelect={handleSelect} />
+          <ImagePicker onSelect={handleSelect} />
         </div>
       </div>
     </div>

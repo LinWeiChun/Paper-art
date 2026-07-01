@@ -86,10 +86,12 @@ public class AuthorServiceImpl implements AuthorService {
     auditService.markUpdated(author);
 
     if (avatar != null && !avatar.isEmpty()) {
+      String oldAvatarUrl = author.getAvatarUrl();
 
       UploadResponse uploadResponse = fileUploadService.upload(avatar, "authors/");
 
       author.setAvatarUrl(uploadResponse.getUrl());
+      fileUploadService.moveToDeleteFolder(oldAvatarUrl);
     }
 
     return toResponse(authorRepository.save(author));
@@ -99,6 +101,7 @@ public class AuthorServiceImpl implements AuthorService {
   public void delete(String id) {
 
     Author author = findActiveAuthor(id);
+    fileUploadService.moveToDeleteFolder(author.getAvatarUrl());
     auditService.markDeleted(author);
     authorRepository.save(author);
   }

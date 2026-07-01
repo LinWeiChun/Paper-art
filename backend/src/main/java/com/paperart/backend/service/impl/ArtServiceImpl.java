@@ -142,10 +142,12 @@ public class ArtServiceImpl implements ArtService {
 
     // 更新圖片
     if (thumbnail != null && !thumbnail.isEmpty()) {
+      String oldThumbnail = art.getThumbnail();
 
       UploadResponse uploadResponse = fileUploadService.upload(thumbnail, "arts/");
 
       art.setThumbnail(uploadResponse.getUrl());
+      fileUploadService.moveToDeleteFolder(oldThumbnail);
     }
 
     artRepository.save(art);
@@ -227,6 +229,7 @@ public class ArtServiceImpl implements ArtService {
   public void delete(String id) {
 
     Art art = findActiveArt(id);
+    fileUploadService.moveToDeleteFolder(art.getThumbnail());
     auditService.markDeleted(art);
     artRepository.save(art);
   }

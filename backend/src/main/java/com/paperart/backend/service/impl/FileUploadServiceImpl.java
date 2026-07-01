@@ -4,6 +4,9 @@ import com.paperart.backend.dto.response.UploadFileResponse;
 import com.paperart.backend.dto.response.UploadPageResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.service.FileUploadService;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -35,18 +39,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     try {
 
-      String originalName = file.getOriginalFilename();
-
-      int dotIndex = originalName.lastIndexOf('.');
-      String extension = "";
-      String fileName = originalName;
-
-      if (dotIndex > -1) {
-        extension = originalName.substring(dotIndex);
-        fileName = originalName.substring(0, dotIndex);
-      }
-
-      String key = folder + fileName + "_" + UUID.randomUUID() + extension;
+      String key = folder + buildStoredFileName(file.getOriginalFilename());
 
       PutObjectRequest request =
           PutObjectRequest.builder()
@@ -114,7 +107,48 @@ public class FileUploadServiceImpl implements FileUploadService {
     s3Client.deleteObject(request);
   }
 
-  /** S3Object -> UploadFileResponse */
+  @Override
+  public void moveToDeleteFolder(String fileUrlOrKey) {
+    String sourceKey = extractKey(fileUrlOrKey);
+
+    if (sourceKey == null || sourceKey.isBlank() || sourceKey.startsWith("delete/")) {
+      return;
+    }
+
+    String destinationKey = "delete/" + sourceKey;
+
+    CopyObjectRequest copyRequest =
+        CopyObjectRequest.builder()
+            .copySource(buildCopySource(sourceKey))
+            .bucket(bucket)
+            .key(destinationKey)
+            .build();
+
+    s3Client.copyObject(copyRequest);
+    delete(sourceKey);
+  }
+
+  @Override
+  public List<String> listAllKeys() {
+    List<String> keys = new ArrayList<>();
+    String continuationToken = null;
+
+    do {
+      ListObjectsV2Request request =
+          ListObjectsV2Request.builder()
+              .bucket(bucket)
+              .continuationToken(continuationToken)
+              .build();
+
+      var response = s3Client.listObjectsV2(request);
+
+      response.contents().stream().map(S3Object::key).forEach(keys::add);
+      continuationToken = response.nextContinuationToken();
+    } while (continuationToken != null);
+
+    return keys;
+  }
+
   /** S3Object -> UploadFileResponse */
   private UploadFileResponse toUploadFileResponse(S3Object object) {
 
@@ -124,9 +158,62 @@ public class FileUploadServiceImpl implements FileUploadService {
     String fileName = key.substring(key.lastIndexOf("/") + 1);
 
     // 移除 UUID，只保留原始檔名
-    fileName = fileName.replaceFirst("_[0-9a-fA-F\\-]{36}(?=\\.)", "");
+    fileName = removeUuidSuffix(fileName);
 
     return new UploadFileResponse(
         key, fileName, publicUrl + "/" + key, object.size(), object.lastModified());
+  }
+
+  private String buildStoredFileName(String originalName) {
+    String fileName = originalName;
+
+    if (fileName == null || fileName.isBlank()) {
+      fileName = "file";
+    }
+
+    fileName = fileName.replace("\\", "/");
+    fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+
+    int dotIndex = fileName.lastIndexOf('.');
+
+    if (dotIndex > -1) {
+      return fileName.substring(0, dotIndex)
+          + "_"
+          + UUID.randomUUID()
+          + fileName.substring(dotIndex);
+    }
+
+    return fileName + "_" + UUID.randomUUID();
+  }
+
+  private String removeUuidSuffix(String fileName) {
+    return fileName
+        .replaceFirst("_[0-9a-fA-F\\-]{36}$", "")
+        .replaceFirst("_[0-9a-fA-F\\-]{36}(?=\\.)", "");
+  }
+
+  private String extractKey(String fileUrlOrKey) {
+    if (fileUrlOrKey == null || fileUrlOrKey.isBlank()) {
+      return null;
+    }
+
+    if (fileUrlOrKey.startsWith(publicUrl + "/")) {
+      return fileUrlOrKey.substring((publicUrl + "/").length());
+    }
+
+    if (fileUrlOrKey.startsWith("http://") || fileUrlOrKey.startsWith("https://")) {
+      return null;
+    }
+
+    return fileUrlOrKey;
+  }
+
+  private String buildCopySource(String sourceKey) {
+    String encodedSourceKey =
+        URLEncoder.encode(sourceKey, StandardCharsets.UTF_8)
+            .replace("+", "%20")
+            .replace("%2F", "/");
+
+    return bucket + "/" + encodedSourceKey;
   }
 }
