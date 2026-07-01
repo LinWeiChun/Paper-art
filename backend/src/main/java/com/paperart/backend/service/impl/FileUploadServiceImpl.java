@@ -6,6 +6,7 @@ import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.service.FileUploadService;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -125,6 +126,27 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     s3Client.copyObject(copyRequest);
     delete(sourceKey);
+  }
+
+  @Override
+  public List<String> listAllKeys() {
+    List<String> keys = new ArrayList<>();
+    String continuationToken = null;
+
+    do {
+      ListObjectsV2Request request =
+          ListObjectsV2Request.builder()
+              .bucket(bucket)
+              .continuationToken(continuationToken)
+              .build();
+
+      var response = s3Client.listObjectsV2(request);
+
+      response.contents().stream().map(S3Object::key).forEach(keys::add);
+      continuationToken = response.nextContinuationToken();
+    } while (continuationToken != null);
+
+    return keys;
   }
 
   /** S3Object -> UploadFileResponse */

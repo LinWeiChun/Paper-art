@@ -2,6 +2,7 @@ package com.paperart.backend.service;
 
 import com.paperart.backend.dto.response.UploadPageResponse;
 import com.paperart.backend.dto.response.UploadResponse;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileUploadService {
@@ -17,4 +18,7 @@ public interface FileUploadService {
 
   /** 將指定檔案移至 delete 資料夾 */
   void moveToDeleteFolder(String fileUrlOrKey);
+
+  /** 取得 R2 所有檔案 key */
+  List<String> listAllKeys();
 }
