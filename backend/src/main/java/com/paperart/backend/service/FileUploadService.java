@@ -14,4 +14,7 @@ public interface FileUploadService {
 
   /** 刪除指定檔案 */
   void delete(String key);
+
+  /** 將指定檔案移至 delete 資料夾 */
+  void moveToDeleteFolder(String fileUrlOrKey);
 }

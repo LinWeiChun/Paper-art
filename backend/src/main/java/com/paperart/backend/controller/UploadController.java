@@ -42,11 +42,11 @@ public class UploadController {
     return ResponseEntity.ok(fileUploadService.listFiles(folder, page, size, keyword));
   }
 
-  /** 刪除圖片 DELETE /upload */
+  /** 將圖片移至 delete 資料夾 DELETE /upload */
   @DeleteMapping
   public ResponseEntity<Void> deleteImage(@RequestParam String key) {
 
-    fileUploadService.delete(key);
+    fileUploadService.moveToDeleteFolder(key);
 
     return ResponseEntity.noContent().build();
   }

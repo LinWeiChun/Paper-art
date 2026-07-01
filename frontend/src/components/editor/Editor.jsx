@@ -73,7 +73,6 @@ function Editor({ value = '', onChange }) {
         open={openLibrary}
         onClose={() => setOpenLibrary(false)}
         onSelect={handleSelectImage}
-        folder="ckeditor"
       />
     </>
   );

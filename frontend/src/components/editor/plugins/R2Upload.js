@@ -2,8 +2,10 @@
 
 import api from '../../../api/api';
 
+const EDITOR_IMAGE_FOLDER = 'editor-images';
+
 class R2Upload {
-  constructor(loader, folder = 'ckeditor') {
+  constructor(loader, folder = EDITOR_IMAGE_FOLDER) {
     this.loader = loader;
     this.folder = folder;
     this.controller = new AbortController();

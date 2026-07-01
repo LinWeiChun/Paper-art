@@ -7,7 +7,9 @@ import useImageLibrary from './hooks/useImageLibrary';
 
 import '../../styles/components/editor/ImagePicker.css';
 
-function ImagePicker({ folder = 'ckeditor', onSelect }) {
+const EDITOR_IMAGE_FOLDER = 'editor-images';
+
+function ImagePicker({ onSelect }) {
   const PAGE_SIZE = 20;
 
   const [page, setPage] = useState(0);
@@ -24,7 +26,7 @@ function ImagePicker({ folder = 'ckeditor', onSelect }) {
     hasNext,
     refresh,
     deleteImage,
-  } = useImageLibrary(folder, page, PAGE_SIZE, keyword);
+  } = useImageLibrary(EDITOR_IMAGE_FOLDER, page, PAGE_SIZE, keyword);
 
   const handleSearch = () => {
     setPage(0);

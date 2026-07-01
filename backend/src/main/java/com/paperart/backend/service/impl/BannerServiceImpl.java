@@ -76,10 +76,12 @@ public class BannerServiceImpl implements BannerService {
     auditService.markUpdated(banner);
 
     if (image != null && !image.isEmpty()) {
+      String oldImage = banner.getImage();
 
       UploadResponse uploadResponse = fileUploadService.upload(image, "banners/");
 
       banner.setImage(uploadResponse.getUrl());
+      fileUploadService.moveToDeleteFolder(oldImage);
     }
 
     return toResponse(bannerRepository.save(banner));
@@ -90,6 +92,7 @@ public class BannerServiceImpl implements BannerService {
 
     Banner banner = findActiveBanner(id);
 
+    fileUploadService.moveToDeleteFolder(banner.getImage());
     auditService.markDeleted(banner);
     bannerRepository.save(banner);
   }

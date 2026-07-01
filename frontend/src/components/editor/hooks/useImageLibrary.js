@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import api from '../../../api/api';
 
 export default function useImageLibrary(
-  folder = 'ckeditor',
+  folder = 'editor-images',
   page = 0,
   size = 20,
   keyword = '',

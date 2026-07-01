@@ -79,10 +79,12 @@ public class NewsServiceImpl implements NewsService {
 
     // 有新圖片才更新
     if (image != null && !image.isEmpty()) {
+      String oldCoverImage = news.getCoverImage();
 
       UploadResponse uploadResponse = fileUploadService.upload(image, "news//");
 
       news.setCoverImage(uploadResponse.getUrl());
+      fileUploadService.moveToDeleteFolder(oldCoverImage);
     }
 
     newsRepository.save(news);
@@ -94,6 +96,7 @@ public class NewsServiceImpl implements NewsService {
   public void deleteNews(String id) {
 
     News news = findActiveNews(id);
+    fileUploadService.moveToDeleteFolder(news.getCoverImage());
     auditService.markDeleted(news);
     newsRepository.save(news);
   }
