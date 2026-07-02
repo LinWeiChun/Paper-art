@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { getArtById, updateArt } from '../../../api/artApi';
 
-import { getAllAuthors } from '../../../api/authorsApi';
-import { getAllCategories } from '../../../api/categoryApi';
+import { getAdminAuthors } from '../../../api/authorsApi';
+import { getAdminCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
 import { createDefaultArtForm } from '../../../constants/pageDefaults';
@@ -40,14 +40,14 @@ function AdminArtEdit() {
     try {
       const [artRes, authorRes, categoryRes] = await Promise.all([
         getArtById(id),
-        getAllAuthors(),
-        getAllCategories(),
+        getAdminAuthors(0, 1000),
+        getAdminCategories(0, 1000),
       ]);
 
       const art = artRes.data;
 
-      setAuthors(authorRes.data);
-      setCategories(categoryRes.data);
+      setAuthors(authorRes.data.content || []);
+      setCategories(categoryRes.data.content || []);
 
       setFormData({
         title: art.title || '',

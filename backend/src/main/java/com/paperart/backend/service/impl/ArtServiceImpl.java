@@ -45,7 +45,7 @@ public class ArtServiceImpl implements ArtService {
   public List<ArtResponse> getAll() {
 
     return artRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc().stream()
-        .map(this::toResponse)
+        .map(this::toPublicResponse)
         .toList();
   }
 
@@ -221,7 +221,7 @@ public class ArtServiceImpl implements ArtService {
           return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-    return artRepository.findAll(spec, pageable).map(this::toResponse);
+    return artRepository.findAll(spec, pageable).map(this::toPublicResponse);
   }
 
   /** 刪除 */
@@ -237,7 +237,7 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public List<ArtResponse> getFeaturedArts() {
     return artRepository.findByFeaturedTrueAndPublishedTrueAndDeletedFalseOrderBySortOrderAsc().stream()
-        .map(this::toResponse)
+        .map(this::toPublicResponse)
         .toList();
   }
 
@@ -268,6 +268,36 @@ public class ArtServiceImpl implements ArtService {
                 .toList())
         .createdBy(auditService.toResponse(art.getCreatedBy()))
         .updatedBy(auditService.toResponse(art.getUpdatedBy()))
+        .build();
+  }
+
+  private ArtResponse toPublicResponse(Art art) {
+
+    return ArtResponse.builder()
+        .id(art.getId())
+        .title(art.getTitle())
+        .description(art.getDescription())
+        .thumbnail(art.getThumbnail())
+        .year(art.getYear())
+        .sortOrder(art.getSortOrder())
+        .featured(art.getFeatured())
+        .rentable(art.getRentable())
+        .published(art.getPublished())
+        .authors(
+            art.getAuthors().stream()
+                .filter(author -> Boolean.TRUE.equals(author.getPublished()))
+                .map(author -> new OptionResponse(author.getId(), author.getName()))
+                .toList())
+        .categories(
+            art.getCategories().stream()
+                .filter(category -> Boolean.TRUE.equals(category.getPublished()))
+                .map(category -> new OptionResponse(category.getId(), category.getName()))
+                .toList())
+        .tags(
+            art.getTags().stream()
+                .filter(tag -> Boolean.TRUE.equals(tag.getPublished()))
+                .map(tag -> new OptionResponse(tag.getId(), tag.getName()))
+                .toList())
         .build();
   }
 

@@ -104,6 +104,7 @@ function WorkDetail() {
             <h3>作品介紹</h3>
 
             <div
+              className="ck-content"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(work.description),
               }}

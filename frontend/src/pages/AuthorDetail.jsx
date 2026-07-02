@@ -22,7 +22,7 @@ function AuthorDetail() {
     try {
       const response = await getAuthorById(id);
 
-      setAuthor(response.data);
+      setAuthor(response.data?.published ? response.data : null);
     } catch (error) {
       console.error('取得作者失敗：', error);
     } finally {
@@ -69,15 +69,13 @@ function AuthorDetail() {
             <h3>{author.title}</h3>
 
             <div
+              className="ck-content"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(author.description),
               }}
             />
 
-            <Link
-              to={`/works?author=${author.name}`}
-              className="author-work-btn"
-            >
+            <Link to={`/works?author=${author.id}`} className="author-work-btn">
               查看作品
             </Link>
           </div>

@@ -6,7 +6,6 @@ import {
   updateContactMessageProcessed,
 } from '../../../api/contactApi';
 import { adminPath } from '../../../routes/adminRoutes';
-import { displayAuditUser } from '../../../utils/audit';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -95,16 +94,6 @@ function AdminContactDetail() {
         <div className="form-group">
           <label>送出時間</label>
           <input value={contact.createdAt?.replace('T', ' ') || ''} readOnly />
-        </div>
-
-        <div className="form-group">
-          <label>建立者</label>
-          <input value={displayAuditUser(contact.createdBy)} readOnly />
-        </div>
-
-        <div className="form-group">
-          <label>更新者</label>
-          <input value={displayAuditUser(contact.updatedBy)} readOnly />
         </div>
 
         <div className="form-group checkbox-group">

@@ -79,6 +79,7 @@ function NewsDetail() {
 
           {/* 如果 content 是純文字 */}
           <div
+            className="ck-content"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content) }}
           />
           <button

@@ -47,6 +47,7 @@ function Login() {
     // 是否鎖定
     if (lockUntil && new Date().getTime() < lockUntil) {
       alert('錯誤次數過多，請 5 分鐘後再試');
+      setIsSubmitting(false);
       return;
     }
 
@@ -55,6 +56,7 @@ function Login() {
       alert('驗證碼錯誤');
       generateCaptcha();
       setInputCaptcha('');
+      setIsSubmitting(false);
       return;
     }
 
@@ -91,6 +93,8 @@ function Login() {
 
       generateCaptcha();
       setInputCaptcha('');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

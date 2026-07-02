@@ -1,6 +1,7 @@
 // src/components/editor/EditorConfig.js
 
 import {
+  Alignment,
   AutoImage,
   BlockQuote,
   Bold,
@@ -53,6 +54,7 @@ const EditorConfig = {
     FontSize,
     FontColor,
     FontBackgroundColor,
+    Alignment,
 
     Link,
     List,
@@ -98,6 +100,10 @@ const EditorConfig = {
       'fontSize',
       'fontColor',
       'fontBackgroundColor',
+
+      '|',
+
+      'alignment',
 
       '|',
 

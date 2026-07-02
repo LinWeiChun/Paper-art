@@ -70,6 +70,7 @@ function News() {
                   <h2>{item.title}</h2>
 
                   <div
+                    className="ck-content news-summary"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeHtml(item.summary),
                     }}
