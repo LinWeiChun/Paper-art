@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createArt } from '../../../api/artApi';
-import { getAllAuthors } from '../../../api/authorsApi';
-import { getAllCategories } from '../../../api/categoryApi';
+import { getAdminAuthors } from '../../../api/authorsApi';
+import { getAdminCategories } from '../../../api/categoryApi';
 
 import Editor from '../../../components/editor/Editor';
 import { createDefaultArtForm } from '../../../constants/pageDefaults';
@@ -30,12 +30,12 @@ function AdminArtCreate() {
   const fetchData = async () => {
     try {
       const [authorRes, categoryRes] = await Promise.all([
-        getAllAuthors(),
-        getAllCategories(),
+        getAdminAuthors(0, 1000),
+        getAdminCategories(0, 1000),
       ]);
 
-      setAuthors(authorRes.data);
-      setCategories(categoryRes.data);
+      setAuthors(authorRes.data.content || []);
+      setCategories(categoryRes.data.content || []);
     } catch (error) {
       console.error('取得資料失敗：', error);
     }

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { getAbout, updateAbout } from '../../../api/aboutApi';
 import Editor from '../../../components/editor/Editor';
-import { displayAuditUser } from '../../../utils/audit';
 
 import '../../../styles/admin/adminForm.css';
 
@@ -17,10 +16,6 @@ function AdminAbout() {
     storyContent: '',
     vision: '',
     values: [],
-  });
-  const [auditData, setAuditData] = useState({
-    createdBy: null,
-    updatedBy: null,
   });
 
   useEffect(() => {
@@ -40,10 +35,6 @@ function AdminAbout() {
         storyContent: data.storyContent ?? '',
         vision: data.vision ?? '',
         values: data.values ?? [],
-      });
-      setAuditData({
-        createdBy: data.createdBy || null,
-        updatedBy: data.updatedBy || null,
       });
     } catch (error) {
       console.error(error);
@@ -226,16 +217,6 @@ function AdminAbout() {
           >
             ＋ 新增核心價值
           </button>
-        </div>
-
-        <div className="form-group">
-          <label>建立者</label>
-          <input value={displayAuditUser(auditData.createdBy)} readOnly />
-        </div>
-
-        <div className="form-group">
-          <label>更新者</label>
-          <input value={displayAuditUser(auditData.updatedBy)} readOnly />
         </div>
 
         <div className="action-buttons">

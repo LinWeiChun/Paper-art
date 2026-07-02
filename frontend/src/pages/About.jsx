@@ -52,6 +52,7 @@ function About() {
             <h2>{about.storyTitle}</h2>
 
             <div
+              className="ck-content"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(about.storyContent),
               }}
@@ -63,11 +64,12 @@ function About() {
         {about.vision && (
           <section className="about-vision">
             <h2>願景</h2>
-            <p
+            <div
+              className="ck-content"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(about.vision),
               }}
-            ></p>
+            />
           </section>
         )}
 
