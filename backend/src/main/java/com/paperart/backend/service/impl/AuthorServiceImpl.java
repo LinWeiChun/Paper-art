@@ -43,6 +43,15 @@ public class AuthorServiceImpl implements AuthorService {
     return authorRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
+  // 前台：分頁作者
+  @Override
+  public Page<AuthorResponse> getPublished(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
+
+    return authorRepository.findByDeletedFalseAndPublishedTrue(pageable).map(this::toResponse);
+  }
+
   @Override
   public AuthorResponse getById(String id) {
 
