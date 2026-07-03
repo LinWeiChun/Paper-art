@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getAdminAuthors, getAllAuthors } from '../api/authorsApi';
+import { getAllAuthors, getAuthorsPage } from '../api/authorsApi';
 
 function useAuthors(page = 0, size = 6) {
   const [authors, setAuthors] = useState([]);
@@ -19,7 +19,7 @@ function useAuthors(page = 0, size = 6) {
         return;
       }
 
-      const response = await getAdminAuthors(page, size);
+      const response = await getAuthorsPage(page, size);
 
       setAuthors(response.data.content);
       setTotalPages(response.data.totalPages);

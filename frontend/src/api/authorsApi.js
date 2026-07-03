@@ -5,6 +5,16 @@ export const getAllAuthors = () => {
   return api.get('/authors');
 };
 
+// 前台：分頁作者
+export const getAuthorsPage = (page = 0, size = 6) => {
+  return api.get('/authors/page', {
+    params: {
+      page,
+      size,
+    },
+  });
+};
+
 // 後台：分頁作者
 export const getAdminAuthors = (page = 0, size = 10) => {
   return api.get('/authors/admin', {
