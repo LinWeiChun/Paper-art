@@ -31,6 +31,16 @@
   box-shadow: 0 0 0 3px rgba(75, 107, 75, 0.1);
 }
 
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-grid.three-columns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 /* ========================================
    Image Preview
 ======================================== */
@@ -213,8 +223,14 @@
 ======================================== */
 @media (max-width: 768px) {
   .dual-list,
+  .form-grid,
   .value-row {
     flex-direction: column;
+  }
+
+  .form-grid,
+  .form-grid.three-columns {
+    grid-template-columns: 1fr;
   }
 
   .value-row {

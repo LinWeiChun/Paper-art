@@ -31,6 +31,15 @@ function AdminArtEdit() {
   // 顯示圖片用
   const [preview, setPreview] = useState(null);
 
+  const buildRequestData = () => ({
+    ...formData,
+    year: formData.year === '' ? null : Number(formData.year),
+    lengthCm: formData.lengthCm === '' ? null : Number(formData.lengthCm),
+    widthCm: formData.widthCm === '' ? null : Number(formData.widthCm),
+    heightCm: formData.heightCm === '' ? null : Number(formData.heightCm),
+    sortOrder: Number(formData.sortOrder) || 0,
+  });
+
   // 防止重複送出
   useEffect(() => {
     fetchData();
@@ -51,7 +60,19 @@ function AdminArtEdit() {
 
       setFormData({
         title: art.title || '',
+        artNumber: art.artNumber || '',
         description: art.description || '',
+        year: art.year ?? '',
+        lengthCm: art.lengthCm ?? '',
+        widthCm: art.widthCm ?? '',
+        heightCm: art.heightCm ?? '',
+        material: art.material || '',
+        color: art.color || '',
+        technique: art.technique || '',
+        creationPeriod: art.creationPeriod || '',
+        artworkType: art.artworkType || '',
+        remarks: art.remarks || '',
+        sortOrder: art.sortOrder ?? 0,
         featured: art.featured ?? false,
         rentable: art.rentable ?? true,
         published: art.published ?? true,
@@ -127,7 +148,7 @@ function AdminArtEdit() {
     setIsSubmitting(true);
 
     try {
-      await updateArt(id, formData, image);
+      await updateArt(id, buildRequestData(), image);
 
       alert('修改成功');
 
@@ -155,6 +176,140 @@ function AdminArtEdit() {
             value={formData.title}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-grid">
+          <div className="form-group">
+            <label>作品編號</label>
+
+            <input
+              type="text"
+              name="artNumber"
+              value={formData.artNumber}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>排序</label>
+
+            <input
+              type="number"
+              name="sortOrder"
+              value={formData.sortOrder}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="form-grid">
+          <div className="form-group">
+            <label>創作年份</label>
+
+            <input
+              type="number"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>製作年代 / 時空背景</label>
+
+            <input
+              type="text"
+              name="creationPeriod"
+              value={formData.creationPeriod}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="form-grid three-columns">
+          <div className="form-group">
+            <label>長(cm)</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="lengthCm"
+              value={formData.lengthCm}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>寬(cm)</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="widthCm"
+              value={formData.widthCm}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>高(cm)</label>
+
+            <input
+              type="number"
+              step="0.1"
+              name="heightCm"
+              value={formData.heightCm}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="form-grid">
+          <div className="form-group">
+            <label>材質</label>
+
+            <input
+              type="text"
+              name="material"
+              value={formData.material}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>色彩</label>
+
+            <input
+              type="text"
+              name="color"
+              value={formData.color}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="form-grid">
+          <div className="form-group">
+            <label>剪刻技法 / 製作手法</label>
+
+            <input
+              type="text"
+              name="technique"
+              value={formData.technique}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>作品型態</label>
+
+            <input
+              type="text"
+              name="artworkType"
+              value={formData.artworkType}
+              onChange={handleChange}
+            />
+          </div>
         </div>
 
         {/* 作者 */}
@@ -262,12 +417,33 @@ function AdminArtEdit() {
           <label className="checkbox-label">
             <input
               type="checkbox"
+              name="rentable"
+              checked={formData.rentable}
+              onChange={handleChange}
+            />
+            可租借
+          </label>
+
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
               name="published"
               checked={formData.published}
               onChange={handleChange}
             />
             發布到前台
           </label>
+        </div>
+
+        <div className="form-group">
+          <label>備註</label>
+
+          <textarea
+            name="remarks"
+            value={formData.remarks}
+            onChange={handleChange}
+            rows="4"
+          />
         </div>
 
         {/* 圖片 */}

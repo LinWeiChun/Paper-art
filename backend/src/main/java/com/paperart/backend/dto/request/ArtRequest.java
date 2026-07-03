@@ -10,9 +10,29 @@ public class ArtRequest {
 
   private String title;
 
+  private String artNumber;
+
   private String description;
 
   private Integer year;
+
+  private Double lengthCm;
+
+  private Double widthCm;
+
+  private Double heightCm;
+
+  private String material;
+
+  private String color;
+
+  private String technique;
+
+  private String creationPeriod;
+
+  private String artworkType;
+
+  private String remarks;
 
   private Integer sortOrder;
 

@@ -21,6 +21,9 @@ public class Art extends BaseEntity {
   // 作品名稱
   private String title;
 
+  // 作品編號
+  private String artNumber;
+
   // 作品介紹
   @Column(columnDefinition = "LONGTEXT")
   private String description;
@@ -30,6 +33,34 @@ public class Art extends BaseEntity {
 
   // 創作年份
   private Integer year;
+
+  // 尺寸：長(cm)
+  private Double lengthCm;
+
+  // 尺寸：寬(cm)
+  private Double widthCm;
+
+  // 尺寸：高(cm)
+  private Double heightCm;
+
+  // 材質
+  private String material;
+
+  // 色彩
+  private String color;
+
+  // 剪刻技法 / 製作手法
+  private String technique;
+
+  // 製作年代 / 時空背景
+  private String creationPeriod;
+
+  // 作品型態
+  private String artworkType;
+
+  // 備註
+  @Column(columnDefinition = "TEXT")
+  private String remarks;
 
   // 排序
   private Integer sortOrder = 0;

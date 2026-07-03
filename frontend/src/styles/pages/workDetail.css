@@ -22,6 +22,32 @@
   margin-bottom: 15px;
 }
 
+.detail-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.detail-meta div {
+  padding: 12px 0;
+  border-bottom: 1px solid #e6e0d8;
+}
+
+.detail-meta span {
+  display: block;
+  margin-bottom: 4px;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.detail-meta strong {
+  color: #333;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 .detail-tags {
   gap: 10px;
   margin: 20px 0;
@@ -98,5 +124,9 @@
 
   .detail-actions button {
     width: 100%;
+  }
+
+  .detail-meta {
+    grid-template-columns: 1fr;
   }
 }

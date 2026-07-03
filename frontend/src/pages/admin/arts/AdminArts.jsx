@@ -75,12 +75,14 @@ function AdminArts() {
         <thead>
           <tr>
             <th style={{ width: '5%' }}>#</th>
-            <th style={{ width: '12%' }}>縮圖</th>
-            <th style={{ width: '25%' }}>作品名稱</th>
-            <th style={{ width: '16%' }}>作者</th>
-            <th style={{ width: '16%' }}>分類</th>
-            <th style={{ width: '7%' }}>精選</th>
-            <th style={{ width: '8%' }}>狀態</th>
+            <th style={{ width: '11%' }}>作品編號</th>
+            <th style={{ width: '11%' }}>縮圖</th>
+            <th style={{ width: '20%' }}>作品名稱</th>
+            <th style={{ width: '13%' }}>作者</th>
+            <th style={{ width: '13%' }}>分類</th>
+            <th style={{ width: '10%' }}>製作年代</th>
+            <th style={{ width: '6%' }}>精選</th>
+            <th style={{ width: '7%' }}>狀態</th>
             <th style={{ width: '14%' }}>操作</th>
           </tr>
         </thead>
@@ -88,12 +90,14 @@ function AdminArts() {
         <tbody>
           {arts.length === 0 ? (
             <tr>
-              <td colSpan="8">目前沒有作品資料</td>
+              <td colSpan="9">目前沒有作品資料</td>
             </tr>
           ) : (
             arts.map((art, index) => (
               <tr key={art.id}>
                 <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
+
+                <td>{art.artNumber || '-'}</td>
 
                 <td>
                   {art.thumbnail && (
@@ -123,6 +127,8 @@ function AdminArts() {
                     ? art.categories.map((category) => category.name).join('、')
                     : '-'}
                 </td>
+
+                <td>{art.creationPeriod || '-'}</td>
 
                 <td>{art.featured ? '是' : '否'}</td>
 
