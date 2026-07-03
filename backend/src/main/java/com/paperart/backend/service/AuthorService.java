@@ -14,6 +14,9 @@ public interface AuthorService {
   // 分頁作者
   Page<AuthorResponse> getAll(int page, int size);
 
+  // 前台分頁作者
+  Page<AuthorResponse> getPublished(int page, int size);
+
   AuthorResponse getById(String id);
 
   AuthorResponse getAdminById(String id);

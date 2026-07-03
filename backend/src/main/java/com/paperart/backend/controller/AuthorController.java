@@ -37,7 +37,7 @@ public class AuthorController {
   public ResponseEntity<Page<AuthorResponse>> getPage(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
-    return ResponseEntity.ok(authorService.getAll(page, size));
+    return ResponseEntity.ok(authorService.getPublished(page, size));
   }
 
   @GetMapping("/admin")

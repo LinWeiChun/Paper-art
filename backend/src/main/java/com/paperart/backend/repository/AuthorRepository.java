@@ -12,6 +12,8 @@ public interface AuthorRepository extends JpaRepository<Author, String> {
 
   Page<Author> findByDeletedFalse(Pageable pageable);
 
+  Page<Author> findByDeletedFalseAndPublishedTrue(Pageable pageable);
+
   List<Author> findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc();
 
   long countByDeletedFalse();
