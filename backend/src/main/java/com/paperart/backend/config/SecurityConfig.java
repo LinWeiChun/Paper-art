@@ -63,7 +63,7 @@ public class SecurityConfig {
                         RegexRequestMatcher.regexMatcher(
                             HttpMethod.GET, "^/news/[0-9a-fA-F-]{36}$"))
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/authors")
+                    .requestMatchers(HttpMethod.GET, "/authors", "/authors/page")
                     .permitAll()
                     .requestMatchers(
                         RegexRequestMatcher.regexMatcher(

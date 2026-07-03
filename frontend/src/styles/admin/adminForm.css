@@ -113,10 +113,14 @@
 }
 
 .value-row input:first-child {
-  flex: 1;
+  flex: 0 0 90px;
 }
 
 .value-row input:nth-child(2) {
+  flex: 1;
+}
+
+.value-row input:nth-child(3) {
   flex: 2;
 }
 

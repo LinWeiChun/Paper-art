@@ -9,6 +9,7 @@ import com.paperart.backend.entity.AboutValue;
 import com.paperart.backend.repository.AboutRepository;
 import com.paperart.backend.service.AboutService;
 import com.paperart.backend.service.AuditService;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,7 @@ public class AboutServiceImpl implements AboutService {
 
       value.setTitle(valueRequest.getTitle());
       value.setDescription(valueRequest.getDescription());
-      value.setSortOrder(valueRequest.getSortOrder());
+      value.setSortOrder(valueRequest.getSortOrder() != null ? valueRequest.getSortOrder() : 0);
 
       value.setAbout(about);
       auditService.markCreated(value);
@@ -91,6 +92,13 @@ public class AboutServiceImpl implements AboutService {
         .vision(about.getVision())
         .values(
             about.getValues().stream()
+                .sorted(
+                    Comparator.comparing(
+                        AboutValue::getSortOrder,
+                            Comparator.nullsLast(Integer::compareTo))
+                        .thenComparing(
+                            AboutValue::getCreatedAt,
+                            Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(
                     value ->
                         AboutValueResponse.builder()

@@ -5,6 +5,19 @@ import Editor from '../../../components/editor/Editor';
 
 import '../../../styles/admin/adminForm.css';
 
+const sortValues = (values = []) => {
+  return [...values].sort((a, b) => {
+    const aOrder = Number.isFinite(Number(a.sortOrder))
+      ? Number(a.sortOrder)
+      : Number.MAX_SAFE_INTEGER;
+    const bOrder = Number.isFinite(Number(b.sortOrder))
+      ? Number(b.sortOrder)
+      : Number.MAX_SAFE_INTEGER;
+
+    return aOrder - bOrder;
+  });
+};
+
 function AdminAbout() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +47,7 @@ function AdminAbout() {
         storyTitle: data.storyTitle ?? '',
         storyContent: data.storyContent ?? '',
         vision: data.vision ?? '',
-        values: data.values ?? [],
+        values: sortValues(data.values ?? []),
       });
     } catch (error) {
       console.error(error);
@@ -122,10 +135,10 @@ function AdminAbout() {
 
         values: formData.values
           .filter((item) => item.title?.trim() && item.description?.trim())
-          .map((item, index) => ({
+          .map((item) => ({
             title: item.title.trim(),
             description: item.description.trim(),
-            sortOrder: index + 1,
+            sortOrder: Number(item.sortOrder) || 0,
           })),
       };
 
@@ -182,6 +195,15 @@ function AdminAbout() {
         <div className="form-group">
           {formData.values.map((item, index) => (
             <div key={item.id || index} className="value-row">
+              <input
+                type="number"
+                placeholder="排序"
+                value={item.sortOrder ?? 0}
+                onChange={(e) =>
+                  handleValueChange(index, 'sortOrder', e.target.value)
+                }
+              />
+
               <input
                 type="text"
                 placeholder="核心價值標題"
