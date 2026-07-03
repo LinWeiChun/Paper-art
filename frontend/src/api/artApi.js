@@ -22,9 +22,22 @@ export const getArts = (page = 0, size = 12) => {
   });
 };
 
+export const getAdminArts = (page = 0, size = 12) => {
+  return api.get('/arts/admin', {
+    params: {
+      page,
+      size,
+    },
+  });
+};
+
 // 單筆作品
 export const getArtById = (id) => {
   return api.get(`/arts/${id}`);
+};
+
+export const getAdminArtById = (id) => {
+  return api.get(`/arts/admin/${id}`);
 };
 
 // 新增作品

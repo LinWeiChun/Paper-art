@@ -13,6 +13,8 @@ public interface CategoryService {
 
   CategoryResponse getById(String id);
 
+  CategoryResponse getAdminById(String id);
+
   CategoryResponse create(CategoryRequest request);
 
   CategoryResponse update(String id, CategoryRequest request);

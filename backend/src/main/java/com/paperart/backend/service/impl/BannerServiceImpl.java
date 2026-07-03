@@ -40,6 +40,18 @@ public class BannerServiceImpl implements BannerService {
 
     Banner banner = findActiveBanner(id);
 
+    if (!Boolean.TRUE.equals(banner.getActive())) {
+      throw new RuntimeException("Banner not found");
+    }
+
+    return toResponse(banner);
+  }
+
+  @Override
+  public BannerResponse getAdminById(String id) {
+
+    Banner banner = findActiveBanner(id);
+
     return toResponse(banner);
   }
 
@@ -54,13 +66,13 @@ public class BannerServiceImpl implements BannerService {
     banner.setActive(request.getActive());
     auditService.markCreated(banner);
 
-    // 上傳圖片
     if (image != null && !image.isEmpty()) {
 
       UploadResponse uploadResponse = fileUploadService.upload(image, "banners/");
 
       banner.setImage(uploadResponse.getUrl());
     }
+
     return toResponse(bannerRepository.save(banner));
   }
 
@@ -113,10 +125,10 @@ public class BannerServiceImpl implements BannerService {
 
   private Banner findActiveBanner(String id) {
     Banner banner =
-        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner 不存在"));
+        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner not found"));
 
     if (Boolean.TRUE.equals(banner.getDeleted())) {
-      throw new RuntimeException("Banner 不存在");
+      throw new RuntimeException("Banner not found");
     }
 
     return banner;

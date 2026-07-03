@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -44,14 +45,41 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/contact-messages")
                     .permitAll()
+                    .requestMatchers("/auth/**")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/about")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/arts", "/arts/featured")
+                    .permitAll()
                     .requestMatchers(
-                        "/auth/**",
-                        "/arts/**",
-                        "/news/**",
-                        "/authors/**",
-                        "/categories/**",
-                        "/about/**",
-                        "/banners/**")
+                        RegexRequestMatcher.regexMatcher(
+                            HttpMethod.GET, "^/arts/[0-9a-fA-F-]{36}$"))
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/arts/search")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/news")
+                    .permitAll()
+                    .requestMatchers(
+                        RegexRequestMatcher.regexMatcher(
+                            HttpMethod.GET, "^/news/[0-9a-fA-F-]{36}$"))
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/authors")
+                    .permitAll()
+                    .requestMatchers(
+                        RegexRequestMatcher.regexMatcher(
+                            HttpMethod.GET, "^/authors/[0-9a-fA-F-]{36}$"))
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/categories")
+                    .permitAll()
+                    .requestMatchers(
+                        RegexRequestMatcher.regexMatcher(
+                            HttpMethod.GET, "^/categories/[0-9a-fA-F-]{36}$"))
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/banners")
+                    .permitAll()
+                    .requestMatchers(
+                        RegexRequestMatcher.regexMatcher(
+                            HttpMethod.GET, "^/banners/[0-9a-fA-F-]{36}$"))
                     .permitAll()
                     .anyRequest()
                     .authenticated())

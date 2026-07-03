@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getArtById, updateArt } from '../../../api/artApi';
+import { getAdminArtById, updateArt } from '../../../api/artApi';
 
 import { getAdminAuthors } from '../../../api/authorsApi';
 import { getAdminCategories } from '../../../api/categoryApi';
@@ -39,7 +39,7 @@ function AdminArtEdit() {
   const fetchData = async () => {
     try {
       const [artRes, authorRes, categoryRes] = await Promise.all([
-        getArtById(id),
+        getAdminArtById(id),
         getAdminAuthors(0, 1000),
         getAdminCategories(0, 1000),
       ]);

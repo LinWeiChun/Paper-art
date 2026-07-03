@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface ArtRepository extends JpaRepository<Art, String>, JpaSpecificationExecutor<Art> {
   Page<Art> findByDeletedFalse(Pageable pageable);
 
+  Page<Art> findByDeletedFalseAndPublishedTrue(Pageable pageable);
+
   List<Art> findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc();
 
   List<Art> findByFeaturedTrueAndPublishedTrueAndDeletedFalseOrderBySortOrderAsc();

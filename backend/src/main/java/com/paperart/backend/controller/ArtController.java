@@ -39,9 +39,21 @@ public class ArtController {
 		return ResponseEntity.ok(artService.getAll(page, size));
 	}
 
+	@GetMapping("/admin")
+	public ResponseEntity<Page<ArtResponse>> getAdminAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "12") int size) {
+
+		return ResponseEntity.ok(artService.getAdminAll(page, size));
+	}
+
 	@GetMapping("/{id}")
 	public ArtResponse getById(@PathVariable String id) {
 		return artService.getById(id);
+	}
+
+	@GetMapping("/admin/{id}")
+	public ArtResponse getAdminById(@PathVariable String id) {
+		return artService.getAdminById(id);
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

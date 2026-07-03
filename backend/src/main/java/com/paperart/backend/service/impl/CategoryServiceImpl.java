@@ -33,13 +33,26 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<CategoryResponse> getAll() {
-    return categoryRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc().stream()
+    return categoryRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc()
+        .stream()
         .map(this::toResponse)
         .toList();
   }
 
   @Override
   public CategoryResponse getById(String id) {
+
+    Category category = findActiveCategory(id);
+
+    if (!Boolean.TRUE.equals(category.getPublished())) {
+      throw new RuntimeException("Category not found");
+    }
+
+    return toResponse(category);
+  }
+
+  @Override
+  public CategoryResponse getAdminById(String id) {
 
     Category category = findActiveCategory(id);
 
@@ -93,10 +106,10 @@ public class CategoryServiceImpl implements CategoryService {
 
   private Category findActiveCategory(String id) {
     Category category =
-        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
+        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
 
     if (Boolean.TRUE.equals(category.getDeleted())) {
-      throw new RuntimeException("分類不存在");
+      throw new RuntimeException("Category not found");
     }
 
     return category;

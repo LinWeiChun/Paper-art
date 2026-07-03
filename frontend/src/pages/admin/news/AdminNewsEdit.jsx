@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { getNewsById, updateNews } from '../../../api/newsApi';
+import { getAdminNewsById, updateNews } from '../../../api/newsApi';
 
 import Editor from '../../../components/editor/Editor';
 import SummaryEditor from '../../../components/editor/SummaryEditor';
@@ -35,7 +35,7 @@ function AdminNewsEdit() {
 
   const fetchNews = async () => {
     try {
-      const response = await getNewsById(id);
+      const response = await getAdminNewsById(id);
 
       const newsData = response.data;
 

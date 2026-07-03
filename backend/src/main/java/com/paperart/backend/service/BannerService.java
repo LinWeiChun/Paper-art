@@ -13,6 +13,8 @@ public interface BannerService {
 
   BannerResponse getById(String id);
 
+  BannerResponse getAdminById(String id);
+
   BannerResponse create(BannerRequest request, MultipartFile image);
 
   BannerResponse update(String id, BannerRequest request, MultipartFile image);
