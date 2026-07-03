@@ -4,6 +4,7 @@ import com.paperart.backend.dto.request.NewsRequest;
 import com.paperart.backend.dto.response.NewsResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.News;
+import com.paperart.backend.enums.PublishStatus;
 import com.paperart.backend.repository.NewsRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.FileUploadService;
@@ -29,11 +30,32 @@ public class NewsServiceImpl implements NewsService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("publishDate").descending());
 
+    return newsRepository.findByDeletedFalseAndStatus(PublishStatus.PUBLISHED, pageable)
+        .map(this::toResponse);
+  }
+
+  @Override
+  public Page<NewsResponse> getAllAdminNews(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size, Sort.by("publishDate").descending());
+
     return newsRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   @Override
   public NewsResponse getNewsById(String id) {
+
+    News news = findActiveNews(id);
+
+    if (news.getStatus() != PublishStatus.PUBLISHED) {
+      throw new RuntimeException("News not found");
+    }
+
+    return toResponse(news);
+  }
+
+  @Override
+  public NewsResponse getAdminNewsById(String id) {
 
     News news = findActiveNews(id);
 

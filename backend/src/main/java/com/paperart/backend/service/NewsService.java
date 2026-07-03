@@ -8,7 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 public interface NewsService {
   Page<NewsResponse> getAllNews(int page, int size);
 
+  Page<NewsResponse> getAllAdminNews(int page, int size);
+
   NewsResponse getNewsById(String id);
+
+  NewsResponse getAdminNewsById(String id);
 
   NewsResponse createNews(NewsRequest request, MultipartFile image);
 

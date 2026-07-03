@@ -42,6 +42,12 @@ public class CategoryController {
     return ResponseEntity.ok(categoryService.getById(id));
   }
 
+  @GetMapping("/admin/{id}")
+  public ResponseEntity<CategoryResponse> getAdminById(@PathVariable String id) {
+
+    return ResponseEntity.ok(categoryService.getAdminById(id));
+  }
+
   @PostMapping
   public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest request) {
 

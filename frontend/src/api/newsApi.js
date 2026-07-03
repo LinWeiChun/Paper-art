@@ -4,8 +4,16 @@ export const getAllNews = (page = 0, size = 6) => {
   return api.get(`/news?page=${page}&size=${size}`);
 };
 
+export const getAdminNews = (page = 0, size = 6) => {
+  return api.get(`/news/admin?page=${page}&size=${size}`);
+};
+
 export const getNewsById = (id) => {
   return api.get(`/news/${id}`);
+};
+
+export const getAdminNewsById = (id) => {
+  return api.get(`/news/admin/${id}`);
 };
 
 export const createNews = (formData) => {

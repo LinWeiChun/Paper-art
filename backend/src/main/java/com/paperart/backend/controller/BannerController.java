@@ -39,6 +39,11 @@ public class BannerController {
     return bannerService.getById(id);
   }
 
+  @GetMapping("/admin/{id}")
+  public BannerResponse getAdminById(@PathVariable String id) {
+    return bannerService.getAdminById(id);
+  }
+
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<BannerResponse> create(
       @RequestPart BannerRequest request, @RequestPart(required = false) MultipartFile image) {

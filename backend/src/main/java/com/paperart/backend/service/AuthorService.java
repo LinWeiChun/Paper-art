@@ -16,6 +16,8 @@ public interface AuthorService {
 
   AuthorResponse getById(String id);
 
+  AuthorResponse getAdminById(String id);
+
   AuthorResponse create(AuthorRequest request, MultipartFile avatar);
 
   AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar);

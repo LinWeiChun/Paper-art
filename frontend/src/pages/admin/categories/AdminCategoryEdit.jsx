@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getCategoryById, updateCategory } from '../../../api/categoryApi';
+import { getAdminCategoryById, updateCategory } from '../../../api/categoryApi';
 import { createDefaultCategoryForm } from '../../../constants/pageDefaults';
 import { adminPath } from '../../../routes/adminRoutes';
 
@@ -21,7 +21,7 @@ function AdminCategoryEdit() {
 
   const fetchCategory = async () => {
     try {
-      const response = await getCategoryById(id);
+      const response = await getAdminCategoryById(id);
 
       setFormData({
         name: response.data.name || '',

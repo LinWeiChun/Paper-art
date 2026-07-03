@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getBannerById, updateBanner } from '../../../api/bannerApi';
+import { getAdminBannerById, updateBanner } from '../../../api/bannerApi';
 import { createDefaultBannerForm } from '../../../constants/pageDefaults';
 import { adminPath } from '../../../routes/adminRoutes';
 
@@ -25,7 +25,7 @@ function AdminBannerEdit() {
 
   const fetchBanner = async () => {
     try {
-      const response = await getBannerById(id);
+      const response = await getAdminBannerById(id);
 
       setFormData({
         title: response.data.title || '',

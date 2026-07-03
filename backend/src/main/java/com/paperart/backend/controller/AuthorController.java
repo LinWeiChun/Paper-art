@@ -40,10 +40,23 @@ public class AuthorController {
     return ResponseEntity.ok(authorService.getAll(page, size));
   }
 
+  @GetMapping("/admin")
+  public ResponseEntity<Page<AuthorResponse>> getAdminPage(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+    return ResponseEntity.ok(authorService.getAll(page, size));
+  }
+
   @GetMapping("/{id}")
   public AuthorResponse getAuthorById(@PathVariable String id) {
 
     return authorService.getById(id);
+  }
+
+  @GetMapping("/admin/{id}")
+  public AuthorResponse getAdminAuthorById(@PathVariable String id) {
+
+    return authorService.getAdminById(id);
   }
 
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -20,6 +20,10 @@ export const getCategoryById = (id) => {
   return api.get(`/categories/${id}`);
 };
 
+export const getAdminCategoryById = (id) => {
+  return api.get(`/categories/admin/${id}`);
+};
+
 // 新增分類
 export const createCategory = (data) => {
   return api.post('/categories', data);

@@ -31,11 +31,24 @@ public class NewsController {
     return newsService.getAllNews(page, size);
   }
 
+  @GetMapping("/admin")
+  public Page<NewsResponse> getAllAdminNews(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "6") int size) {
+
+    return newsService.getAllAdminNews(page, size);
+  }
+
   // 查單筆
   @GetMapping("/{id}")
   public NewsResponse getNewsById(@PathVariable String id) {
 
     return newsService.getNewsById(id);
+  }
+
+  @GetMapping("/admin/{id}")
+  public NewsResponse getAdminNewsById(@PathVariable String id) {
+
+    return newsService.getAdminNewsById(id);
   }
 
   // 新增

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { getAuthorById, updateAuthor } from '../../../api/authorsApi';
+import { getAdminAuthorById, updateAuthor } from '../../../api/authorsApi';
 import Editor from '../../../components/editor/Editor';
 import { createDefaultAuthorForm } from '../../../constants/pageDefaults';
 import { adminPath } from '../../../routes/adminRoutes';
@@ -28,7 +28,7 @@ function AdminAuthorEdit() {
 
   const fetchAuthor = async () => {
     try {
-      const response = await getAuthorById(id);
+      const response = await getAdminAuthorById(id);
 
       // console.log(response.data); // ← 已經有資料
 

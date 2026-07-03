@@ -13,9 +13,13 @@ public interface ArtService {
 
   Page<ArtResponse> getAll(int page, int size);
 
+  Page<ArtResponse> getAdminAll(int page, int size);
+
   Page<ArtResponse> search(ArtSearchRequest request, int page, int size);
 
   ArtResponse getById(String id);
+
+  ArtResponse getAdminById(String id);
 
   ArtResponse create(ArtRequest request, MultipartFile thumbnail);
 

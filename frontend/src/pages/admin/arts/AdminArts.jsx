@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { deleteArt, getArts } from '../../../api/artApi';
+import { deleteArt, getAdminArts } from '../../../api/artApi';
 
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
@@ -31,7 +31,7 @@ function AdminArts() {
 
   const fetchArts = async () => {
     try {
-      const response = await getArts(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
+      const response = await getAdminArts(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
 
       setArts(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);

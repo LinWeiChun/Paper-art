@@ -15,6 +15,10 @@ export const getBannerById = (id) => {
   return api.get(`/banners/${id}`);
 };
 
+export const getAdminBannerById = (id) => {
+  return api.get(`/banners/admin/${id}`);
+};
+
 // 新增 Banner
 export const createBanner = (data, image) => {
   const formData = new FormData();

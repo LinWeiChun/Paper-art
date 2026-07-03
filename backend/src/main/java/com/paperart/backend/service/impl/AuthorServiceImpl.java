@@ -48,6 +48,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     Author author = findActiveAuthor(id);
 
+    if (!Boolean.TRUE.equals(author.getPublished())) {
+      throw new RuntimeException("Author not found");
+    }
+
+    return toResponse(author);
+  }
+
+  @Override
+  public AuthorResponse getAdminById(String id) {
+
+    Author author = findActiveAuthor(id);
+
     return toResponse(author);
   }
 

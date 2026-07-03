@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { deleteNews, getAllNews } from '../../../api/newsApi';
+import { deleteNews, getAdminNews } from '../../../api/newsApi';
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
 import { adminPath } from '../../../routes/adminRoutes';
@@ -28,7 +28,7 @@ function AdminNews() {
 
   const fetchNews = async () => {
     try {
-      const response = await getAllNews(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
+      const response = await getAdminNews(currentPage - 1, ADMIN_ITEMS_PER_PAGE);
 
       setNewsList(response.data.content || []);
       setTotalPages(response.data.totalPages || 0);

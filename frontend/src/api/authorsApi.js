@@ -7,7 +7,7 @@ export const getAllAuthors = () => {
 
 // 後台：分頁作者
 export const getAdminAuthors = (page = 0, size = 10) => {
-  return api.get('/authors/page', {
+  return api.get('/authors/admin', {
     params: {
       page,
       size,
@@ -18,6 +18,10 @@ export const getAdminAuthors = (page = 0, size = 10) => {
 // 單筆作者
 export const getAuthorById = (id) => {
   return api.get(`/authors/${id}`);
+};
+
+export const getAdminAuthorById = (id) => {
+  return api.get(`/authors/admin/${id}`);
 };
 
 // 新增作者

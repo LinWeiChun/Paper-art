@@ -55,12 +55,32 @@ public class ArtServiceImpl implements ArtService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
 
+    return artRepository.findByDeletedFalseAndPublishedTrue(pageable).map(this::toPublicResponse);
+  }
+
+  @Override
+  public Page<ArtResponse> getAdminAll(int page, int size) {
+
+    Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
+
     return artRepository.findByDeletedFalse(pageable).map(this::toResponse);
   }
 
   /** 單筆查詢 */
   @Override
   public ArtResponse getById(String id) {
+
+    Art art = findActiveArt(id);
+
+    if (!Boolean.TRUE.equals(art.getPublished())) {
+      throw new RuntimeException("Art not found");
+    }
+
+    return toPublicResponse(art);
+  }
+
+  @Override
+  public ArtResponse getAdminById(String id) {
 
     Art art = findActiveArt(id);
 
