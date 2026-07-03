@@ -94,8 +94,18 @@ public class ArtServiceImpl implements ArtService {
     Art art = new Art();
 
     art.setTitle(request.getTitle());
+    art.setArtNumber(request.getArtNumber());
     art.setDescription(request.getDescription());
     art.setYear(request.getYear());
+    art.setLengthCm(request.getLengthCm());
+    art.setWidthCm(request.getWidthCm());
+    art.setHeightCm(request.getHeightCm());
+    art.setMaterial(request.getMaterial());
+    art.setColor(request.getColor());
+    art.setTechnique(request.getTechnique());
+    art.setCreationPeriod(request.getCreationPeriod());
+    art.setArtworkType(request.getArtworkType());
+    art.setRemarks(request.getRemarks());
     art.setSortOrder(request.getSortOrder());
     art.setFeatured(request.getFeatured());
     art.setRentable(request.getRentable());
@@ -137,8 +147,18 @@ public class ArtServiceImpl implements ArtService {
     Art art = findActiveArt(id);
 
     art.setTitle(request.getTitle());
+    art.setArtNumber(request.getArtNumber());
     art.setDescription(request.getDescription());
     art.setYear(request.getYear());
+    art.setLengthCm(request.getLengthCm());
+    art.setWidthCm(request.getWidthCm());
+    art.setHeightCm(request.getHeightCm());
+    art.setMaterial(request.getMaterial());
+    art.setColor(request.getColor());
+    art.setTechnique(request.getTechnique());
+    art.setCreationPeriod(request.getCreationPeriod());
+    art.setArtworkType(request.getArtworkType());
+    art.setRemarks(request.getRemarks());
     art.setSortOrder(request.getSortOrder());
     art.setFeatured(request.getFeatured());
     art.setRentable(request.getRentable());
@@ -195,7 +215,14 @@ public class ArtServiceImpl implements ArtService {
             predicates.add(
                 cb.or(
                     cb.like(cb.lower(root.get("title")), keyword),
-                    cb.like(cb.lower(root.get("description")), keyword)));
+                    cb.like(cb.lower(root.get("description")), keyword),
+                    cb.like(cb.lower(root.get("artNumber")), keyword),
+                    cb.like(cb.lower(root.get("material")), keyword),
+                    cb.like(cb.lower(root.get("color")), keyword),
+                    cb.like(cb.lower(root.get("technique")), keyword),
+                    cb.like(cb.lower(root.get("creationPeriod")), keyword),
+                    cb.like(cb.lower(root.get("artworkType")), keyword),
+                    cb.like(cb.lower(root.get("remarks")), keyword)));
           }
 
           // 是否可租借
@@ -267,9 +294,19 @@ public class ArtServiceImpl implements ArtService {
     return ArtResponse.builder()
         .id(art.getId())
         .title(art.getTitle())
+        .artNumber(art.getArtNumber())
         .description(art.getDescription())
         .thumbnail(art.getThumbnail())
         .year(art.getYear())
+        .lengthCm(art.getLengthCm())
+        .widthCm(art.getWidthCm())
+        .heightCm(art.getHeightCm())
+        .material(art.getMaterial())
+        .color(art.getColor())
+        .technique(art.getTechnique())
+        .creationPeriod(art.getCreationPeriod())
+        .artworkType(art.getArtworkType())
+        .remarks(art.getRemarks())
         .sortOrder(art.getSortOrder())
         .featured(art.getFeatured())
         .rentable(art.getRentable())
@@ -296,9 +333,19 @@ public class ArtServiceImpl implements ArtService {
     return ArtResponse.builder()
         .id(art.getId())
         .title(art.getTitle())
+        .artNumber(art.getArtNumber())
         .description(art.getDescription())
         .thumbnail(art.getThumbnail())
         .year(art.getYear())
+        .lengthCm(art.getLengthCm())
+        .widthCm(art.getWidthCm())
+        .heightCm(art.getHeightCm())
+        .material(art.getMaterial())
+        .color(art.getColor())
+        .technique(art.getTechnique())
+        .creationPeriod(art.getCreationPeriod())
+        .artworkType(art.getArtworkType())
+        .remarks(art.getRemarks())
         .sortOrder(art.getSortOrder())
         .featured(art.getFeatured())
         .rentable(art.getRentable())

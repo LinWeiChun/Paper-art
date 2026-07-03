@@ -15,6 +15,10 @@ function WorkDetail() {
   const [work, setWork] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const dimensions = [work?.lengthCm, work?.widthCm, work?.heightCm]
+    .filter((value) => value !== null && value !== undefined && value !== '')
+    .join(' × ');
+
   // 返回作品列表
   const handleBack = () => {
     navigate(location.state?.from || '/works', {
@@ -87,6 +91,57 @@ function WorkDetail() {
             {work.authors?.map((author) => author.name).join('、')}
           </p>
 
+          <div className="detail-meta">
+            {work.artNumber && (
+              <div>
+                <span>作品編號</span>
+                <strong>{work.artNumber}</strong>
+              </div>
+            )}
+
+            {dimensions && (
+              <div>
+                <span>尺寸(cm)</span>
+                <strong>{dimensions}</strong>
+              </div>
+            )}
+
+            {work.material && (
+              <div>
+                <span>材質</span>
+                <strong>{work.material}</strong>
+              </div>
+            )}
+
+            {work.color && (
+              <div>
+                <span>色彩</span>
+                <strong>{work.color}</strong>
+              </div>
+            )}
+
+            {work.technique && (
+              <div>
+                <span>剪刻技法</span>
+                <strong>{work.technique}</strong>
+              </div>
+            )}
+
+            {work.creationPeriod && (
+              <div>
+                <span>製作年代</span>
+                <strong>{work.creationPeriod}</strong>
+              </div>
+            )}
+
+            {work.artworkType && (
+              <div>
+                <span>作品型態</span>
+                <strong>{work.artworkType}</strong>
+              </div>
+            )}
+          </div>
+
           {/* <p>
             <strong>年份：</strong>
             {work.year || '未提供'}
@@ -110,6 +165,14 @@ function WorkDetail() {
               }}
             />
           </div>
+
+          {work.remarks && (
+            <div className="detail-description">
+              <h3>備註</h3>
+
+              <p>{work.remarks}</p>
+            </div>
+          )}
 
           {/* 按鈕 */}
           <div className="detail-actions">
