@@ -44,7 +44,7 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public List<ArtResponse> getAll() {
 
-    return artRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAsc().stream()
+    return artRepository.findAll(buildPublicSpecification(null), Sort.by("sortOrder").ascending()).stream()
         .map(this::toPublicResponse)
         .toList();
   }
@@ -55,7 +55,7 @@ public class ArtServiceImpl implements ArtService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
 
-    return artRepository.findByDeletedFalseAndPublishedTrue(pageable).map(this::toPublicResponse);
+    return artRepository.findAll(buildPublicSpecification(null), pageable).map(this::toPublicResponse);
   }
 
   @Override
@@ -72,7 +72,7 @@ public class ArtServiceImpl implements ArtService {
 
     Art art = findActiveArt(id);
 
-    if (!Boolean.TRUE.equals(art.getPublished())) {
+    if (!Boolean.TRUE.equals(art.getPublished()) || !hasPublishedRelations(art)) {
       throw new RuntimeException("Art not found");
     }
 
@@ -200,73 +200,7 @@ public class ArtServiceImpl implements ArtService {
 
     Pageable pageable = PageRequest.of(page, size, buildSort(request.getSort()));
 
-    Specification<Art> spec =
-        (root, query, cb) -> {
-          List<Predicate> predicates = new ArrayList<>();
-
-          predicates.add(cb.isFalse(root.get("deleted")));
-          predicates.add(cb.isTrue(root.get("published")));
-
-          // 關鍵字
-          if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
-
-            String keyword = "%" + request.getKeyword().trim().toLowerCase() + "%";
-
-            predicates.add(
-                cb.or(
-                    cb.like(cb.lower(root.get("title")), keyword),
-                    cb.like(cb.lower(root.get("description")), keyword),
-                    cb.like(cb.lower(root.get("artNumber")), keyword),
-                    cb.like(cb.lower(root.get("material")), keyword),
-                    cb.like(cb.lower(root.get("color")), keyword),
-                    cb.like(cb.lower(root.get("technique")), keyword),
-                    cb.like(cb.lower(root.get("creationPeriod")), keyword),
-                    cb.like(cb.lower(root.get("artworkType")), keyword),
-                    cb.like(cb.lower(root.get("remarks")), keyword)));
-          }
-
-          // 是否可租借
-          if (request.getRentable() != null) {
-            predicates.add(cb.equal(root.get("rentable"), request.getRentable()));
-          }
-
-          // 是否精選
-          if (request.getFeatured() != null) {
-            predicates.add(cb.equal(root.get("featured"), request.getFeatured()));
-          }
-
-          // 作者
-          if (request.getAuthorIds() != null && !request.getAuthorIds().isEmpty()) {
-
-            Join<Art, Author> join = root.join("authors");
-
-            predicates.add(join.get("id").in(request.getAuthorIds()));
-
-            query.distinct(true);
-          }
-
-          // 分類
-          if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
-
-            Join<Art, Category> join = root.join("categories");
-
-            predicates.add(join.get("id").in(request.getCategoryIds()));
-
-            query.distinct(true);
-          }
-
-          // 標籤
-          if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
-
-            Join<Art, Tag> join = root.join("tags");
-
-            predicates.add(join.get("id").in(request.getTagIds()));
-
-            query.distinct(true);
-          }
-
-          return cb.and(predicates.toArray(new Predicate[0]));
-        };
+    Specification<Art> spec = buildPublicSpecification(request);
 
     return artRepository.findAll(spec, pageable).map(this::toPublicResponse);
   }
@@ -283,9 +217,101 @@ public class ArtServiceImpl implements ArtService {
 
   @Override
   public List<ArtResponse> getFeaturedArts() {
-    return artRepository.findByFeaturedTrueAndPublishedTrueAndDeletedFalseOrderBySortOrderAsc().stream()
+    ArtSearchRequest request = new ArtSearchRequest();
+    request.setFeatured(true);
+
+    return artRepository.findAll(buildPublicSpecification(request), Sort.by("sortOrder").ascending()).stream()
         .map(this::toPublicResponse)
         .toList();
+  }
+
+  private Specification<Art> buildPublicSpecification(ArtSearchRequest request) {
+
+    return (root, query, cb) -> {
+      List<Predicate> predicates = new ArrayList<>();
+
+      Join<Art, Author> authorJoin = root.join("authors");
+      Join<Art, Category> categoryJoin = root.join("categories");
+
+      predicates.add(cb.isFalse(root.get("deleted")));
+      predicates.add(cb.isTrue(root.get("published")));
+      predicates.add(cb.isFalse(authorJoin.get("deleted")));
+      predicates.add(cb.isTrue(authorJoin.get("published")));
+      predicates.add(cb.isFalse(categoryJoin.get("deleted")));
+      predicates.add(cb.isTrue(categoryJoin.get("published")));
+
+      if (request != null) {
+        // 關鍵字
+        if (request.getKeyword() != null && !request.getKeyword().isBlank()) {
+
+          String keyword = "%" + request.getKeyword().trim().toLowerCase() + "%";
+
+          predicates.add(
+              cb.or(
+                  cb.like(cb.lower(root.get("title")), keyword),
+                  cb.like(cb.lower(root.get("description")), keyword),
+                  cb.like(cb.lower(root.get("artNumber")), keyword),
+                  cb.like(cb.lower(root.get("material")), keyword),
+                  cb.like(cb.lower(root.get("color")), keyword),
+                  cb.like(cb.lower(root.get("technique")), keyword),
+                  cb.like(cb.lower(root.get("creationPeriod")), keyword),
+                  cb.like(cb.lower(root.get("artworkType")), keyword),
+                  cb.like(cb.lower(root.get("remarks")), keyword)));
+        }
+
+        // 是否可租借
+        if (request.getRentable() != null) {
+          predicates.add(cb.equal(root.get("rentable"), request.getRentable()));
+        }
+
+        // 是否精選
+        if (request.getFeatured() != null) {
+          predicates.add(cb.equal(root.get("featured"), request.getFeatured()));
+        }
+
+        // 作者
+        if (request.getAuthorIds() != null && !request.getAuthorIds().isEmpty()) {
+          predicates.add(authorJoin.get("id").in(request.getAuthorIds()));
+        }
+
+        // 分類
+        if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
+          predicates.add(categoryJoin.get("id").in(request.getCategoryIds()));
+        }
+
+        // 標籤
+        if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
+          Join<Art, Tag> tagJoin = root.join("tags");
+
+          predicates.add(cb.isFalse(tagJoin.get("deleted")));
+          predicates.add(cb.isTrue(tagJoin.get("published")));
+          predicates.add(tagJoin.get("id").in(request.getTagIds()));
+        }
+      }
+
+      query.distinct(true);
+
+      return cb.and(predicates.toArray(new Predicate[0]));
+    };
+  }
+
+  private boolean hasPublishedRelations(Art art) {
+
+    boolean hasPublishedAuthor =
+        art.getAuthors().stream()
+            .anyMatch(
+                author ->
+                    !Boolean.TRUE.equals(author.getDeleted())
+                        && Boolean.TRUE.equals(author.getPublished()));
+
+    boolean hasPublishedCategory =
+        art.getCategories().stream()
+            .anyMatch(
+                category ->
+                    !Boolean.TRUE.equals(category.getDeleted())
+                        && Boolean.TRUE.equals(category.getPublished()));
+
+    return hasPublishedAuthor && hasPublishedCategory;
   }
 
   /** Entity → Response */
