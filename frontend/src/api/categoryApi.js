@@ -29,6 +29,14 @@ export const createCategory = (data) => {
   return api.post('/categories', data);
 };
 
+export const importCategories = (file) => {
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  return api.post('/categories/import', formData);
+};
+
 // 修改分類
 export const updateCategory = (id, data) => {
   return api.put(`/categories/${id}`, data);

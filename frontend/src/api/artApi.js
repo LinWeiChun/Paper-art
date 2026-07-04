@@ -58,6 +58,14 @@ export const createArt = (art, thumbnail) => {
   return api.post('/arts', formData);
 };
 
+export const importArts = (file) => {
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  return api.post('/arts/import', formData);
+};
+
 // 修改作品
 export const updateArt = (id, art, thumbnail) => {
   const formData = new FormData();

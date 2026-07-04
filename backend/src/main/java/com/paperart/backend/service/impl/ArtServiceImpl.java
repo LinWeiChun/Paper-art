@@ -3,6 +3,7 @@ package com.paperart.backend.service.impl;
 import com.paperart.backend.dto.request.ArtRequest;
 import com.paperart.backend.dto.request.ArtSearchRequest;
 import com.paperart.backend.dto.response.ArtResponse;
+import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.dto.response.OptionResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Art;
@@ -18,15 +19,22 @@ import com.paperart.backend.service.ArtService;
 import com.paperart.backend.service.FileUploadService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -138,6 +146,78 @@ public class ArtServiceImpl implements ArtService {
     artRepository.save(art);
 
     return toResponse(art);
+  }
+
+  @Override
+  @Transactional
+  public ImportResponse importArts(MultipartFile file) {
+    int createdCount = 0;
+    int skippedCount = 0;
+    int failedCount = 0;
+    DataFormatter formatter = new DataFormatter();
+    String mainCategoryName = extractMainCategoryName(file.getOriginalFilename());
+
+    try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+      for (Sheet sheet : workbook) {
+        String sheetCategoryName = extractSheetCategoryName(sheet.getSheetName());
+        List<Category> categories =
+            Arrays.asList(
+                findOrCreateCategory(mainCategoryName), findOrCreateCategory(sheetCategoryName));
+
+        for (int rowIndex = 2; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+          Row row = sheet.getRow(rowIndex);
+          if (row == null) {
+            continue;
+          }
+
+          try {
+            String artNumber = getCellValue(row, 0, formatter);
+            String title = getCellValue(row, 1, formatter);
+
+            if (artNumber.isBlank() || title.isBlank()) {
+              skippedCount++;
+              continue;
+            }
+
+            if (artRepository.findByArtNumberAndDeletedFalse(artNumber).isPresent()) {
+              skippedCount++;
+              continue;
+            }
+
+            Art art = new Art();
+            art.setArtNumber(artNumber);
+            art.setTitle(title);
+            art.setLengthCm(parseDouble(getCellValue(row, 2, formatter)));
+            art.setWidthCm(parseDouble(getCellValue(row, 3, formatter)));
+            art.setHeightCm(parseDouble(getCellValue(row, 4, formatter)));
+            art.setMaterial(getCellValue(row, 5, formatter));
+            art.setColor(getCellValue(row, 6, formatter));
+            art.setTechnique(getCellValue(row, 7, formatter));
+            art.setCreationPeriod(getCellValue(row, 8, formatter));
+            art.setArtworkType(getCellValue(row, 9, formatter));
+            art.setRemarks(getCellValue(row, 10, formatter));
+            art.setSortOrder(resolveCreateSortOrder(null));
+            art.setFeatured(false);
+            art.setRentable(true);
+            art.setPublished(true);
+            art.setCategories(categories);
+            auditService.markCreated(art);
+            artRepository.save(art);
+            createdCount++;
+          } catch (Exception e) {
+            failedCount++;
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Import arts failed", e);
+    }
+
+    return ImportResponse.builder()
+        .createdCount(createdCount)
+        .skippedCount(skippedCount)
+        .failedCount(failedCount)
+        .build();
   }
 
   /** 修改作品 */
@@ -433,5 +513,51 @@ public class ArtServiceImpl implements ArtService {
     }
 
     return artRepository.findMaxSortOrderByDeletedFalse() + 1;
+  }
+
+  private Category findOrCreateCategory(String name) {
+    return categoryRepository.findByNameAndDeletedFalse(name)
+        .orElseGet(
+            () -> {
+              Category category = new Category();
+              category.setName(name);
+              category.setSortOrder(categoryRepository.findMaxSortOrderByDeletedFalse() + 1);
+              category.setPublished(true);
+              auditService.markCreated(category);
+              return categoryRepository.save(category);
+            });
+  }
+
+  private String extractMainCategoryName(String filename) {
+    if (filename == null || filename.isBlank()) {
+      return "未分類";
+    }
+
+    String name = filename.replaceFirst("\\.xlsx?$", "");
+    return name.replaceFirst("^索引表[0-9]+-[0-9]+~[0-9]+-[0-9]+", "").trim();
+  }
+
+  private String extractSheetCategoryName(String sheetName) {
+    if (sheetName == null || sheetName.isBlank()) {
+      return "未分類";
+    }
+
+    return sheetName.replaceFirst("^[0-9]+-[0-9]+", "").trim();
+  }
+
+  private String getCellValue(Row row, int cellIndex, DataFormatter formatter) {
+    return formatter.formatCellValue(row.getCell(cellIndex)).trim();
+  }
+
+  private Double parseDouble(String value) {
+    if (value == null || value.isBlank() || value.equals("/")) {
+      return null;
+    }
+
+    try {
+      return Double.parseDouble(value.trim());
+    } catch (NumberFormatException e) {
+      return null;
+    }
   }
 }

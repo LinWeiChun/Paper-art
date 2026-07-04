@@ -2,6 +2,7 @@ package com.paperart.backend.service.impl;
 
 import com.paperart.backend.dto.request.AuthorRequest;
 import com.paperart.backend.dto.response.AuthorResponse;
+import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Author;
 import com.paperart.backend.repository.AuthorRepository;
@@ -10,11 +11,17 @@ import com.paperart.backend.service.AuthorService;
 import com.paperart.backend.service.FileUploadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -95,6 +102,62 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
+  public ImportResponse importAuthors(MultipartFile file) {
+    int createdCount = 0;
+    int skippedCount = 0;
+    int failedCount = 0;
+    DataFormatter formatter = new DataFormatter();
+
+    try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+      for (Sheet sheet : workbook) {
+        Row header = sheet.getRow(0);
+        if (header == null) {
+          continue;
+        }
+
+        for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+          Row row = sheet.getRow(rowIndex);
+          if (row == null) {
+            continue;
+          }
+
+          try {
+            String name = getCellValue(row, 0, formatter);
+            if (name.isBlank()) {
+              skippedCount++;
+              continue;
+            }
+
+            if (authorRepository.findByNameAndDeletedFalse(name).isPresent()) {
+              skippedCount++;
+              continue;
+            }
+
+            Author author = new Author();
+            author.setName(name);
+            author.setSortOrder(resolveCreateSortOrder(parseInteger(getCellValue(row, 1, formatter))));
+            author.setPublished(parsePublished(getCellValue(row, 2, formatter)));
+            auditService.markCreated(author);
+            authorRepository.save(author);
+            createdCount++;
+          } catch (Exception e) {
+            failedCount++;
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Import authors failed", e);
+    }
+
+    return ImportResponse.builder()
+        .createdCount(createdCount)
+        .skippedCount(skippedCount)
+        .failedCount(failedCount)
+        .build();
+  }
+
+  @Override
   public AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar) {
 
     Author author = findActiveAuthor(id);
@@ -159,5 +222,38 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     return authorRepository.findMaxSortOrderByDeletedFalse() + 1;
+  }
+
+  private String getCellValue(Row row, int cellIndex, DataFormatter formatter) {
+    return formatter.formatCellValue(row.getCell(cellIndex)).trim();
+  }
+
+  private Integer parseInteger(String value) {
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+
+    try {
+      return (int) Double.parseDouble(value.trim());
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
+  private Boolean parsePublished(String value) {
+    if (value == null || value.isBlank()) {
+      return true;
+    }
+
+    String normalized = value.trim().toLowerCase();
+    return normalized.equals("1")
+        || normalized.equals("true")
+        || normalized.equals("yes")
+        || normalized.equals("y")
+        || normalized.equals("是")
+        || normalized.equals("發布")
+        || normalized.equals("發佈")
+        || normalized.equals("已發布")
+        || normalized.equals("已發佈");
   }
 }
