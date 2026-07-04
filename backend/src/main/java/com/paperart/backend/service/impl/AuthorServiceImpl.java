@@ -80,7 +80,7 @@ public class AuthorServiceImpl implements AuthorService {
     author.setName(request.getName());
     author.setTitle(request.getTitle());
     author.setDescription(request.getDescription());
-    author.setSortOrder(request.getSortOrder());
+    author.setSortOrder(resolveCreateSortOrder(request.getSortOrder()));
     author.setPublished(request.getPublished() != null ? request.getPublished() : true);
     auditService.markCreated(author);
 
@@ -151,5 +151,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     return author;
+  }
+
+  private Integer resolveCreateSortOrder(Integer sortOrder) {
+    if (sortOrder != null && sortOrder > 0) {
+      return sortOrder;
+    }
+
+    return authorRepository.findMaxSortOrderByDeletedFalse() + 1;
   }
 }

@@ -75,13 +75,9 @@ function AdminArts() {
         <thead>
           <tr>
             <th style={{ width: '5%' }}>#</th>
-            <th style={{ width: '11%' }}>作品編號</th>
             <th style={{ width: '11%' }}>縮圖</th>
             <th style={{ width: '20%' }}>作品名稱</th>
             <th style={{ width: '13%' }}>作者</th>
-            <th style={{ width: '13%' }}>分類</th>
-            <th style={{ width: '10%' }}>製作年代</th>
-            <th style={{ width: '6%' }}>精選</th>
             <th style={{ width: '7%' }}>狀態</th>
             <th style={{ width: '14%' }}>操作</th>
           </tr>
@@ -96,8 +92,6 @@ function AdminArts() {
             arts.map((art, index) => (
               <tr key={art.id}>
                 <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
-
-                <td>{art.artNumber || '-'}</td>
 
                 <td>
                   {art.thumbnail && (
@@ -121,16 +115,6 @@ function AdminArts() {
                     ? art.authors.map((author) => author.name).join('、')
                     : '-'}
                 </td>
-
-                <td>
-                  {art.categories?.length
-                    ? art.categories.map((category) => category.name).join('、')
-                    : '-'}
-                </td>
-
-                <td>{art.creationPeriod || '-'}</td>
-
-                <td>{art.featured ? '是' : '否'}</td>
 
                 <td>{art.published ? '已發布' : '未發布'}</td>
 
