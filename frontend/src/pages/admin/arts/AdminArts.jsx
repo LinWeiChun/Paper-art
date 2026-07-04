@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { deleteArt, getAdminArts } from '../../../api/artApi';
+import { deleteArt, getAdminArts, importArts } from '../../../api/artApi';
 
 import Pagination from '../../../components/common/Pagination';
 import { ADMIN_ITEMS_PER_PAGE } from '../../../constants/pageDefaults';
@@ -14,6 +14,7 @@ function AdminArts() {
 
   const [arts, setArts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [isImporting, setIsImporting] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get('page')) || 1,
@@ -59,17 +60,54 @@ function AdminArts() {
     }
   };
 
+  const handleImport = async (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file || isImporting) return;
+
+    setIsImporting(true);
+
+    try {
+      const response = await importArts(file);
+      const data = response.data;
+
+      alert(
+        `匯入完成：新增 ${data.createdCount} 筆，略過 ${data.skippedCount} 筆，失敗 ${data.failedCount} 筆`,
+      );
+      await fetchArts();
+    } catch (error) {
+      console.error('匯入作品失敗：', error);
+      alert('匯入失敗');
+    } finally {
+      setIsImporting(false);
+      e.target.value = '';
+    }
+  };
+
   return (
     <div className="admin-page">
       <div className="admin-page-header">
         <h1>作品管理</h1>
 
-        <button
-          className="btn btn-add"
-          onClick={() => navigate(adminPath('arts/create'))}
-        >
-          ＋ 新增作品
-        </button>
+        <div className="action-buttons">
+          <label className="btn btn-secondary">
+            {isImporting ? '匯入中...' : '匯入作品'}
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              hidden
+              disabled={isImporting}
+              onChange={handleImport}
+            />
+          </label>
+
+          <button
+            className="btn btn-add"
+            onClick={() => navigate(adminPath('arts/create'))}
+          >
+            ＋ 新增作品
+          </button>
+        </div>
       </div>
       <table className="admin-table admin-table-fixed">
         <thead>

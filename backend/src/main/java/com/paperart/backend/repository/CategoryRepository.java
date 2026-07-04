@@ -2,6 +2,7 @@ package com.paperart.backend.repository;
 
 import com.paperart.backend.entity.Category;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
 
   @Query("select coalesce(max(category.sortOrder), 0) from Category category where category.deleted = false")
   Integer findMaxSortOrderByDeletedFalse();
+
+  Optional<Category> findByNameAndDeletedFalse(String name);
 }

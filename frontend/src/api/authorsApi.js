@@ -52,6 +52,14 @@ export const createAuthor = (author, avatar) => {
   return api.post('/authors', formData);
 };
 
+export const importAuthors = (file) => {
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  return api.post('/authors/import', formData);
+};
+
 // 修改作者
 export const updateAuthor = (id, author, avatar) => {
   const formData = new FormData();

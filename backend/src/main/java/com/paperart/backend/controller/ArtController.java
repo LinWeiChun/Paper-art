@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.paperart.backend.dto.request.ArtRequest;
 import com.paperart.backend.dto.request.ArtSearchRequest;
 import com.paperart.backend.dto.response.ArtResponse;
+import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.service.ArtService;
 
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,12 @@ public class ArtController {
 			@RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail) {
 
 		return artService.create(request, thumbnail);
+	}
+
+	@PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ImportResponse> importArts(@RequestPart("file") MultipartFile file) {
+
+		return ResponseEntity.ok(artService.importArts(file));
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

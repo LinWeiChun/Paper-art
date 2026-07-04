@@ -2,6 +2,7 @@ package com.paperart.backend.controller;
 
 import com.paperart.backend.dto.request.AuthorRequest;
 import com.paperart.backend.dto.response.AuthorResponse;
+import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.service.AuthorService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,12 @@ public class AuthorController {
       @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
 
     return authorService.create(request, avatar);
+  }
+
+  @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ImportResponse> importAuthors(@RequestPart("file") MultipartFile file) {
+
+    return ResponseEntity.ok(authorService.importAuthors(file));
   }
 
   @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
