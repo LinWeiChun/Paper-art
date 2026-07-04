@@ -106,7 +106,7 @@ public class ArtServiceImpl implements ArtService {
     art.setCreationPeriod(request.getCreationPeriod());
     art.setArtworkType(request.getArtworkType());
     art.setRemarks(request.getRemarks());
-    art.setSortOrder(request.getSortOrder());
+    art.setSortOrder(resolveCreateSortOrder(request.getSortOrder()));
     art.setFeatured(request.getFeatured());
     art.setRentable(request.getRentable());
     art.setPublished(request.getPublished() != null ? request.getPublished() : true);
@@ -425,5 +425,13 @@ public class ArtServiceImpl implements ArtService {
     }
 
     return art;
+  }
+
+  private Integer resolveCreateSortOrder(Integer sortOrder) {
+    if (sortOrder != null && sortOrder > 0) {
+      return sortOrder;
+    }
+
+    return artRepository.findMaxSortOrderByDeletedFalse() + 1;
   }
 }

@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = new Category();
 
     category.setName(request.getName());
-    category.setSortOrder(request.getSortOrder());
+    category.setSortOrder(resolveCreateSortOrder(request.getSortOrder()));
     category.setPublished(request.getPublished() != null ? request.getPublished() : true);
     auditService.markCreated(category);
 
@@ -113,5 +113,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     return category;
+  }
+
+  private Integer resolveCreateSortOrder(Integer sortOrder) {
+    if (sortOrder != null && sortOrder > 0) {
+      return sortOrder;
+    }
+
+    return categoryRepository.findMaxSortOrderByDeletedFalse() + 1;
   }
 }

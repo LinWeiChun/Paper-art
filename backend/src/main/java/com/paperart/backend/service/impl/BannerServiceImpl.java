@@ -62,7 +62,7 @@ public class BannerServiceImpl implements BannerService {
 
     banner.setTitle(request.getTitle());
     banner.setSubtitle(request.getSubtitle());
-    banner.setSortOrder(request.getSortOrder());
+    banner.setSortOrder(resolveCreateSortOrder(request.getSortOrder()));
     banner.setActive(request.getActive());
     auditService.markCreated(banner);
 
@@ -132,5 +132,13 @@ public class BannerServiceImpl implements BannerService {
     }
 
     return banner;
+  }
+
+  private Integer resolveCreateSortOrder(Integer sortOrder) {
+    if (sortOrder != null && sortOrder > 0) {
+      return sortOrder;
+    }
+
+    return bannerRepository.findMaxSortOrderByDeletedFalse() + 1;
   }
 }
