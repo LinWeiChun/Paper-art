@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview"
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^11.2.0",
@@ -24,6 +25,7 @@
     "react-router-dom": "^7.16.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.44.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
@@ -36,6 +38,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "wrangler": "^4.110.0"
   }
 }
