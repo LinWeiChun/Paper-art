@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const removeConsolePlugin = () => ({
   name: 'remove-console',
   apply: 'build',
@@ -21,5 +23,5 @@ const removeConsolePlugin = () => ({
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [removeConsolePlugin(), react()],
+  plugins: [removeConsolePlugin(), react(), cloudflare()],
 });
