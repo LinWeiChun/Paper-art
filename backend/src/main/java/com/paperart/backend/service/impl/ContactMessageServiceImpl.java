@@ -14,16 +14,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ContactMessageServiceImpl implements ContactMessageService {
 
   private final ContactMessageRepository contactMessageRepository;
   private final AuditService auditService;
 
   @Override
+  @Transactional
   public ContactMessageResponse create(ContactMessageRequest request) {
     validate(request);
 
@@ -61,6 +64,7 @@ public class ContactMessageServiceImpl implements ContactMessageService {
   }
 
   @Override
+  @Transactional
   public ContactMessageResponse updateProcessed(String id, Boolean processed) {
     ContactMessage contactMessage =
         contactMessageRepository

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
@@ -71,6 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public CategoryResponse create(CategoryRequest request) {
 
     Category category = new Category();
@@ -141,6 +143,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public CategoryResponse update(String id, CategoryRequest request) {
 
     Category category = findActiveCategory(id);
@@ -154,6 +157,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
     Category category = findActiveCategory(id);
     auditService.markDeleted(category);

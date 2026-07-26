@@ -17,10 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NewsServiceImpl implements NewsService {
 
   private final NewsRepository newsRepository;
@@ -66,6 +68,7 @@ public class NewsServiceImpl implements NewsService {
   }
 
   @Override
+  @Transactional
   public NewsResponse createNews(NewsRequest request, MultipartFile image) {
 
     News news = new News();
@@ -90,6 +93,7 @@ public class NewsServiceImpl implements NewsService {
   }
 
   @Override
+  @Transactional
   public NewsResponse updateNews(String id, NewsRequest request, MultipartFile image) {
 
     News news = findActiveNews(id);
@@ -118,6 +122,7 @@ public class NewsServiceImpl implements NewsService {
   }
 
   @Override
+  @Transactional
   public void deleteNews(String id) {
 
     News news = findActiveNews(id);

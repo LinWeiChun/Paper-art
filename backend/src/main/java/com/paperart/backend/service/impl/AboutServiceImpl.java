@@ -17,12 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AboutServiceImpl implements AboutService {
 
   private final AboutRepository aboutRepository;
   private final AuditService auditService;
 
   @Override
+  @Transactional
   public AboutResponse getAbout() {
 
     About about =

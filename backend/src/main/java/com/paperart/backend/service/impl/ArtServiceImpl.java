@@ -41,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArtServiceImpl implements ArtService {
 
   private final ArtRepository artRepository;
@@ -103,6 +104,7 @@ public class ArtServiceImpl implements ArtService {
 
   /** 新增作品 */
   @Override
+  @Transactional
   public ArtResponse create(ArtRequest request, MultipartFile thumbnail) {
 
     Art art = new Art();
@@ -228,6 +230,7 @@ public class ArtServiceImpl implements ArtService {
 
   /** 修改作品 */
   @Override
+  @Transactional
   public ArtResponse update(String id, ArtRequest request, MultipartFile thumbnail) {
 
     Art art = findActiveArt(id);
@@ -293,6 +296,7 @@ public class ArtServiceImpl implements ArtService {
 
   /** 刪除 */
   @Override
+  @Transactional
   public void delete(String id) {
 
     Art art = findActiveArt(id);

@@ -15,9 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
 
   private final TagRepository tagRepository;
@@ -47,6 +49,7 @@ public class TagServiceImpl implements TagService {
   }
 
   @Override
+  @Transactional
   public TagResponse create(TagRequest request) {
 
     Tag tag = new Tag();
@@ -59,6 +62,7 @@ public class TagServiceImpl implements TagService {
   }
 
   @Override
+  @Transactional
   public TagResponse update(String id, TagRequest request) {
 
     Tag tag = findActiveTag(id);
@@ -71,6 +75,7 @@ public class TagServiceImpl implements TagService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
     Tag tag = findActiveTag(id);
     auditService.markDeleted(tag);
