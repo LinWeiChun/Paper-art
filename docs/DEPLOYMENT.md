@@ -6,7 +6,7 @@
 
 - 專案根目錄：`frontend`
 - 正式分支：`main`
-- Build command：`npm ci && npm run build`
+- Build command：`npm run build`（Cloudflare 會先自動執行 `npm clean-install`）
 - Build output：`dist`
 - 綁定網域：`paper-cut.org`、`www.paper-cut.org`、`admin.paper-cut.org`
 
@@ -58,7 +58,7 @@ CORS_ALLOWED_ORIGINS=https://paper-cut.org,https://www.paper-cut.org,https://adm
 - 使用獨立 MySQL 與 R2 bucket
 - 不得使用正式資料或正式憑證
 
-Pages Preview 變數：
+Staging Pages 專案的 Production 變數：
 
 ```env
 VITE_API_URL=https://api-staging.paper-cut.org
