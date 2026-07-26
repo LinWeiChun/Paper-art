@@ -73,6 +73,10 @@ Railway staging 必須設定 `SPRING_PROFILES_ACTIVE=staging`，並設定：
 CORS_ALLOWED_ORIGINS=https://staging.paper-cut.org,https://admin-staging.paper-cut.org
 ```
 
+Staging 啟動時預設會以 `ADMIN_PASSWORD` 同步既有初始管理者的密碼；修改密碼後必須
+重新部署 Railway。若需保留資料庫中的密碼，可設定 `ADMIN_SYNC_PASSWORD=false`。
+正式環境預設不啟用此同步。
+
 因 Cookie 請求不接受萬用來源，不可設定 `*`。Staging 前端與 API 應維持在
 `paper-cut.org` 的子網域，避免登入 Cookie 變成跨站 Cookie。
 
