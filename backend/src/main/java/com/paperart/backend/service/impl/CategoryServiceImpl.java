@@ -4,6 +4,7 @@ import com.paperart.backend.dto.request.CategoryRequest;
 import com.paperart.backend.dto.response.CategoryResponse;
 import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.entity.Category;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.CategoryRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.CategoryService;
@@ -18,12 +19,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
@@ -41,7 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<CategoryResponse> getAll() {
-    return categoryRepository.findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc()
+    return categoryRepository
+        .findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc()
         .stream()
         .map(this::toResponse)
         .toList();
@@ -53,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     Category category = findActiveCategory(id);
 
     if (!Boolean.TRUE.equals(category.getPublished())) {
-      throw new RuntimeException("Category not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "找不到分類");
     }
 
     return toResponse(category);
@@ -68,6 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public CategoryResponse create(CategoryRequest request) {
 
     Category category = new Category();
@@ -115,7 +120,8 @@ public class CategoryServiceImpl implements CategoryService {
 
             Category category = new Category();
             category.setName(name);
-            category.setSortOrder(resolveCreateSortOrder(parseInteger(getCellValue(row, 1, formatter))));
+            category.setSortOrder(
+                resolveCreateSortOrder(parseInteger(getCellValue(row, 1, formatter))));
             category.setPublished(parsePublished(getCellValue(row, 2, formatter)));
             auditService.markCreated(category);
             categoryRepository.save(category);
@@ -137,6 +143,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public CategoryResponse update(String id, CategoryRequest request) {
 
     Category category = findActiveCategory(id);
@@ -150,6 +157,7 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
     Category category = findActiveCategory(id);
     auditService.markDeleted(category);
@@ -170,10 +178,13 @@ public class CategoryServiceImpl implements CategoryService {
 
   private Category findActiveCategory(String id) {
     Category category =
-        categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        categoryRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new ApiException(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "找不到分類"));
 
     if (Boolean.TRUE.equals(category.getDeleted())) {
-      throw new RuntimeException("Category not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", "找不到分類");
     }
 
     return category;

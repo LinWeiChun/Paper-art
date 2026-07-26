@@ -20,7 +20,8 @@ public interface AuthorRepository extends JpaRepository<Author, String> {
 
   long countByDeletedFalse();
 
-  @Query("select coalesce(max(author.sortOrder), 0) from Author author where author.deleted = false")
+  @Query(
+      "select coalesce(max(author.sortOrder), 0) from Author author where author.deleted = false")
   Integer findMaxSortOrderByDeletedFalse();
 
   Optional<Author> findByNameAndDeletedFalse(String name);

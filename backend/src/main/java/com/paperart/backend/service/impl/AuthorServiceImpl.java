@@ -5,6 +5,7 @@ import com.paperart.backend.dto.response.AuthorResponse;
 import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Author;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.AuthorRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.AuthorService;
@@ -20,12 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthorServiceImpl implements AuthorService {
 
   private final AuthorRepository authorRepository;
@@ -65,7 +68,7 @@ public class AuthorServiceImpl implements AuthorService {
     Author author = findActiveAuthor(id);
 
     if (!Boolean.TRUE.equals(author.getPublished())) {
-      throw new RuntimeException("Author not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "AUTHOR_NOT_FOUND", "找不到作者");
     }
 
     return toResponse(author);
@@ -80,6 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public AuthorResponse create(AuthorRequest request, MultipartFile avatar) {
 
     Author author = new Author();
@@ -136,7 +140,8 @@ public class AuthorServiceImpl implements AuthorService {
 
             Author author = new Author();
             author.setName(name);
-            author.setSortOrder(resolveCreateSortOrder(parseInteger(getCellValue(row, 1, formatter))));
+            author.setSortOrder(
+                resolveCreateSortOrder(parseInteger(getCellValue(row, 1, formatter))));
             author.setPublished(parsePublished(getCellValue(row, 2, formatter)));
             auditService.markCreated(author);
             authorRepository.save(author);
@@ -158,6 +163,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar) {
 
     Author author = findActiveAuthor(id);
@@ -182,6 +188,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
 
     Author author = findActiveAuthor(id);
@@ -207,10 +214,12 @@ public class AuthorServiceImpl implements AuthorService {
 
   private Author findActiveAuthor(String id) {
     Author author =
-        authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        authorRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "AUTHOR_NOT_FOUND", "找不到作者"));
 
     if (Boolean.TRUE.equals(author.getDeleted())) {
-      throw new RuntimeException("Author not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "AUTHOR_NOT_FOUND", "找不到作者");
     }
 
     return author;

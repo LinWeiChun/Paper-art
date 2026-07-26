@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api/authApi';
+
+import { getCurrentUser, login } from '../api/authApi';
 import { adminPath } from '../routes/adminRoutes';
+import { saveAuthSession } from '../utils/authSession';
 
 import '../styles/pages/login.css';
 
@@ -12,30 +14,8 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [captcha, setCaptcha] = useState('');
-  const [captchaRotate, setCaptchaRotate] = useState(0);
-  const [inputCaptcha, setInputCaptcha] = useState('');
-  const [errorCount, setErrorCount] = useState(0);
-  const [lockUntil, setLockUntil] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // 產生驗證碼
-  const generateCaptcha = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
-
-    const length = Math.floor(Math.random() * 3) + 4;
-
-    let code = '';
-
-    for (let i = 0; i < length; i++) {
-      code += chars[Math.floor(Math.random() * chars.length)];
-    }
-
-    setCaptcha(code);
-
-    // 只在重新產生驗證碼時改變角度
-    setCaptchaRotate(Math.floor(Math.random() * 11) - 5);
-  };
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,22 +23,7 @@ function Login() {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-
-    // 是否鎖定
-    if (lockUntil && new Date().getTime() < lockUntil) {
-      alert('錯誤次數過多，請 5 分鐘後再試');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // 驗證碼
-    if (inputCaptcha !== captcha) {
-      alert('驗證碼錯誤');
-      generateCaptcha();
-      setInputCaptcha('');
-      setIsSubmitting(false);
-      return;
-    }
+    setErrorMessage('');
 
     try {
       const response = await login({
@@ -66,46 +31,23 @@ function Login() {
         password,
       });
 
-      // JWT 資料存入 sessionStorage
-      sessionStorage.setItem('token', response.data.token);
-      sessionStorage.setItem('username', response.data.username);
-      sessionStorage.setItem('roles', JSON.stringify(response.data.roles));
-
-      setErrorCount(0);
-
-      alert('登入成功');
-
+      saveAuthSession(response.data);
       navigate(adminPath());
     } catch (error) {
-      const count = errorCount + 1;
-
-      setErrorCount(count);
-
       const message = error.response?.data?.message || '帳號或密碼錯誤';
-
-      if (count >= 5) {
-        setLockUntil(new Date().getTime() + 5 * 60 * 1000);
-
-        alert('錯誤達 5 次，已鎖定 5 分鐘');
-      } else {
-        alert(`${message}（剩餘 ${5 - count} 次）`);
-      }
-
-      generateCaptcha();
-      setInputCaptcha('');
+      setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
-    // 已登入則直接進後台
-    if (sessionStorage.getItem('token')) {
-      navigate(adminPath());
-      return;
-    }
-
-    generateCaptcha();
+    getCurrentUser()
+      .then((response) => {
+        saveAuthSession(response.data);
+        navigate(adminPath());
+      })
+      .catch(() => {});
 
     // 隱藏登入頁 scrollbar
     document.body.style.overflow = 'hidden';
@@ -153,38 +95,11 @@ function Login() {
           </div>
         </div>
 
-        <div className="form-group">
-          <label>驗證碼</label>
-
-          <div className="captcha-box">
-            <span className="captcha-text">
-              <span
-                className="captcha-code"
-                style={{
-                  transform: `rotate(${captchaRotate}deg)`,
-                }}
-              >
-                {captcha}
-              </span>
-            </span>
-
-            <button
-              type="button"
-              className="refresh-btn"
-              onClick={generateCaptcha}
-            >
-              重新產生
-            </button>
-          </div>
-
-          <input
-            type="text"
-            placeholder="請輸入驗證碼"
-            value={inputCaptcha}
-            onChange={(e) => setInputCaptcha(e.target.value)}
-            required
-          />
-        </div>
+        {errorMessage && (
+          <p className="login-error" role="alert">
+            {errorMessage}
+          </p>
+        )}
 
         <button type="submit" className="login-btn" disabled={isSubmitting}>
           {isSubmitting ? '登入中...' : '登入'}

@@ -72,6 +72,15 @@ body {
   box-shadow: 0 0 0 3px rgba(178, 34, 34, 0.15);
 }
 
+.login-error {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: #8f1616;
+  background: #fff0f0;
+  border: 1px solid #efb4b4;
+}
+
 /* 驗證碼區塊 */
 .captcha-box {
   display: flex;

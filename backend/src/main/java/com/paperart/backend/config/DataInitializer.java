@@ -28,6 +28,9 @@ public class DataInitializer {
   @Value("${admin.password}")
   private String adminPassword;
 
+  @Value("${admin.sync-password:false}")
+  private boolean syncAdminPassword;
+
   @Bean
   public CommandLineRunner init() {
 
@@ -52,19 +55,49 @@ public class DataInitializer {
         adminRoles.add(role);
       }
 
-      // 建立 admin 帳號
-      if (!userRepository.existsByUsername(adminUsername)) {
+      Role adminRole =
+          roleRepository
+              .findByName("ADMIN")
+              .orElseGet(
+                  () -> {
+                    Role role = new Role();
+                    role.setName("ADMIN");
+                    return roleRepository.save(role);
+                  });
+      adminRoles.add(adminRole);
 
-        User admin = new User();
+      User admin =
+          userRepository
+              .findByUsername(adminUsername)
+              .orElseGet(
+                  () -> {
+                    User user = new User();
+                    user.setUsername(adminUsername);
+                    user.setPassword(passwordEncoder.encode(adminPassword));
+                    return user;
+                  });
 
-        admin.setUsername(adminUsername);
+      boolean adminPasswordChanged = synchronizeAdminPassword(admin);
+      Set<String> existingRoleNames =
+          admin.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toSet());
+      Set<String> requiredRoleNames =
+          adminRoles.stream().map(Role::getName).collect(java.util.stream.Collectors.toSet());
 
-        admin.setPassword(passwordEncoder.encode(adminPassword));
-
+      if (admin.getId() == null
+          || adminPasswordChanged
+          || !existingRoleNames.containsAll(requiredRoleNames)) {
         admin.setRoles(adminRoles);
-
         userRepository.save(admin);
       }
     };
+  }
+
+  boolean synchronizeAdminPassword(User admin) {
+    if (!syncAdminPassword || passwordEncoder.matches(adminPassword, admin.getPassword())) {
+      return false;
+    }
+
+    admin.setPassword(passwordEncoder.encode(adminPassword));
+    return true;
   }
 }

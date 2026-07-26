@@ -49,6 +49,24 @@ dto
 
 security
 
+JWT Cookie、CSRF、登入限制、請求追蹤
+
 config
 
 exception
+
+統一 API 錯誤格式
+
+resources/
+
+application-dev.properties
+application-staging.properties
+application-prod.properties
+
+---
+
+# CI
+
+.github/workflows/ci.yml
+
+Frontend lint/build 與 Backend formatting/test。

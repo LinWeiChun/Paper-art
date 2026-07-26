@@ -17,12 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AboutServiceImpl implements AboutService {
 
   private final AboutRepository aboutRepository;
   private final AuditService auditService;
 
   @Override
+  @Transactional
   public AboutResponse getAbout() {
 
     About about =
@@ -94,8 +96,7 @@ public class AboutServiceImpl implements AboutService {
             about.getValues().stream()
                 .sorted(
                     Comparator.comparing(
-                        AboutValue::getSortOrder,
-                            Comparator.nullsLast(Integer::compareTo))
+                            AboutValue::getSortOrder, Comparator.nullsLast(Integer::compareTo))
                         .thenComparing(
                             AboutValue::getCreatedAt,
                             Comparator.nullsLast(Comparator.naturalOrder())))

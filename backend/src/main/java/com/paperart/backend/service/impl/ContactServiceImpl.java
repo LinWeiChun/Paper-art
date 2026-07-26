@@ -8,15 +8,18 @@ import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ContactServiceImpl implements ContactService {
 
   private final ContactRepository contactRepository;
   private final AuditService auditService;
 
   @Override
+  @Transactional
   public ContactResponse getContact() {
 
     Contact contact =
@@ -28,10 +31,10 @@ public class ContactServiceImpl implements ContactService {
   }
 
   @Override
+  @Transactional
   public ContactResponse update(ContactRequest request) {
 
-    Contact contact =
-        contactRepository.findAll().stream().findFirst().orElseGet(Contact::new);
+    Contact contact = contactRepository.findAll().stream().findFirst().orElseGet(Contact::new);
 
     contact.setContactPerson(request.getContactPerson());
     contact.setPhone(request.getPhone());

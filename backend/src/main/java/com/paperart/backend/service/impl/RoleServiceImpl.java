@@ -15,6 +15,9 @@ public class RoleServiceImpl implements RoleService {
   @Override
   public List<String> getAllRoles() {
 
-    return roleRepository.findAll().stream().map(role -> role.getName()).toList();
+    return roleRepository.findAll().stream()
+        .map(role -> role.getName())
+        .filter(name -> !"ADMIN".equals(name))
+        .toList();
   }
 }

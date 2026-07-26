@@ -4,6 +4,7 @@ import com.paperart.backend.dto.request.UserRequest;
 import com.paperart.backend.dto.response.UserResponse;
 import com.paperart.backend.entity.Role;
 import com.paperart.backend.entity.User;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.RoleRepository;
 import com.paperart.backend.repository.UserRepository;
 import com.paperart.backend.service.AuditService;
@@ -12,11 +13,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
@@ -33,16 +37,20 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponse getUserById(String id) {
 
-    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "使用者不存在"));
 
     return convertToResponse(user);
   }
 
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest request) {
 
     if (userRepository.existsByUsername(request.getUsername())) {
-      throw new RuntimeException("帳號已存在");
+      throw new ApiException(HttpStatus.CONFLICT, "USERNAME_EXISTS", "帳號已存在");
     }
 
     User user = new User();
@@ -61,7 +69,10 @@ public class UserServiceImpl implements UserService {
                   roleName ->
                       roleRepository
                           .findByName(roleName)
-                          .orElseThrow(() -> new RuntimeException("權限不存在")))
+                          .orElseThrow(
+                              () ->
+                                  new ApiException(
+                                      HttpStatus.BAD_REQUEST, "ROLE_NOT_FOUND", "權限不存在")))
               .collect(Collectors.toSet());
 
       user.setRoles(roles);
@@ -74,9 +85,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public UserResponse updateUser(String id, UserRequest request) {
 
-    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "使用者不存在"));
 
     // 是否啟用
     if (request.getEnabled() != null) {
@@ -98,7 +113,10 @@ public class UserServiceImpl implements UserService {
                   roleName ->
                       roleRepository
                           .findByName(roleName)
-                          .orElseThrow(() -> new RuntimeException("權限不存在")))
+                          .orElseThrow(
+                              () ->
+                                  new ApiException(
+                                      HttpStatus.BAD_REQUEST, "ROLE_NOT_FOUND", "權限不存在")))
               .collect(Collectors.toSet());
 
       user.setRoles(roles);
@@ -111,9 +129,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void disableUser(String id) {
 
-    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "使用者不存在"));
 
     user.setEnabled(false);
     auditService.markUpdated(user);
@@ -122,9 +144,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void enableUser(String id) {
 
-    User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("使用者不存在"));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "使用者不存在"));
 
     user.setEnabled(true);
     auditService.markUpdated(user);
@@ -133,6 +159,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void deleteUser(String id) {
     disableUser(id);
   }
