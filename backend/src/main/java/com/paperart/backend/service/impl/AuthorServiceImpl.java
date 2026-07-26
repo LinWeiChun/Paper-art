@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthorServiceImpl implements AuthorService {
 
   private final AuthorRepository authorRepository;
@@ -82,6 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public AuthorResponse create(AuthorRequest request, MultipartFile avatar) {
 
     Author author = new Author();
@@ -161,6 +163,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public AuthorResponse update(String id, AuthorRequest request, MultipartFile avatar) {
 
     Author author = findActiveAuthor(id);
@@ -185,6 +188,7 @@ public class AuthorServiceImpl implements AuthorService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
 
     Author author = findActiveAuthor(id);

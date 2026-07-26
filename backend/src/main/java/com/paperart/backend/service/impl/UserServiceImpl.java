@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest request) {
 
     if (userRepository.existsByUsername(request.getUsername())) {
@@ -82,6 +85,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public UserResponse updateUser(String id, UserRequest request) {
 
     User user =
@@ -125,6 +129,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void disableUser(String id) {
 
     User user =
@@ -139,6 +144,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void enableUser(String id) {
 
     User user =
@@ -153,6 +159,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void deleteUser(String id) {
     disableUser(id);
   }

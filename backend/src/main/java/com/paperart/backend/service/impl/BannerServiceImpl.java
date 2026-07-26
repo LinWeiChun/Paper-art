@@ -13,10 +13,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BannerServiceImpl implements BannerService {
 
   private final BannerRepository bannerRepository;
@@ -58,6 +60,7 @@ public class BannerServiceImpl implements BannerService {
   }
 
   @Override
+  @Transactional
   public BannerResponse create(BannerRequest request, MultipartFile image) {
 
     Banner banner = new Banner();
@@ -79,6 +82,7 @@ public class BannerServiceImpl implements BannerService {
   }
 
   @Override
+  @Transactional
   public BannerResponse update(String id, BannerRequest request, MultipartFile image) {
 
     Banner banner = findActiveBanner(id);
@@ -102,6 +106,7 @@ public class BannerServiceImpl implements BannerService {
   }
 
   @Override
+  @Transactional
   public void delete(String id) {
 
     Banner banner = findActiveBanner(id);
