@@ -94,8 +94,7 @@ public class AboutServiceImpl implements AboutService {
             about.getValues().stream()
                 .sorted(
                     Comparator.comparing(
-                        AboutValue::getSortOrder,
-                            Comparator.nullsLast(Integer::compareTo))
+                            AboutValue::getSortOrder, Comparator.nullsLast(Integer::compareTo))
                         .thenComparing(
                             AboutValue::getCreatedAt,
                             Comparator.nullsLast(Comparator.naturalOrder())))

@@ -30,8 +30,7 @@ public class ContactServiceImpl implements ContactService {
   @Override
   public ContactResponse update(ContactRequest request) {
 
-    Contact contact =
-        contactRepository.findAll().stream().findFirst().orElseGet(Contact::new);
+    Contact contact = contactRepository.findAll().stream().findFirst().orElseGet(Contact::new);
 
     contact.setContactPerson(request.getContactPerson());
     contact.setPhone(request.getPhone());

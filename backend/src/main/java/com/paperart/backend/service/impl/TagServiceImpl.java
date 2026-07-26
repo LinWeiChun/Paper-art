@@ -3,6 +3,7 @@ package com.paperart.backend.service.impl;
 import com.paperart.backend.dto.request.TagRequest;
 import com.paperart.backend.dto.response.TagResponse;
 import com.paperart.backend.entity.Tag;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.TagRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.TagService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -87,10 +89,13 @@ public class TagServiceImpl implements TagService {
   }
 
   private Tag findActiveTag(String id) {
-    Tag tag = tagRepository.findById(id).orElseThrow(() -> new RuntimeException("分類不存在"));
+    Tag tag =
+        tagRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "TAG_NOT_FOUND", "標籤不存在"));
 
     if (Boolean.TRUE.equals(tag.getDeleted())) {
-      throw new RuntimeException("分類不存在");
+      throw new ApiException(HttpStatus.NOT_FOUND, "TAG_NOT_FOUND", "標籤不存在");
     }
 
     return tag;

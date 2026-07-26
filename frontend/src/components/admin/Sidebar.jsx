@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import { logout } from '../../api/authApi';
 import { adminLoginPath, adminPath } from '../../routes/adminRoutes';
+import { clearAuthSession } from '../../utils/authSession';
 import { hasPermission } from '../../utils/permission.js';
 
 import '../../styles/admin/sidebar.css';
@@ -16,12 +19,13 @@ function Sidebar() {
     系統管理: false,
   });
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('roles');
-
-    navigate(adminLoginPath());
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      clearAuthSession();
+      navigate(adminLoginPath());
+    }
   };
 
   const toggleMenu = (title) => {
@@ -90,7 +94,7 @@ function Sidebar() {
     {
       title: '系統管理',
       items: [
-        hasPermission('USER_MANAGE') && {
+        hasPermission('ADMIN') && {
           name: '使用者管理',
           path: adminPath('users'),
         },

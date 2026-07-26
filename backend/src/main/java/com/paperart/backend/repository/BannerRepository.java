@@ -11,6 +11,7 @@ public interface BannerRepository extends JpaRepository<Banner, String> {
 
   List<Banner> findByActiveTrueAndDeletedFalseOrderBySortOrderAsc();
 
-  @Query("select coalesce(max(banner.sortOrder), 0) from Banner banner where banner.deleted = false")
+  @Query(
+      "select coalesce(max(banner.sortOrder), 0) from Banner banner where banner.deleted = false")
   Integer findMaxSortOrderByDeletedFalse();
 }

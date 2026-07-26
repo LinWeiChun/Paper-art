@@ -3,6 +3,7 @@ package com.paperart.backend.service.impl;
 import com.paperart.backend.dto.request.ContactMessageRequest;
 import com.paperart.backend.dto.response.ContactMessageResponse;
 import com.paperart.backend.entity.ContactMessage;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.ContactMessageRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.ContactMessageService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -51,7 +53,9 @@ public class ContactMessageServiceImpl implements ContactMessageService {
     ContactMessage contactMessage =
         contactMessageRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Contact message not found"));
+            .orElseThrow(
+                () ->
+                    new ApiException(HttpStatus.NOT_FOUND, "CONTACT_MESSAGE_NOT_FOUND", "找不到聯絡訊息"));
 
     return toResponse(contactMessage);
   }
@@ -61,7 +65,9 @@ public class ContactMessageServiceImpl implements ContactMessageService {
     ContactMessage contactMessage =
         contactMessageRepository
             .findById(id)
-            .orElseThrow(() -> new RuntimeException("Contact message not found"));
+            .orElseThrow(
+                () ->
+                    new ApiException(HttpStatus.NOT_FOUND, "CONTACT_MESSAGE_NOT_FOUND", "找不到聯絡訊息"));
 
     contactMessage.setProcessed(Boolean.TRUE.equals(processed));
     auditService.markUpdated(contactMessage);
