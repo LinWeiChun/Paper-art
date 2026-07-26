@@ -28,6 +28,9 @@ public class DataInitializer {
   @Value("${admin.password}")
   private String adminPassword;
 
+  @Value("${admin.sync-password:false}")
+  private boolean syncAdminPassword;
+
   @Bean
   public CommandLineRunner init() {
 
@@ -74,15 +77,27 @@ public class DataInitializer {
                     return user;
                   });
 
+      boolean adminPasswordChanged = synchronizeAdminPassword(admin);
       Set<String> existingRoleNames =
           admin.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toSet());
       Set<String> requiredRoleNames =
           adminRoles.stream().map(Role::getName).collect(java.util.stream.Collectors.toSet());
 
-      if (admin.getId() == null || !existingRoleNames.containsAll(requiredRoleNames)) {
+      if (admin.getId() == null
+          || adminPasswordChanged
+          || !existingRoleNames.containsAll(requiredRoleNames)) {
         admin.setRoles(adminRoles);
         userRepository.save(admin);
       }
     };
+  }
+
+  boolean synchronizeAdminPassword(User admin) {
+    if (!syncAdminPassword || passwordEncoder.matches(adminPassword, admin.getPassword())) {
+      return false;
+    }
+
+    admin.setPassword(passwordEncoder.encode(adminPassword));
+    return true;
   }
 }
