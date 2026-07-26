@@ -10,17 +10,18 @@ import com.paperart.backend.entity.Art;
 import com.paperart.backend.entity.Author;
 import com.paperart.backend.entity.Category;
 import com.paperart.backend.entity.Tag;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.ArtRepository;
 import com.paperart.backend.repository.AuthorRepository;
 import com.paperart.backend.repository.CategoryRepository;
 import com.paperart.backend.repository.TagRepository;
-import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.ArtService;
+import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.FileUploadService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -33,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,7 +54,9 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public List<ArtResponse> getAll() {
 
-    return artRepository.findAll(buildPublicSpecification(null), Sort.by("sortOrder").ascending()).stream()
+    return artRepository
+        .findAll(buildPublicSpecification(null), Sort.by("sortOrder").ascending())
+        .stream()
         .map(this::toPublicResponse)
         .toList();
   }
@@ -63,7 +67,9 @@ public class ArtServiceImpl implements ArtService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("sortOrder").ascending());
 
-    return artRepository.findAll(buildPublicSpecification(null), pageable).map(this::toPublicResponse);
+    return artRepository
+        .findAll(buildPublicSpecification(null), pageable)
+        .map(this::toPublicResponse);
   }
 
   @Override
@@ -81,7 +87,7 @@ public class ArtServiceImpl implements ArtService {
     Art art = findActiveArt(id);
 
     if (!Boolean.TRUE.equals(art.getPublished()) || !hasPublishedRelations(art)) {
-      throw new RuntimeException("Art not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "ART_NOT_FOUND", "找不到作品");
     }
 
     return toPublicResponse(art);
@@ -300,7 +306,9 @@ public class ArtServiceImpl implements ArtService {
     ArtSearchRequest request = new ArtSearchRequest();
     request.setFeatured(true);
 
-    return artRepository.findAll(buildPublicSpecification(request), Sort.by("sortOrder").ascending()).stream()
+    return artRepository
+        .findAll(buildPublicSpecification(request), Sort.by("sortOrder").ascending())
+        .stream()
         .map(this::toPublicResponse)
         .toList();
   }
@@ -498,10 +506,13 @@ public class ArtServiceImpl implements ArtService {
   }
 
   private Art findActiveArt(String id) {
-    Art art = artRepository.findById(id).orElseThrow(() -> new RuntimeException("Art not found"));
+    Art art =
+        artRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "ART_NOT_FOUND", "找不到作品"));
 
     if (Boolean.TRUE.equals(art.getDeleted())) {
-      throw new RuntimeException("Art not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "ART_NOT_FOUND", "找不到作品");
     }
 
     return art;
@@ -516,7 +527,8 @@ public class ArtServiceImpl implements ArtService {
   }
 
   private Category findOrCreateCategory(String name) {
-    return categoryRepository.findByNameAndDeletedFalse(name)
+    return categoryRepository
+        .findByNameAndDeletedFalse(name)
         .orElseGet(
             () -> {
               Category category = new Category();

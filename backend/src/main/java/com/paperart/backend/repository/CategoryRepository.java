@@ -15,7 +15,8 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
 
   List<Category> findByDeletedFalseAndPublishedTrueOrderBySortOrderAscCreatedAtDesc();
 
-  @Query("select coalesce(max(category.sortOrder), 0) from Category category where category.deleted = false")
+  @Query(
+      "select coalesce(max(category.sortOrder), 0) from Category category where category.deleted = false")
   Integer findMaxSortOrderByDeletedFalse();
 
   Optional<Category> findByNameAndDeletedFalse(String name);

@@ -8,12 +8,15 @@ target/
 
 # Spring profiles
 application-dev.properties
+!backend/src/main/resources/application-dev.properties
 
 # env
 .env
 .env.*
 **/.env
 **/.env.*
+!.env.example
+!**/.env.example
 
 # system
 .DS_Store

@@ -5,6 +5,7 @@ import com.paperart.backend.dto.response.NewsResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.News;
 import com.paperart.backend.enums.PublishStatus;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.NewsRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.FileUploadService;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +32,8 @@ public class NewsServiceImpl implements NewsService {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by("publishDate").descending());
 
-    return newsRepository.findByDeletedFalseAndStatus(PublishStatus.PUBLISHED, pageable)
+    return newsRepository
+        .findByDeletedFalseAndStatus(PublishStatus.PUBLISHED, pageable)
         .map(this::toResponse);
   }
 
@@ -48,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
     News news = findActiveNews(id);
 
     if (news.getStatus() != PublishStatus.PUBLISHED) {
-      throw new RuntimeException("News not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "NEWS_NOT_FOUND", "找不到最新消息");
     }
 
     return toResponse(news);
@@ -141,10 +144,12 @@ public class NewsServiceImpl implements NewsService {
 
   private News findActiveNews(String id) {
     News news =
-        newsRepository.findById(id).orElseThrow(() -> new RuntimeException("News not found"));
+        newsRepository
+            .findById(id)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "NEWS_NOT_FOUND", "找不到最新消息"));
 
     if (Boolean.TRUE.equals(news.getDeleted())) {
-      throw new RuntimeException("News not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "NEWS_NOT_FOUND", "找不到最新消息");
     }
 
     return news;

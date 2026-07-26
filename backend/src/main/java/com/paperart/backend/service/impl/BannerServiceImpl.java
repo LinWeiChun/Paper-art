@@ -4,12 +4,14 @@ import com.paperart.backend.dto.request.BannerRequest;
 import com.paperart.backend.dto.response.BannerResponse;
 import com.paperart.backend.dto.response.UploadResponse;
 import com.paperart.backend.entity.Banner;
+import com.paperart.backend.exception.ApiException;
 import com.paperart.backend.repository.BannerRepository;
 import com.paperart.backend.service.AuditService;
 import com.paperart.backend.service.BannerService;
 import com.paperart.backend.service.FileUploadService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +43,7 @@ public class BannerServiceImpl implements BannerService {
     Banner banner = findActiveBanner(id);
 
     if (!Boolean.TRUE.equals(banner.getActive())) {
-      throw new RuntimeException("Banner not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "BANNER_NOT_FOUND", "找不到輪播項目");
     }
 
     return toResponse(banner);
@@ -125,10 +127,13 @@ public class BannerServiceImpl implements BannerService {
 
   private Banner findActiveBanner(String id) {
     Banner banner =
-        bannerRepository.findById(id).orElseThrow(() -> new RuntimeException("Banner not found"));
+        bannerRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new ApiException(HttpStatus.NOT_FOUND, "BANNER_NOT_FOUND", "找不到輪播項目"));
 
     if (Boolean.TRUE.equals(banner.getDeleted())) {
-      throw new RuntimeException("Banner not found");
+      throw new ApiException(HttpStatus.NOT_FOUND, "BANNER_NOT_FOUND", "找不到輪播項目");
     }
 
     return banner;
