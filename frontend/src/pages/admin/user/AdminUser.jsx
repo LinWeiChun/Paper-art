@@ -74,7 +74,12 @@ function AdminUser() {
         </thead>
 
         <tbody>
-          {adminList.map((admin, index) => (
+          {adminList.length === 0 ? (
+            <tr>
+              <td colSpan="4">目前沒有管理員資料</td>
+            </tr>
+          ) : (
+            adminList.map((admin, index) => (
             <tr key={admin.id}>
               <td>{index + 1}</td>
 
@@ -108,7 +113,8 @@ function AdminUser() {
                 </div>
               </td>
             </tr>
-          ))}
+            ))
+          )}
         </tbody>
       </table>
     </div>

@@ -112,19 +112,19 @@ function AdminArts() {
       <table className="admin-table admin-table-fixed">
         <thead>
           <tr>
-            <th style={{ width: '5%' }}>#</th>
-            <th style={{ width: '11%' }}>縮圖</th>
-            <th style={{ width: '20%' }}>作品名稱</th>
-            <th style={{ width: '13%' }}>作者</th>
-            <th style={{ width: '7%' }}>狀態</th>
-            <th style={{ width: '14%' }}>操作</th>
+            <th style={{ width: '6%' }}>#</th>
+            <th style={{ width: '12%' }}>縮圖</th>
+            <th style={{ width: '34%' }}>作品名稱</th>
+            <th style={{ width: '22%' }}>作者</th>
+            <th style={{ width: '10%' }}>狀態</th>
+            <th style={{ width: '16%' }}>操作</th>
           </tr>
         </thead>
 
         <tbody>
           {arts.length === 0 ? (
             <tr>
-              <td colSpan="9">目前沒有作品資料</td>
+              <td colSpan="6">目前沒有作品資料</td>
             </tr>
           ) : (
             arts.map((art, index) => (

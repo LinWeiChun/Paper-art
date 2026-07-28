@@ -125,11 +125,11 @@ function AdminAuthors() {
       <table className="admin-table">
         <thead>
           <tr>
-            <th style={{ width: '10%' }}>#</th>
-            <th style={{ width: '32%' }}>姓名</th>
-            <th style={{ width: '30%' }}>職稱</th>
+            <th style={{ width: '8%' }}>#</th>
+            <th style={{ width: '30%' }}>姓名</th>
+            <th style={{ width: '28%' }}>職稱</th>
             <th style={{ width: '12%' }}>狀態</th>
-            <th style={{ width: '20%' }}>操作</th>
+            <th style={{ width: '22%' }}>操作</th>
           </tr>
         </thead>
 
