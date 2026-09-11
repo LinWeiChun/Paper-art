@@ -47,6 +47,53 @@ CORS_ALLOWED_ORIGINS=https://paper-cut.org,https://www.paper-cut.org,https://adm
 
 `JWT_SECRET` 必須使用至少 32 bytes 的隨機值。所有機密只存於 Railway，不可提交至 Git。
 
+### Railway JVM 記憶體限制
+
+`backend/railpack.json` 沿用 Railpack 的 Maven 建置與 `JAVA_OPTS` 啟動參數機制，
+只覆寫服務啟動命令。預設為：
+
+```text
+-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m
+```
+
+- Heap 初始值 128 MiB、上限 512 MiB；Metaspace 上限 192 MiB。
+- `JAVA_OPTS` 放在預設限制之後，可個別覆寫，例如
+  `JAVA_OPTS=-XX:MaxMetaspaceSize=256m`，其餘限制仍保留。
+- `PORT` 未設定時使用 8080；Railway 網域的 target port 必須與服務監聽埠一致。
+- `exec` 讓 Java 接收容器停止訊號；JAR 沿用 Maven 的 `target/*.jar`，不綁定版本號。
+- 不在全域設定 `JAVA_TOOL_OPTIONS`，避免同時限制 Maven／編譯器 JVM。
+  若另有 `JAVA_TOOL_OPTIONS` 或 `_JAVA_OPTIONS`，啟用前先檢查是否有重複記憶體參數；
+  本啟動命令的記憶體調整統一使用 `JAVA_OPTS`。參數中不得放入密碼或金鑰。
+- `application*.properties` 在 JVM 啟動後才讀取，無法用來設定 Heap 上限。
+
+2026-09-11 唯讀確認：production 與 staging 都使用 `RAILPACK`、Root Directory
+`/backend`，分別追蹤 `main` 與 `development`，沒有自訂 Start Command；服務層
+沒有 `JAVA_OPTS` 或 `JAVA_TOOL_OPTIONS`。既有文件要求 staging 驗證，但實際驗證
+是否完成仍需以部署紀錄為準。
+
+日後經授權啟用時：
+
+1. 先在 staging 驗證。Root Directory 維持 `/backend`，讓 Railpack 讀取
+   `backend/railpack.json`；保留現有建置器、建置命令與秘密變數。
+2. 確認沒有 Dashboard Start Command、`RAILPACK_START_CMD` 或
+   `RAILPACK_CONFIG_FILE` 覆寫此設定，並在建置／部署資訊核對實際啟動命令。
+3. 觀察 `/paper/api/actuator/health`、登入、查詢、圖片上傳與 Excel 匯入，
+   特別檢查 `OutOfMemoryError`、`Metaspace`、GC 壓力及容器重啟。
+4. 若 Metaspace 不足，先透過 `JAVA_OPTS=-XX:MaxMetaspaceSize=256m` 增加空間；
+   若 Heap 不足，依負載評估增加 `-Xmx`。每次調整都須重新驗證。
+5. 完成 staging 負載驗證並取得正式部署授權後，才套用 production。
+
+512 MiB 是 Heap 上限，並非整個容器的 RAM 上限；執行緒 stack、code cache、
+直接記憶體與其他 native allocation 仍會佔用 RAM。Metaspace 192 MiB 也不保證
+適合所有負載。實際節費須比較部署前後相同流量與觀察期間的 Railway 指標。
+
+本機 JDK 21 驗證：初始 Metaspace 128 MiB 限制下，格式檢查、11 項既有測試與打包通過；HTTP 健康端點回傳 200／UP。但啟動後 Metaspace 已使用約 111 MiB，因此最終上限提高為 192 MiB，保留類別載入空間。測試使用 test profile 與 H2，未驗證正式 MySQL、R2 或實際流量。專案編譯目標與 CI 仍為 Java 17。
+
+上述本機驗證階段未更新 Railway 設定或觸發部署；雲端發布狀態請以 GitHub PR 與 Railway 部署紀錄為準。
+
+參考：[Railpack 設定檔](https://railpack.com/config/file/)、
+[Railpack Java 啟動實作](https://github.com/railwayapp/railpack/blob/main/core/providers/java/java.go)。
+
 ## Staging
 
 - 使用獨立 Cloudflare Pages staging 專案，但沿用同一個 `frontend` 程式
