@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "deploy": {
+    "startCommand": "exec java -Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m $JAVA_OPTS -Dserver.port=${PORT:-8080} -jar target/*.jar"
+  }
+}
