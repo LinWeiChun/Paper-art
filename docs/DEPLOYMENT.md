@@ -131,6 +131,21 @@ JVM 調整的驗證流程：
 
 本機 JDK 21 驗證：初始 Metaspace 128 MiB 限制下，格式檢查、11 項既有測試與打包通過；HTTP 健康端點回傳 200／UP。但啟動後 Metaspace 已使用約 111 MiB，因此最終上限提高為 192 MiB，保留類別載入空間。測試使用 test profile 與 H2，未驗證正式 MySQL、R2 或實際流量。專案編譯目標與 CI 仍為 Java 17。
 
+2026-09-14 正式發布前的 staging 驗證紀錄（保留 main 歷史內容；以下發布步驟為當時規劃）：
+
+- PR #101 已於 2026-09-11 合併至 `development`，前後端 CI 通過。
+- staging 部署 `376ec729-b6bf-4dda-8769-9a268f00900a` 使用提交 `b824fe4`，
+  Railway 狀態為 `SUCCESS`，日誌確認 MySQL 連線與 Spring Boot 啟動成功。
+- staging 近 24 小時 RAM 平均 0.5615 GB，範圍 0.5558–0.5623 GB；
+  production 套用前平均 0.8466 GB，範圍 0.8459–0.8472 GB。
+  這是不同環境的觀察值，不能直接視為正式環境已實現的節費。
+- staging Railway 網域的健康、作品列表、分類與 CSRF 端點均回傳 HTTP 200；
+  健康為 UP。staging 列表為空，本次未驗證登入、圖片上傳、Excel 匯入或負載測試。
+- 正式發布從 `main` 建立獨立分支，只帶入本 JVM 設定與部署文件，
+  避免連帶發布 `development` 尚未上線的前端變更。合併前須通過前後端 CI，
+  合併後須核對 Railway production 的提交、啟動命令、健康與查詢端點。
+- 本次未變更 Railway 訂閱方案、MySQL、休眠設定或環境變數。
+
 上述本機驗證階段未更新 Railway 設定或觸發部署；雲端發布狀態請以 GitHub PR 與 Railway 部署紀錄為準。
 
 2026-09-14 部署與驗證結果（本機執行紀錄）：
