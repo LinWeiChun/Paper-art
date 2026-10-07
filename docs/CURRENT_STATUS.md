@@ -1,40 +1,54 @@
-## 已完成
+# 專案現況
 
-- JWT 登入
-- 作者 CRUD
-- 分類 CRUD
-- Tag CRUD
-- 作品 CRUD
-- 首頁
-- 作品列表
-- 作品詳情
-- Server-side Search
-- URL Query 同步
-- Works Drawer
-- 篩選 UI
-- Active Tag 顯示名稱
-- JWT HttpOnly Cookie 與登出 API
-- CSRF 防護與嚴格 CORS
-- 後端 RBAC 與 ADMIN 高風險權限
-- 登入失敗限制（15 分鐘內 5 次）
-- 統一 API 錯誤格式與 Trace ID
-- Cloudflare Pages／Railway staging 設定
-- GitHub Actions CI
+文件整理日期：2026-10-07。
 
-## 正在開發
+本頁依既有文件及部署紀錄整理；本輪未執行應用程式測試、雲端查核或使用者驗收。
+工作順序與完成條件見 [TODO.md](TODO.md)，流程見 [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)。
 
-- 第一階段 staging 部署驗證
-- search API 穩定性
+## 狀態定義
 
-## 已知問題
+- **實作**：既有「已完成」清單僅作為實作紀錄，需核對目前程式。
+- **測試**：需列出版本、環境、案例及結果，不能以已實作推定通過。
+- **部署**：需列出環境、版本及紀錄，歷史部署不代表目前工作區已發布。
+- **驗收**：需由指定驗收者確認業務情境並保留結果。
 
-- search API 部分情況仍會回傳 500
-- Detail 頁面偶爾出現 Art not found
-- 登入限制目前使用單機記憶體；多 instance 前需改為共用儲存
+## 既有功能紀錄
+
+| 功能 | 實作紀錄 | 測試證據 | 部署證據 | 使用者驗收 |
+|---|---|---|---|---|
+| 首頁、作品列表、作品詳情 | 原文件列為已完成 | 2026-09-14 正式網站 HTTP 200、列表及既有詳情成功；未涵蓋所有案例 | 有當日正式部署紀錄；目前版本待核對 | 待記錄 |
+| 作者／分類／Tag／作品 CRUD | 原文件列為已完成 | 當日分類查詢成功；CRUD 完整流程待驗證 | 各功能對應版本待核對 | 待記錄 |
+| Server-side Search | 原文件列為已完成，仍列穩定性問題 | 當日空條件及關鍵字搜尋成功；完整組合待驗證 | 有當日查詢紀錄；目前版本待核對 | 待記錄 |
+| URL Query 同步、Works Drawer、Active Tag 名稱 | 原文件列為已完成 | 本輪未驗證 | 待核對 | 待記錄 |
+| 篩選 UI | 原文件列為已完成 | Tag／Featured／Rentable／Sort 仍列待辦；UI 完成不代表查詢完成 | 待核對 | 待記錄 |
+| JWT 登入、HttpOnly Cookie、登出 API | 原文件列為已完成 | 2026-09-14 正式檢查未包含登入；完整流程待驗證 | 各功能對應版本待核對 | 待記錄 |
+| CSRF、嚴格 CORS、RBAC、ADMIN 高風險權限 | 原文件列為已完成 | 當日 CSRF 端點成功；跨網域與權限情境待驗證 | 各功能對應版本待核對 | 待記錄 |
+| 登入失敗限制、統一 API 錯誤格式、Trace ID | 原文件列為已完成 | 本輪未驗證；原規格為 15 分鐘內失敗 5 次 | 待核對 | 待記錄 |
+| GitHub Actions CI | 設定已存在 | 本輪核對流程為前端 lint/build、後端 formatting/test；未重新執行 | 歷史 CI 結果見部署文件，不等同應用程式部署 | 不適用 |
+
+## 部署與環境歷史
+
+- 2026-09-14：PR #102 合併後前後端 CI 通過，Railway production 部署成功；版本與驗證範圍見 [DEPLOYMENT.md](DEPLOYMENT.md)。
+- 當日未驗證登入、圖片上傳、Excel 匯入或負載測試，不能視為完整端對端驗收。
+- 原有 Cloudflare Pages／Railway staging 設定保留為歷史參考。
+- 2026-09-14：依使用者要求刪除 Railway staging（含測試 MySQL）與 Cloudflare Pages staging，正式環境保留。
+- `development` 分支及 R2 檔案保留，staging 端對端驗證暫停；重建需另行確認。
+- 本輪未重新確認正式服務、Cloudflare 安全規則或 GitHub ruleset 的即時狀態。
+
+## 待重現問題與限制
+
+| 項目 | 原文件紀錄 | 下一步 |
+|---|---|---|
+| search API | 部分情況回傳 500 | 記錄輸入、資料條件、Trace ID、版本及重現步驟，再修復並補回歸測試 |
+| Detail 頁面 | 偶爾出現 Art not found | 分辨有效作品載入失敗與作品確實不存在，確認 API 回應及路由參數 |
+| 登入限制 | 使用單機記憶體 | 擴充多個 instance 前設計共用儲存並驗證計數一致性 |
+| 篩選功能 | UI 列完成，但個別 Filter 與 Sort 未完成 | 核對 UI、URL、API 與結果，不直接推定功能缺失或完成 |
+| main 保護 | 歷史紀錄有審查者要求，TODO 仍列 ruleset 待辦 | 查核目前規則及必要 CI，不假設保護完全不存在 |
 
 ## 下一步
 
-1. 建立並驗證 Cloudflare Pages／Railway staging
-2. 設定 Cloudflare Access、登入 Rate Limit 與 GitHub ruleset
-3. 修正 search API 並補完整測試
-4. 進入第二階段：Flyway、備份、回收站與 R2 生命週期
+1. 核對功能、API 契約與驗收範圍，為歷史問題建立重現案例。
+2. 修復已重現的搜尋及詳情問題，補核心操作狀態與回歸測試。
+3. 核對並補齊篩選、排序、URL 同步及行動版操作。
+4. 查核 Cloudflare Access／Rate Limit／GitHub ruleset，規劃 Flyway、備份、回收站及 R2 生命週期。
+5. 完成適用的整合測試、UAT 與發布檢查；隔離環境缺口須明列，不能以 CI 取代。

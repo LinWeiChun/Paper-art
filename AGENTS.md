@@ -32,7 +32,10 @@
 
 ### Deployment
 - Railway（Backend）
-- Vercel（Frontend）
+- Cloudflare Pages（Frontend）
+
+部署基準依 `docs/DEPLOYMENT.md` 的既有紀錄；發布前須核對雲端實際設定。
+Staging 已於 2026-09-14 下線，重新建立需使用者另行確認。
 
 ---
 
@@ -45,6 +48,8 @@
 - 優先重用現有元件、Service、Repository、Utility。
 - 維持既有命名與程式風格。
 - 若需要調整架構，請先說明原因與影響。
+- 開發流程與驗收規劃參考 `docs/DEVELOPMENT_PLAN.md`，工作順序以 `docs/TODO.md` 為準。
+- 分開記錄實作、測試、部署與驗收狀態；歷史成功紀錄不代表目前版本已驗證。
 
 ---
 
@@ -57,4 +62,4 @@
 3. 需修改的檔案
 4. 完整程式碼（不要只提供片段）
 
-若涉及 Cloudflare R2、Railway、Vercel 或環境變數，請一併說明需要調整的部署設定。
+若涉及 Cloudflare Pages、Cloudflare R2、Railway 或環境變數，請一併說明需要調整的部署設定。
