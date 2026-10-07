@@ -1,7 +1,7 @@
 .contact-banner {
   background:
     linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    url('/images/contact-banner.jpg');
+    url('/images/slide1.jpg');
   background-size: cover;
   background-position: center;
 }

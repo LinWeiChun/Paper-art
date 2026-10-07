@@ -74,7 +74,12 @@ function AdminContactMessage() {
         </thead>
 
         <tbody>
-          {messages.map((item, index) => (
+          {messages.length === 0 ? (
+            <tr>
+              <td colSpan="7">目前沒有聯絡訊息資料</td>
+            </tr>
+          ) : (
+            messages.map((item, index) => (
             <tr key={item.id}>
               <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
               <td>{item.name}</td>
@@ -102,7 +107,8 @@ function AdminContactMessage() {
                 </button>
               </td>
             </tr>
-          ))}
+            ))
+          )}
         </tbody>
       </table>
 

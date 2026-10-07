@@ -83,10 +83,4 @@
     align-items: flex-start;
     gap: 15px;
   }
-
-  .admin-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 }

@@ -94,7 +94,12 @@ function AdminNews() {
         </thead>
 
         <tbody>
-          {newsList.map((news, index) => (
+          {newsList.length === 0 ? (
+            <tr>
+              <td colSpan="4">目前沒有最新消息資料</td>
+            </tr>
+          ) : (
+            newsList.map((news, index) => (
             <tr key={news.id}>
               <td>{(currentPage - 1) * ADMIN_ITEMS_PER_PAGE + index + 1}</td>
 
@@ -126,7 +131,8 @@ function AdminNews() {
                 </div>
               </td>
             </tr>
-          ))}
+            ))
+          )}
         </tbody>
       </table>
 
