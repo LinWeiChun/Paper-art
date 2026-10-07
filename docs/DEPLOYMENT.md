@@ -131,6 +131,8 @@ JVM 調整的驗證流程：
 
 本機 JDK 21 驗證：初始 Metaspace 128 MiB 限制下，格式檢查、11 項既有測試與打包通過；HTTP 健康端點回傳 200／UP。但啟動後 Metaspace 已使用約 111 MiB，因此最終上限提高為 192 MiB，保留類別載入空間。測試使用 test profile 與 H2，未驗證正式 MySQL、R2 或實際流量。專案編譯目標與 CI 仍為 Java 17。
 
+上述本機驗證階段未更新 Railway 設定或觸發部署；雲端發布狀態請以 GitHub PR 與 Railway 部署紀錄為準。
+
 2026-09-14 部署與驗證結果（本機執行紀錄）：
 
 - PR #101 已合併至 `development`；staging 部署
