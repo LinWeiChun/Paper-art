@@ -287,7 +287,11 @@ public class ArtServiceImpl implements ArtService {
   @Override
   public Page<ArtResponse> search(ArtSearchRequest request, int page, int size) {
 
-    Pageable pageable = PageRequest.of(page, size, buildSort(request.getSort()));
+    if (size > 100) {
+      throw new IllegalArgumentException("每頁最多 100 筆");
+    }
+    Pageable pageable =
+        PageRequest.of(page, size, buildSort(request.getSort()).and(Sort.by("id").ascending()));
 
     Specification<Art> spec = buildPublicSpecification(request);
 

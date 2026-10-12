@@ -23,6 +23,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -188,8 +189,8 @@ public class SecurityConfig {
                         "ART_MANAGE")
                     .anyRequest()
                     .authenticated())
-        .addFilterBefore(requestTraceFilter, UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(jwtAuthenticationFilter, RequestTraceFilter.class);
+        .addFilterBefore(requestTraceFilter, CorsFilter.class)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 }
