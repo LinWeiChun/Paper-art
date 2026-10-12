@@ -81,7 +81,9 @@ class BrowserVerificationIT {
       while (!Files.exists(stop) && System.nanoTime() < deadline) {
         Thread.sleep(250);
       }
-      assertThat(Files.exists(stop)).as("Browser operator must explicitly stop the fixture").isTrue();
+      assertThat(Files.exists(stop))
+          .as("Browser operator must explicitly stop the fixture")
+          .isTrue();
       verifyNoInteractions(s3Client);
       verifyNoInteractions(cleanupScheduler);
     } finally {
