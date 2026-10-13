@@ -49,7 +49,6 @@ public class SecurityConfig {
     csrfRepository.setCookieCustomizer(cookie -> cookie.secure(csrfCookieSecure).sameSite("Lax"));
 
     CsrfTokenRequestAttributeHandler csrfRequestHandler = new CsrfTokenRequestAttributeHandler();
-    csrfRequestHandler.setCsrfRequestAttributeName(null);
 
     http.cors(Customizer.withDefaults())
         .csrf(

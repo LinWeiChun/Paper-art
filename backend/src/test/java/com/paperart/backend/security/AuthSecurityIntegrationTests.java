@@ -64,6 +64,36 @@ class AuthSecurityIntegrationTests {
     verifyNoInteractions(s3Client);
   }
 
+  @ParameterizedTest
+  @ValueSource(strings = {"/authors", "/categories"})
+  void initialParallelReadsDoNotInvalidateSearchCsrf(String metadataPath) throws Exception {
+    var csrfResponse = mockMvc.perform(get("/auth/csrf")).andExpect(status().isOk()).andReturn();
+    String token =
+        objectMapper
+            .readTree(csrfResponse.getResponse().getContentAsString())
+            .get("token")
+            .asText();
+    Cookie browserCookie = csrfResponse.getResponse().getCookie("XSRF-TOKEN");
+    // Both requests started without a cookie. Simulate the metadata response arriving last.
+    var metadataResponse =
+        mockMvc.perform(get(metadataPath)).andExpect(status().isOk()).andReturn();
+    Cookie lateCookie = metadataResponse.getResponse().getCookie("XSRF-TOKEN");
+    if (lateCookie != null) {
+      browserCookie = lateCookie;
+    }
+    mockMvc
+        .perform(
+            post("/arts/search")
+                .cookie(browserCookie)
+                .header("X-XSRF-TOKEN", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+        .andExpect(status().isOk());
+    assertThat(lateCookie)
+        .as("Read-only metadata must not overwrite the CSRF bootstrap cookie")
+        .isNull();
+  }
+
   private MvcResult login(String username, String password, String ip, int expectedStatus)
       throws Exception {
     return mockMvc
