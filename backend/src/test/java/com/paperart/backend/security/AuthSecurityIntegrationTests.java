@@ -112,6 +112,28 @@ class AuthSecurityIntegrationTests {
         .andReturn();
   }
 
+  @Test
+  void authenticatedReadsPreserveCsrfForSubsequentWrites() throws Exception {
+    Cookie session = adminCookie();
+    var bootstrap = mockMvc.perform(get("/auth/csrf")).andExpect(status().isOk()).andReturn();
+    Cookie csrf = bootstrap.getResponse().getCookie("XSRF-TOKEN");
+    var me =
+        mockMvc
+            .perform(get("/auth/me").cookie(session, csrf))
+            .andExpect(status().isOk())
+            .andReturn();
+    Cookie replacement = me.getResponse().getCookie("XSRF-TOKEN");
+    Cookie[] cookies =
+        replacement == null
+            ? new Cookie[] {session, csrf}
+            : replacement.getMaxAge() == 0
+                ? new Cookie[] {session}
+                : new Cookie[] {session, replacement};
+    mockMvc
+        .perform(post("/auth/logout").cookie(cookies).header("X-XSRF-TOKEN", csrf.getValue()))
+        .andExpect(status().isNoContent());
+  }
+
   private Cookie adminCookie() throws Exception {
     return login("test-admin", "test-password", "192.0.2.10", 200)
         .getResponse()
