@@ -23,6 +23,9 @@ import software.amazon.awssdk.services.s3.S3Client;
     properties = {
       "server.address=127.0.0.1",
       "server.port=33317",
+      "server.tomcat.accesslog.enabled=true",
+      "server.tomcat.accesslog.directory=${user.dir}/target/browser-accesslog",
+      "server.tomcat.accesslog.pattern=%t %r %s %{X-Trace-Id}o",
       "spring.datasource.url=jdbc:h2:mem:paperart_browser;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=YEAR",
       "spring.datasource.driver-class-name=org.h2.Driver",
       "spring.datasource.username=sa",
@@ -54,13 +57,13 @@ class BrowserVerificationIT {
       assertThat(connection.getMetaData().getURL()).isEqualTo("jdbc:h2:mem:paperart_browser");
     }
     jdbc.update(
-        "insert into authors (id,name,sort_order,published,deleted) values ('00000000-0000-4000-8000-000000000101','測試作者',0,true,false)");
+        "insert into authors (id,name,sort_order,published,deleted,created_at,updated_at) values ('00000000-0000-4000-8000-000000000101','測試作者',0,true,false,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)");
     jdbc.update(
-        "insert into categories (id,name,sort_order,published,deleted) values ('00000000-0000-4000-8000-000000000201','測試分類',0,true,false)");
+        "insert into categories (id,name,sort_order,published,deleted,created_at,updated_at) values ('00000000-0000-4000-8000-000000000201','測試分類',0,true,false,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)");
     for (int i = 1; i <= 3; i++) {
       String id = "00000000-0000-4000-8000-%012d".formatted(i);
       jdbc.update(
-          "insert into arts (id,title,art_number,sort_order,year,featured,rentable,published,deleted) values (?,?,?,0,2026,false,true,?,false)",
+          "insert into arts (id,title,art_number,sort_order,year,featured,rentable,published,deleted,created_at,updated_at) values (?,?,?,0,2026,false,true,?,false,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)",
           id,
           i == 1 ? "春花" : i == 2 ? "春鳥" : "草稿作品",
           "BROWSER-" + i,
