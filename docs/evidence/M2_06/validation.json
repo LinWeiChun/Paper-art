@@ -1,0 +1,57 @@
+{
+  "sourceHashes": [
+    {
+      "path": "backend/src/main/java/com/paperart/backend/config/SecurityConfig.java",
+      "sha256": "9B07119F158471015AF819C717AFCA5BCE949507EA2D906B259078979038F47E"
+    },
+    {
+      "path": "backend/src/test/java/com/paperart/backend/security/AuthSecurityIntegrationTests.java",
+      "sha256": "D51E38314D543CFA4DDC81C914A6B75B47E8C4EE6E79E13A2FE21E3B1044ED7B"
+    },
+    {
+      "path": "backend/src/test/java/com/paperart/backend/diagnostics/BrowserVerificationIT.java",
+      "sha256": "70169F375757F4FC6CB94A323784FE61E1ED03E4A913AA5DF164CF8E829A9920"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "32CE412DA8417E114A07E114A4D983BF093621A8D01D759C869BE57B66C57454"
+    }
+  ],
+  "date": "2026-10-13",
+  "candidate": "4bf3bfe0dcffb5d72f1bd6f14abe0163d5aec799",
+  "executor": "Codex",
+  "environment": {
+    "storage": "Mock S3; cleanup scheduler mocked",
+    "browser": "Codex in-app Chromium",
+    "node": "22.23.3",
+    "npm": "10.9.9",
+    "java": "Temurin 17.0.20.1+1",
+    "collation": "utf8mb4_0900_ai_ci",
+    "os": "Windows",
+    "mysql": "9.7.2"
+  },
+  "results": {
+    "backend": {
+      "errors": 0,
+      "tests": 65,
+      "skipped": 0,
+      "failures": 0
+    },
+    "mysql": {
+      "errors": 0,
+      "tests": 22,
+      "skipped": 0,
+      "failures": 0
+    },
+    "uat": "pending user",
+    "httpCookieLifecycle": "login=200 me=200 csrfUnchanged=True logout=204 afterLogout=401",
+    "remoteCI": "not run",
+    "deployment": "not performed",
+    "frontend": {
+      "build": "passed",
+      "lintErrors": 0,
+      "npmCi": "2026-10-12 unchanged lockfile",
+      "lintWarnings": 53
+    }
+  }
+}

@@ -1,11 +1,20 @@
 # 專案現況
 
-文件更新日期：2026-10-12。
+文件更新日期：2026-10-13。
 
-本頁保留各批歷史，本批新增 M2-05 安全回歸。完整範圍及限制見 [M1_EXECUTION.md](M1_EXECUTION.md)、[M2_01_EXECUTION.md](M2_01_EXECUTION.md)、[M2_05_EXECUTION.md](M2_05_EXECUTION.md)，尚未使用者驗收或發布。
+本頁保留各批歷史，最新為 [M2_06_EXECUTION.md](M2_06_EXECUTION.md) 同版本機驗證。前批範圍見 [M1_EXECUTION.md](M1_EXECUTION.md)、[M2_01_EXECUTION.md](M2_01_EXECUTION.md)、[M2_05_EXECUTION.md](M2_05_EXECUTION.md)，尚未使用者驗收或發布。
 工作順序與完成條件見 [TODO.md](TODO.md)，流程見 [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)。
 
-## 2026-10-12 M2-05 安全及管理回歸
+## 2026-10-13 M2-06 同版本機驗證（部分完成）
+
+- 版本：本機分支 `codex/m2-06-verification`，程式候選 `4bf3bfe0dcffb5d72f1bd6f14abe0163d5aec799`；規範／需求兩軸審查均無需修正發現。
+- 實作：瀏覽器找到首次搜尋 CSRF Cookie 競態，以及 JWT 認證後清除 CSRF Cookie 導致登出 403；均以失敗測試重現後修正。新增隔離瀏覽器入口，維持 CSRF、權限及 Cookie 安全規則。
+- 測試：Java 17 完整 65 項及 Spotless 通過；MySQL 9.7.2 搜尋 22 項通過；Node 22 lint 0 錯誤／53 警告、build 通過。真實 HTTP 及本機瀏覽器確認搜尋、管理讀取、登入／登出；HTTP 登出 204、後續 me 401。
+- 缺口：遠端 GitHub CI 未執行，M2-06 不勾完成；HTTP localhost 不代表正式 HTTPS／跨子網域。真實 R2、完整 M1-05、UAT 及發布仍待辦。
+- 發現：201 字搜尋回 400 後，前端仍顯示舊結果且無提示；空結果也無明確文案，交 M2-03。npm audit 回報 48 個受影響套件，發布前由 M4-04 評估適用性與修補，未升級套件。
+- 部署／驗收：已建立本機候選提交，未推送、部署、變更雲端或 UAT。剩餘送驗方式及證據見 M2_06_EXECUTION。
+
+## 2026-10-12 M2-05 安全及管理回歸（前批）
 
 - 實作：修正 RequestTraceFilter 順序，讓 CSRF／CORS 提早拒絕的請求也有追蹤編號；JWT 過濾器維持在 CORS／CSRF 之後。授權、登入限制與 Cookie 規則未變更。
 - 測試：完整後端 62 項及 Spotless check 通過；含認證 23、登入限制 4、管理／上傳／匯入 7 及其他 28 項。使用隔離 H2、真實登入 Cookie、模擬 S3 與可控 Clock。
@@ -103,7 +112,7 @@
 ## 下一步
 
 1. M1：保留已確認決策與診斷證據；補完其餘契約、瀏覽器／雲端整合及清理風險驗證。
-2. M2／R1：M2-01／05 本機完成，接續 M2-06 同版驗證；其餘狀態與競態先補 M1-05 重現。
+2. M2／R1：M2-06 本機審查／測試完成，剩同版遠端 CI；並行接續 M1-05 與已有證據的 M2-03 前端錯誤／空狀態，不標 R1 全部完成。
 3. M3／R2：D-04／07 定案後補篩選、排序、URL 及行動版。
 4. M4／R3：補管理、上傳／匯入、安全與資料維運；先備份／還原，再安排遷移與清理治理。
 5. 每版 M5：完成適用整合、真人 UAT 與發布檢查；必要雲端缺口未補齊，不視為可發布。

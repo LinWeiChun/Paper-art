@@ -13,6 +13,7 @@
 | [M1_EXECUTION.md](M1_EXECUTION.md) | 2026-10-08 規格確認、隔離診斷、雲端唯讀查核與證據缺口 |
 | [M2_01_EXECUTION.md](M2_01_EXECUTION.md) | 2026-10-12 搜尋修正、H2／MySQL 回歸與重跑入口 |
 | [M2_05_EXECUTION.md](M2_05_EXECUTION.md) | 2026-10-12 安全／管理回歸、CSRF 追蹤修正及驗證界線 |
+| [M2_06_EXECUTION.md](M2_06_EXECUTION.md) | 2026-10-13 同版本機驗證、兩項 CSRF 修正與遠端 CI 待辦 |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | 環境變數、發布檢查、回復方案與歷史紀錄 |
 
 開始工作前依序閱讀本文件、專案結構、目前狀態與待辦；規劃新功能或發布時，再閱讀開發流程及部署文件。
