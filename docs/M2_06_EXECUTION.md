@@ -1,8 +1,8 @@
 # M2-06：R1 同版開發驗證
 
-執行日期：2026-10-12～13；執行者：Codex。使用者負責業務與真人 UAT。
+執行日期：2026-10-12～14；執行者：Codex。使用者負責業務與真人 UAT。
 
-**狀態：本機審查、Java 17／Node 22、MySQL 與本批瀏覽器抽樣已完成；遠端 GitHub CI 尚未執行，M2-06 保留未勾選。未推送、部署或 UAT。**
+**狀態：本批 M2-06 開發驗證完成。本機審查、Java 17／Node 22、MySQL、瀏覽器抽樣及同程式版本的遠端 CI 已取得；已推送並建立 development 草稿 PR #104。Pages 自動建立 Preview；未合併、正式發布或 UAT。**
 
 ## 1. 候選與範圍
 
@@ -71,7 +71,7 @@
 | 依賴安裝 | 2026-10-12 同分支 `npm ci` 成功；後續未改前端或鎖定檔 | `m2-06-npm-ci.log`、validation.json 鎖定檔雜湊 |
 | 真實 HTTP Cookie | 登入 200 → me 200／CSRF 不變 → 登出 204 → me 401 | `m2-06-http-cookie-final.log` |
 | 本機瀏覽器 | Codex in-app Chromium；HTTP localhost 不同埠 | 下表、[HTTP 記錄](evidence/M2_06/browser-http.log)與截圖 |
-| 遠端 CI | **未執行** | 沒有此候選的 GitHub Actions run；本機 Windows 不冒充 Ubuntu CI |
+| 遠端 CI | Ubuntu runner、Temurin 17.0.20+1／Node 22.23.3；backend／frontend 全通過，後端 65 項；lint 0 錯誤／53 警告 | [run 38495315460](https://github.com/LinWeiChun/Paper-art/actions/runs/38495315460)，2026-10-14 09:22:52（UTC+8）後端完成；版本對照見第 8 節 |
 
 65 項為前批 62＋首次搜尋競態 2＋認證後 CSRF 1。MySQL 22 為相同搜尋案例的另一 DB 執行，不當作 22 項新增測試。瀏覽器入口另執行，不列入 65 項。
 
@@ -96,7 +96,7 @@
 - **BUG-SEARCH-UI-01（S2，未修）**：201 字搜尋回 400 但保留舊結果、無錯誤提示；200 零筆無空狀態文案。替代操作：修正關鍵字或清除篩選。由 M2-03 處理；是否接受此子版需使用者決定，未代替 UAT 核准。
 - 兩項已重現 S1 在本機最終候選修正並回歸通過；未發現本批其他 S0／S1，不推論未知環境沒有風險。
 - `npm audit` 2026-10-12 回報 48 個受影響套件（19 high、29 moderate；非 48 個獨立可利用漏洞）。直接依賴涉及 axios、react-router-dom、@tiptap/react、ckeditor5-premium-features；未自動修復或升級。加入 M4-04 依賴影響評估，發布前判斷適用性與修補範圍；不能以 lint/build 通過排除弱點。
-- 未執行遠端 CI、實際 R2、正式 MySQL 精確版本核對、正式 HTTPS／跨子網域 Cookie、行動版及多瀏覽器、慢網／離線／5xx／快速切 ID、完整 UAT。M1-05／06 及 M2-03／04 繼續保留。
+- 未執行實際 R2、正式 MySQL 精確版本核對、正式 HTTPS／跨子網域 Cookie、行動版及多瀏覽器、慢網／離線／5xx／快速切 ID、完整 UAT。M1-05／06 及 M2-03／04 繼續保留；遠端 CI 不涵蓋這些項目。
 - 未修改 Cloudflare、Railway、R2、正式資料或環境檔；無部署設定需要隨本次程式修正調整。發佈前仍須重查雲端實際設定。
 
 ## 7. 重跑與送驗
@@ -116,4 +116,16 @@ MySQL 入口只對 `127.0.0.1:33316/paperart_m1` 的專用 disposable DB 執行 
 
 前端 CI 對應命令為 `npm ci`、`npm run lint`、`npm run build`，版本 Node 22；不更換現有套件。原始日誌在忽略的 `backend/target`，持久摘要、來源雜湊、HTTP 與畫面證據在本文件旁的 evidence。
 
-剩餘 M2-06 步驟：依既有本機開發／測試授權完成上述工作；取得遠端送驗授權並核對分支觸發後，推送候選分支、建立以 `development` 為目標的草稿 PR，取得相同程式版本的 GitHub `backend`／`frontend` CI 證據。未取得前保持 M2-06 未完成；不合併 `main`、不觸發正式發布，也不重建 staging。
+本批送驗已於 2026-10-14 完成。後續新功能或修正須按影響重新驗證；下一個本機工作為 M1-05，接續 M2-03／04。M5 的適用 QA、真人 UAT 與發布條件仍獨立追蹤。
+
+## 8. 遠端送驗與部署觸發查核（2026-10-14）
+
+- 使用者明確授權核對觸發規則、推送候選分支、建立 development 草稿 PR 並完成遠端 CI。
+- [PR #104](https://github.com/LinWeiChun/Paper-art/pull/104)：`codex/m2-06-verification` → `development`，保持草稿、未合併。查核時 development 為 `9f45b8f3396e86830acc82cad64e869b0801781f`，無額外未納入提交或衝突。
+- 首次 CI head：`906e913299b7c62f28d374fcac57f5848af674e6`；PR merge ref：`43d0ccede8abbb61ddb9d8d75eeb8180d76f529c`。兩者與本機候選 `4bf3bfe` 的 `backend`、`frontend`、`.github` 差異皆為空；文件提交不改程式，故本機及遠端證據適用同一程式版本。
+- CI run `38495315460`：frontend 成功於 01:22:30 UTC、backend 成功於 01:22:52 UTC；日誌確認後端 65 項、0 失敗／錯誤／略過。原始日誌保存於忽略的 `backend/target/m2-06-remote-ci.log`，持久摘要見 validation.json 及遠端 run。
+- Railway 唯讀查核：production 後端 source branch 為 `main`、root `/backend`，無 staged changes；最新部署仍為 `fbd12dfb-7bab-4589-955b-3d7333b16333`（2026-10-07 SUCCESS）。未改任何服務設定或變數。
+- Cloudflare Pages 唯讀查核：`paper-art` production branch 為 `main`；preview 設定 `all`、includes `*`、無 excludes。因此 feature branch 推送自動產生 Preview，非重新建立 staging。
+- 首次 Preview：`768244ee-5963-4ce5-b5d7-982ba2235932`，environment `preview`，狀態 success，提交 `906e913`；[預覽網址](https://768244ee.paper-art-3g5.pages.dev)。只核對部署 metadata，未使用此站操作正式 API 或當作 UAT。
+- 推送後 production canonical deployment 仍為 `cc572d6d-cfbf-4c37-bde0-4dee436f282f`／`b4ee38bb366bfecf0192a28670f8c31ddf0cdf7f`。本次沒有部署設定或環境變數調整。
+- 後續證據文件提交仍會觸發 PR CI 與 Preview；應以 PR 最新 head 的檢查結果判斷送驗狀態。首次 run 作為不可變的同版證據保留，不把文件更新誤記為程式變更。

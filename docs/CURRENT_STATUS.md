@@ -1,11 +1,19 @@
 # 專案現況
 
-文件更新日期：2026-10-13。
+文件更新日期：2026-10-14。
 
-本頁保留各批歷史，最新為 [M2_06_EXECUTION.md](M2_06_EXECUTION.md) 同版本機驗證。前批範圍見 [M1_EXECUTION.md](M1_EXECUTION.md)、[M2_01_EXECUTION.md](M2_01_EXECUTION.md)、[M2_05_EXECUTION.md](M2_05_EXECUTION.md)，尚未使用者驗收或發布。
+本頁保留各批歷史，最新為 [M2_06_EXECUTION.md](M2_06_EXECUTION.md) 同版開發驗證與遠端 CI。前批範圍見 [M1_EXECUTION.md](M1_EXECUTION.md)、[M2_01_EXECUTION.md](M2_01_EXECUTION.md)、[M2_05_EXECUTION.md](M2_05_EXECUTION.md)，尚未使用者驗收或正式發布。
 工作順序與完成條件見 [TODO.md](TODO.md)，流程見 [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)。
 
-## 2026-10-13 M2-06 同版本機驗證（部分完成）
+## 2026-10-14 M2-06 遠端 CI 補證（本批開發驗證完成）
+
+- 使用者授權後推送 `codex/m2-06-verification`，建立 [development 草稿 PR #104](https://github.com/LinWeiChun/Paper-art/pull/104)，保持未合併。
+- [CI 38495315460](https://github.com/LinWeiChun/Paper-art/actions/runs/38495315460) backend／frontend 全通過：Ubuntu、Java 17 後端 65 項及 Spotless；Node 22 lint/build，0 錯誤／53 既有警告。
+- CI head `906e913`／merge ref `43d0cce` 與本機程式候選 `4bf3bfe` 的 backend、frontend、.github 完全一致；後續提交僅同步證據文件，最新 head 檢查見 PR。
+- Railway 與 Pages 正式分支皆確認為 main；Pages preview 規則為所有其他分支，已自動建立成功 Preview。Pages 正式 canonical 仍為 b4ee38b，Railway 正式部署仍為 2026-10-07 SUCCESS；沒有變更雲端設定、正式部署或重建 staging。
+- M2-06 本批完成，M1／M2／R1 整體與 M5 尚未完成。下一項 M1-05；201 字搜尋提示交 M2-03，依賴掃描交 M4-04，真實 R2、正式跨網域與真人 UAT 仍待驗證。
+
+## 2026-10-13 M2-06 同版本機驗證（歷史；遠端補證見上）
 
 - 版本：本機分支 `codex/m2-06-verification`，程式候選 `4bf3bfe0dcffb5d72f1bd6f14abe0163d5aec799`；規範／需求兩軸審查均無需修正發現。
 - 實作：瀏覽器找到首次搜尋 CSRF Cookie 競態，以及 JWT 認證後清除 CSRF Cookie 導致登出 403；均以失敗測試重現後修正。新增隔離瀏覽器入口，維持 CSRF、權限及 Cookie 安全規則。
