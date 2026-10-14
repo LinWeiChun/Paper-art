@@ -1,5 +1,6 @@
 package com.paperart.backend.dto.request;
 
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 public class ArtSearchRequest {
 
   /** 關鍵字（作品名稱、描述） */
+  @Size(max = 200, message = "關鍵字最多 200 字")
   private String keyword;
 
   /** 作者（可多選） */

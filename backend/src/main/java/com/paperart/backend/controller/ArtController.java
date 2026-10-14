@@ -5,6 +5,7 @@ import com.paperart.backend.dto.request.ArtSearchRequest;
 import com.paperart.backend.dto.response.ArtResponse;
 import com.paperart.backend.dto.response.ImportResponse;
 import com.paperart.backend.service.ArtService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -89,7 +90,7 @@ public class ArtController {
 
   @PostMapping("/search")
   public ResponseEntity<Page<ArtResponse>> search(
-      @RequestBody ArtSearchRequest request,
+      @Valid @RequestBody ArtSearchRequest request,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "12") int size) {
 

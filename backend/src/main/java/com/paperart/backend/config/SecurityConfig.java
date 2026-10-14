@@ -18,11 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -48,13 +50,15 @@ public class SecurityConfig {
     csrfRepository.setCookieCustomizer(cookie -> cookie.secure(csrfCookieSecure).sameSite("Lax"));
 
     CsrfTokenRequestAttributeHandler csrfRequestHandler = new CsrfTokenRequestAttributeHandler();
-    csrfRequestHandler.setCsrfRequestAttributeName(null);
 
     http.cors(Customizer.withDefaults())
         .csrf(
             csrf ->
                 csrf.csrfTokenRepository(csrfRepository)
-                    .csrfTokenRequestHandler(csrfRequestHandler))
+                    .csrfTokenRequestHandler(csrfRequestHandler)
+                    // A stateless JWT is re-authenticated on every request, not a new login
+                    // session.
+                    .sessionAuthenticationStrategy(new NullAuthenticatedSessionStrategy()))
         .formLogin(AbstractHttpConfigurer::disable)
         .httpBasic(AbstractHttpConfigurer::disable)
         .sessionManagement(
@@ -188,8 +192,8 @@ public class SecurityConfig {
                         "ART_MANAGE")
                     .anyRequest()
                     .authenticated())
-        .addFilterBefore(requestTraceFilter, UsernamePasswordAuthenticationFilter.class)
-        .addFilterAfter(jwtAuthenticationFilter, RequestTraceFilter.class);
+        .addFilterBefore(requestTraceFilter, CorsFilter.class)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 }

@@ -10,11 +10,13 @@ import org.slf4j.MDC;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
@@ -43,6 +45,15 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiError> handleIllegalArgumentException(
       IllegalArgumentException exception, HttpServletRequest request) {
     return build(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", exception.getMessage(), request, null);
+  }
+
+  @ExceptionHandler({
+    MethodArgumentTypeMismatchException.class,
+    HttpMessageNotReadableException.class
+  })
+  public ResponseEntity<ApiError> handleRequestParsingException(
+      Exception exception, HttpServletRequest request) {
+    return build(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "請求參數或 JSON 格式不正確", request, null);
   }
 
   @ExceptionHandler(MaxUploadSizeExceededException.class)
